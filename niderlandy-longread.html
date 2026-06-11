@@ -268,6 +268,43 @@
 
   hr.soft{border:none;border-top:1px solid var(--rule);margin:34px 0;}
 
+  /* ── Аудиогид (озвучка голосом устройства) ─────────────────────────── */
+  .listen-btn{
+    font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:#fff;background:var(--accent);border:none;border-radius:20px;
+    padding:6px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  }
+  html:has(#theme-cb:checked) .listen-btn{color:#0D1B2A;}
+  .listen-btn:hover{filter:brightness(1.07);}
+  .listen-btn.cheat-listen{margin:4px 0 22px;}
+  /* подсветка читаемого фрагмента */
+  .speaking{
+    background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--accent);
+    border-radius:5px;transition:background .2s ease;
+  }
+  /* плавающий плеер */
+  #player{
+    position:fixed;left:50%;bottom:14px;z-index:97;width:min(94vw,560px);
+    transform:translateX(-50%) translateY(160%);
+    display:flex;align-items:center;gap:8px;
+    background:var(--navy);color:var(--cream);
+    border-radius:30px;padding:9px 12px;box-shadow:0 8px 30px rgba(0,0,0,.4);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+  }
+  html:has(#theme-cb:checked) #player{border:1px solid var(--rule);background:#08121d;}
+  #player.show{transform:translateX(-50%) translateY(0);}
+  #player button{
+    background:none;border:none;color:var(--cream);font-size:19px;cursor:pointer;
+    width:36px;height:36px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  #player button:hover{background:rgba(255,255,255,.13);}
+  #player .p-title{flex:1;font-family:var(--serif);font-style:italic;font-size:14px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e7ddcd;min-width:0;}
+  #player .p-note{font-size:11px;color:#9fb0c2;white-space:nowrap;}
+  #player .p-rate{background:rgba(255,255,255,.13);color:#fff;border-radius:15px;
+    font-family:var(--sans);font-size:12px;font-weight:700;width:auto;padding:0 11px;}
+
   /* Шпаргалка */
   section.cheat{
     margin-top:64px;background:var(--navy);color:var(--cream);
@@ -1109,6 +1146,133 @@
   window.addEventListener('scroll', onScroll, {passive:true});
   window.addEventListener('resize', onScroll);
   update();
+})();
+</script>
+
+<script>
+/* Аудиогид: озвучка через Web Speech API (голос самого устройства, офлайн). */
+(function(){
+  if(!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') return;
+  var synth = window.speechSynthesis;
+  var voice = null, rate = 1, items = [], idx = 0, playing = false, paused = false, seq = 0, hl = null;
+
+  function pickVoice(){
+    var vs = synth.getVoices() || [];
+    voice = vs.filter(function(v){ return /ru[-_]?ru/i.test(v.lang); })[0]
+         || vs.filter(function(v){ return /^ru/i.test(v.lang); })[0] || null;
+  }
+  pickVoice();
+  if(synth.onvoiceschanged !== undefined) synth.onvoiceschanged = pickVoice;
+
+  function clean(s){ return (s || '').replace(/\s+/g,' ').trim(); }
+  function chunk(t){
+    if(t.length <= 240) return [t];
+    var parts = t.match(/[^.!?…]+[.!?…]*/g) || [t], out = [], buf = '';
+    parts.forEach(function(p){
+      if((buf + p).length > 240){ if(buf) out.push(buf.trim()); buf = p; }
+      else buf += p;
+    });
+    if(buf.trim()) out.push(buf.trim());
+    return out;
+  }
+
+  // плеер
+  var player = document.createElement('div');
+  player.id = 'player';
+  player.innerHTML =
+    '<button class="p-pp" aria-label="Пауза или воспроизведение">⏸</button>' +
+    '<button class="p-stop" aria-label="Остановить">⏹</button>' +
+    '<span class="p-title"></span>' +
+    '<span class="p-note"></span>' +
+    '<button class="p-rate" aria-label="Скорость">1×</button>';
+  document.body.appendChild(player);
+  var ppBtn = player.querySelector('.p-pp'),
+      stopBtn = player.querySelector('.p-stop'),
+      titleEl = player.querySelector('.p-title'),
+      noteEl = player.querySelector('.p-note'),
+      rateBtn = player.querySelector('.p-rate');
+
+  function setNote(){ noteEl.textContent = items.length ? ('§ ' + Math.min(idx + 1, items.length) + '/' + items.length) : ''; }
+  function highlight(el){
+    if(el === hl) return;
+    if(hl) hl.classList.remove('speaking');
+    hl = el;
+    if(el){ el.classList.add('speaking'); el.scrollIntoView({behavior:'smooth', block:'center'}); }
+  }
+  function clearHl(){ if(hl) hl.classList.remove('speaking'); hl = null; }
+
+  function build(section){
+    items = [];
+    var title = section.querySelector('.ch-title') || section.querySelector('h2');
+    if(title) chunk(clean(title.textContent)).forEach(function(c){ items.push({el:title, text:c}); });
+    section.querySelectorAll('p, h3, li, blockquote').forEach(function(n){
+      var t = clean(n.textContent);
+      if(t) chunk(t).forEach(function(c){ items.push({el:n, text:c}); });
+    });
+  }
+
+  function speak(){
+    if(idx >= items.length){ stop(); return; }
+    var my = ++seq, it = items[idx];
+    highlight(it.el); setNote();
+    var u = new SpeechSynthesisUtterance(it.text);
+    u.lang = 'ru-RU'; if(voice) u.voice = voice; u.rate = rate; u.pitch = 1;
+    u.onend   = function(){ if(my === seq && playing && !paused){ idx++; speak(); } };
+    u.onerror = function(){ if(my === seq && playing && !paused){ idx++; speak(); } };
+    synth.speak(u);
+  }
+
+  function start(section, label){
+    synth.cancel();                 // синхронно, чтобы сохранить «жест пользователя» на iOS
+    build(section); idx = 0; playing = true; paused = false;
+    ppBtn.textContent = '⏸';
+    titleEl.textContent = label;
+    player.classList.add('show');
+    speak();
+  }
+  function stop(){ playing = false; paused = false; ++seq; synth.cancel(); clearHl(); player.classList.remove('show'); }
+
+  ppBtn.addEventListener('click', function(){
+    if(!playing) return;
+    if(paused){ paused = false; synth.resume(); ppBtn.textContent = '⏸'; }
+    else { paused = true; synth.pause(); ppBtn.textContent = '▶'; }
+  });
+  stopBtn.addEventListener('click', stop);
+  rateBtn.addEventListener('click', function(){
+    var s = [1, 1.2, 1.5, 0.8], i = s.indexOf(rate);
+    rate = s[(i + 1) % s.length];
+    rateBtn.textContent = rate + '×';
+    if(playing && !paused){ synth.cancel(); speak(); }   // тот же фрагмент в новой скорости
+  });
+
+  // Chrome иногда «засыпает» на длинном тексте — мягко поддерживаем
+  setInterval(function(){
+    if(playing && !paused && synth.speaking){ synth.pause(); synth.resume(); }
+  }, 9000);
+
+  // кнопки «Слушать» в каждой главе
+  function mkBtn(label){
+    var b = document.createElement('button');
+    b.className = 'listen-btn';
+    b.textContent = '▶ ' + label;
+    return b;
+  }
+  document.querySelectorAll('section.ch').forEach(function(sec){
+    var meta = sec.querySelector('.ch-meta'); if(!meta) return;
+    var t = sec.querySelector('.ch-title'), name = t ? t.textContent.trim() : 'главу';
+    var b = mkBtn('Слушать');
+    b.addEventListener('click', function(){ start(sec, name); });
+    meta.appendChild(b);
+  });
+  var cheat = document.querySelector('section.cheat');
+  if(cheat){
+    var cb = mkBtn('Слушать шпаргалку'); cb.className += ' cheat-listen';
+    cb.addEventListener('click', function(){ start(cheat, 'Шпаргалка перед сном'); });
+    var sub = cheat.querySelector('.sub');
+    if(sub) sub.insertAdjacentElement('afterend', cb); else cheat.insertBefore(cb, cheat.firstChild);
+  }
+
+  window.addEventListener('beforeunload', function(){ synth.cancel(); });
 })();
 </script>
 </body>
