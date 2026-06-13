@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Погружение в Нидерланды — лонгрид-гид для поезда</title>
+<style>
+  /* ── Шрифты: единственная внешняя зависимость, с фолбэком ───────────── */
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');
+
+  :root{
+    --cream:#F5F0E8;
+    --navy:#0D1B2A;
+    --orange:#E8631A;
+    --paper:#F5F0E8;
+    --ink:#0D1B2A;
+    --ink-soft:#3a4656;
+    --rule:#d8cfbf;
+    --card:#efe7d8;
+    --accent:#E8631A;
+    --accent-soft:#fbe5d6;
+    --link:#b8480f;
+    --serif:'Playfair Display', Georgia, 'Times New Roman', serif;
+    --sans:'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --maxw:720px;
+  }
+  html[data-theme="dark"],
+  html:has(#theme-cb:checked){
+    --paper:#0D1B2A;
+    --ink:#F5F0E8;
+    --ink-soft:#b9c2cf;
+    --rule:#27384a;
+    --card:#13243a;
+    --accent:#ff7a36;
+    --accent-soft:#1d3147;
+    --link:#ff9a5e;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:19px;
+    line-height:1.72;
+    -webkit-text-size-adjust:100%;
+    transition:background .3s ease,color .3s ease;
+  }
+  @media (max-width:480px){ body{font-size:18px;} }
+  @media (max-width:560px){ .topbar .here{display:none;} }
+
+  /* спрятать управляющие чекбоксы (вне экрана, но доступны) */
+  #theme-cb,#nav-cb{position:absolute;width:1px;height:1px;opacity:0;
+    margin:-1px;padding:0;border:0;clip:rect(0 0 0 0);overflow:hidden;}
+
+  /* ── Верхняя панель (sticky) ───────────────────────────────────────── */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:90;
+    display:flex;align-items:center;gap:10px;
+    height:46px;padding:0 12px;
+    background:var(--paper); /* фолбэк для старых движков */
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    -webkit-backdrop-filter:saturate(160%) blur(10px);
+    backdrop-filter:saturate(160%) blur(10px);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar .ctrl{
+    font-family:var(--sans);font-size:13px;font-weight:700;
+    color:var(--ink);background:var(--card);
+    border:1px solid var(--rule);border-radius:20px;
+    padding:6px 13px;cursor:pointer;user-select:none;
+    display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+  }
+  .topbar .ctrl:hover{border-color:var(--accent);color:var(--accent);}
+  .topbar .spacer{flex:1;}
+  .topbar .here{
+    font-family:var(--serif);font-style:italic;font-size:14px;
+    color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    max-width:46vw;
+  }
+  /* подпись на кнопке темы переключается чисто на CSS */
+  .l-dark{display:none;}
+  html:has(#theme-cb:checked) .l-dark{display:inline;}
+  html:has(#theme-cb:checked) .l-light{display:none;}
+
+  /* ── Прогресс чтения (тонкая полоса под панелью) ───────────────────── */
+  #progress{
+    position:fixed;top:46px;left:0;height:3px;width:0%;
+    background:var(--accent);z-index:91;transition:width .1s linear;
+  }
+  /* отступ контента под фиксированную панель */
+  body{padding-top:46px;}
+
+  /* ── Выезжающее меню глав ──────────────────────────────────────────── */
+  .menu-backdrop{
+    position:fixed;inset:0;z-index:95;background:rgba(5,12,20,.5);
+    opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;
+  }
+  .menu-panel{
+    position:fixed;top:0;left:0;bottom:0;z-index:96;width:min(86vw,360px);
+    background:var(--paper);border-right:1px solid var(--rule);
+    box-shadow:2px 0 28px rgba(0,0,0,.25);
+    transform:translateX(-102%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+    overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 18px 40px;
+  }
+  html:has(#nav-cb:checked) .menu-backdrop{opacity:1;visibility:visible;}
+  html:has(#nav-cb:checked) .menu-panel{transform:translateX(0);}
+  .menu-panel h2{
+    font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;
+    font-size:12px;color:var(--accent);margin:4px 0 14px;font-weight:700;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .menu-panel .close-x{font-size:22px;line-height:1;cursor:pointer;color:var(--ink-soft);padding:0 4px;}
+  .menu-panel ol{margin:0;padding:0;list-style:none;counter-reset:m;}
+  .menu-panel li{counter-increment:m;border-top:1px solid var(--rule);}
+  .menu-panel li:first-child{border-top:none;}
+  .menu-panel a{
+    display:flex;gap:10px;align-items:baseline;
+    text-decoration:none;color:var(--ink);padding:11px 4px;line-height:1.3;
+  }
+  .menu-panel a:hover,.menu-panel a:focus{color:var(--accent);background:var(--card);}
+  .menu-panel a.active{color:var(--accent);font-weight:700;}
+  .menu-panel a::before{
+    content:counter(m,decimal-leading-zero);
+    font-family:var(--serif);font-weight:700;color:var(--accent);
+    font-size:13px;min-width:22px;flex-shrink:0;
+  }
+  .menu-panel .mt{flex:1;font-size:15px;}
+  .menu-panel .mr{font-size:11px;color:var(--ink-soft);white-space:nowrap;}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px 120px;}
+
+  /* ── Обложка ───────────────────────────────────────────────────────── */
+  header.cover{
+    max-width:var(--maxw);margin:0 auto;padding:74px 22px 30px;
+    text-align:left;
+  }
+  .kicker{
+    font-family:var(--sans);font-weight:700;text-transform:uppercase;
+    letter-spacing:.22em;font-size:12px;color:var(--accent);margin-bottom:18px;
+  }
+  h1.title{
+    font-family:var(--serif);font-weight:900;line-height:1.02;
+    font-size:clamp(40px,12vw,76px);margin:0 0 18px;letter-spacing:-.01em;
+  }
+  h1.title em{font-style:italic;color:var(--accent);}
+  .dek{
+    font-family:var(--serif);font-style:italic;font-size:22px;
+    color:var(--ink-soft);line-height:1.45;margin:0 0 26px;max-width:600px;
+  }
+  .meta-row{
+    display:flex;flex-wrap:wrap;gap:10px 18px;font-size:14px;
+    color:var(--ink-soft);border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);padding:16px 0;
+  }
+  .meta-row b{color:var(--ink);}
+
+  /* ── Оглавление ────────────────────────────────────────────────────── */
+  nav.toc{
+    background:var(--card);border:1px solid var(--rule);
+    border-radius:14px;padding:22px 22px 10px;margin:34px 0 10px;
+  }
+  nav.toc h2{
+    font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;
+    font-size:13px;color:var(--accent);margin:0 0 14px;font-weight:700;
+  }
+  nav.toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;}
+  nav.toc li{
+    counter-increment:toc;border-top:1px solid var(--rule);
+  }
+  nav.toc li:first-of-type{border-top:none;}
+  nav.toc a{
+    display:flex;align-items:baseline;gap:12px;
+    text-decoration:none;color:var(--ink);padding:11px 0;
+  }
+  nav.toc a:hover{color:var(--accent);}
+  nav.toc a::before{
+    content:counter(toc,decimal-leading-zero);
+    font-family:var(--serif);font-weight:700;color:var(--accent);
+    font-size:15px;min-width:26px;
+  }
+  nav.toc .t{flex:1;font-weight:500;}
+  nav.toc .rt{font-size:12px;color:var(--ink-soft);white-space:nowrap;}
+
+  /* ── Главы ─────────────────────────────────────────────────────────── */
+  section.ch{padding-top:54px;scroll-margin-top:64px;}
+  #top,#cheat{scroll-margin-top:64px;}
+  .ch-head{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:6px;}
+  .ch-num{
+    font-family:var(--serif);font-style:italic;font-size:17px;color:var(--accent);
+    margin-bottom:6px;
+  }
+  h2.ch-title{
+    font-family:var(--serif);font-weight:800;line-height:1.06;
+    font-size:clamp(28px,7vw,42px);margin:0;letter-spacing:-.01em;
+  }
+  .ch-meta{
+    display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 26px;
+  }
+  .badge{
+    font-family:var(--sans);font-size:12px;font-weight:700;
+    letter-spacing:.04em;padding:5px 11px;border-radius:20px;
+  }
+  .badge.day{background:var(--accent);color:#fff;}
+  html[data-theme="dark"] .badge.day{color:#0D1B2A;}
+  .badge.time{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);}
+
+  p{margin:0 0 20px;}
+  .ch p:first-of-type::first-letter{
+    font-family:var(--serif);font-weight:900;float:left;
+    font-size:64px;line-height:.78;padding:6px 10px 0 0;color:var(--accent);
+  }
+  a.inl{color:var(--link);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;}
+  strong{font-weight:700;}
+  em{font-style:italic;}
+  h3{
+    font-family:var(--serif);font-weight:700;font-size:24px;
+    margin:36px 0 12px;line-height:1.15;
+  }
+
+  /* Выноска-цитата */
+  blockquote{
+    margin:30px 0;padding:6px 0 6px 24px;border-left:4px solid var(--accent);
+    font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.4;
+    color:var(--ink);
+  }
+  blockquote cite{
+    display:block;font-family:var(--sans);font-style:normal;font-size:14px;
+    color:var(--ink-soft);margin-top:12px;font-weight:500;
+  }
+
+  /* Крючок-история */
+  .hook{
+    background:var(--card);border-radius:12px;padding:20px 22px;margin:28px 0;
+    border:1px solid var(--rule);
+  }
+  .hook .lbl{
+    font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;
+    font-size:11px;font-weight:700;color:var(--accent);margin-bottom:10px;
+  }
+  .hook p:last-child{margin-bottom:0;}
+
+  /* Привязка к маршруту */
+  .route{
+    display:flex;gap:13px;align-items:flex-start;
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;margin:26px 0;
+    font-size:16.5px;line-height:1.55;
+  }
+  .route .pin{font-size:22px;line-height:1.3;flex-shrink:0;}
+  .route b{color:var(--link);}
+  html[data-theme="dark"] .route b,
+  html:has(#theme-cb:checked) .route b{color:var(--accent);}
+
+  /* Факт-бокс */
+  .fact{
+    border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+    padding:16px 0;margin:26px 0;font-size:16px;color:var(--ink-soft);
+  }
+  .fact b{color:var(--ink);}
+
+  /* SVG-схемы */
+  figure{margin:32px 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;border-radius:10px;
+    background:var(--card);border:1px solid var(--rule);padding:10px;}
+  figcaption{font-size:14px;color:var(--ink-soft);margin-top:10px;font-style:italic;font-family:var(--serif);}
+
+  hr.soft{border:none;border-top:1px solid var(--rule);margin:34px 0;}
+
+  /* ── Аудиогид (озвучка голосом устройства) ─────────────────────────── */
+  .listen-btn{
+    font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:#fff;background:var(--accent);border:none;border-radius:20px;
+    padding:6px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  }
+  html:has(#theme-cb:checked) .listen-btn{color:#0D1B2A;}
+  .listen-btn:hover{filter:brightness(1.07);}
+  .listen-btn.cheat-listen{margin:4px 0 22px;}
+  /* подсветка читаемого фрагмента */
+  .speaking{
+    background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--accent);
+    border-radius:5px;transition:background .2s ease;
+  }
+  /* плавающий плеер */
+  #player{
+    position:fixed;left:50%;bottom:14px;z-index:97;width:min(94vw,560px);
+    transform:translateX(-50%) translateY(160%);
+    display:flex;align-items:center;gap:8px;
+    background:var(--navy);color:var(--cream);
+    border-radius:30px;padding:9px 12px;box-shadow:0 8px 30px rgba(0,0,0,.4);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+  }
+  html:has(#theme-cb:checked) #player{border:1px solid var(--rule);background:#08121d;}
+  #player.show{transform:translateX(-50%) translateY(0);}
+  #player button{
+    background:none;border:none;color:var(--cream);font-size:19px;cursor:pointer;
+    width:36px;height:36px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  #player button:hover{background:rgba(255,255,255,.13);}
+  #player .p-title{flex:1;font-family:var(--serif);font-style:italic;font-size:14px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e7ddcd;min-width:0;}
+  #player .p-note{font-size:11px;color:#9fb0c2;white-space:nowrap;}
+  #player .p-rate{background:rgba(255,255,255,.13);color:#fff;border-radius:15px;
+    font-family:var(--sans);font-size:12px;font-weight:700;width:auto;padding:0 11px;}
+
+  /* Шпаргалка */
+  section.cheat{
+    margin-top:64px;background:var(--navy);color:var(--cream);
+    border-radius:16px;padding:34px 26px;
+  }
+  html[data-theme="dark"] section.cheat,
+  html:has(#theme-cb:checked) section.cheat{border:1px solid var(--rule);background:#08121d;}
+  section.cheat h2{
+    font-family:var(--serif);font-weight:800;font-size:30px;margin:0 0 6px;color:var(--cream);
+  }
+  section.cheat .sub{color:#9fb0c2;font-size:14px;margin-bottom:24px;font-family:var(--sans);}
+  section.cheat h3{color:var(--orange);font-size:18px;margin:26px 0 12px;font-family:var(--sans);
+    text-transform:uppercase;letter-spacing:.1em;font-weight:700;}
+  ol.twenty{margin:0;padding-left:22px;}
+  ol.twenty li{margin-bottom:9px;line-height:1.5;color:#e7ddcd;}
+  ol.twenty li b{color:#fff;}
+  table.words{width:100%;border-collapse:collapse;font-size:15px;}
+  table.words td{padding:8px 6px;border-bottom:1px solid #243748;vertical-align:top;color:#e7ddcd;}
+  table.words td.nl{font-family:var(--serif);font-weight:700;color:#fff;white-space:nowrap;}
+  table.words td.pr{color:var(--orange);font-style:italic;white-space:nowrap;}
+
+  footer.src{margin-top:44px;font-size:13px;color:var(--ink-soft);line-height:1.6;}
+  footer.src h3{font-family:var(--sans);text-transform:uppercase;letter-spacing:.12em;
+    font-size:12px;color:var(--accent);}
+  footer.src a{color:var(--link);}
+  .back-top{display:inline-block;margin-top:18px;font-size:14px;color:var(--accent);
+    text-decoration:none;font-weight:700;}
+</style>
+</head>
+<body>
+
+<!-- управляющие чекбоксы (тема и меню) — работают без JS -->
+<input type="checkbox" id="theme-cb" aria-hidden="true" tabindex="-1">
+<input type="checkbox" id="nav-cb" aria-hidden="true" tabindex="-1">
+
+<!-- верхняя панель -->
+<div class="topbar">
+  <label class="ctrl" for="nav-cb" role="button" aria-label="Открыть меню глав">☰&nbsp;Главы</label>
+  <span class="here" id="here">Погружение в Нидерланды</span>
+  <span class="spacer"></span>
+  <span class="ctrl" id="pct">0%</span>
+  <label class="ctrl" for="theme-cb" role="button" aria-label="Переключить тему">
+    <span class="l-light">🌙&nbsp;Тёмная</span><span class="l-dark">☀️&nbsp;Светлая</span>
+  </label>
+</div>
+<div id="progress"></div>
+
+<!-- выезжающее меню глав -->
+<label class="menu-backdrop" for="nav-cb" aria-hidden="true"></label>
+<aside class="menu-panel" id="menu" aria-label="Главы">
+  <h2>Маршрут чтения <label class="close-x" for="nav-cb" role="button" aria-label="Закрыть">✕</label></h2>
+  <ol>
+    <li><a href="#ch1"><span class="mt">Имя и карта</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#ch2"><span class="mt">Вода как политика</span><span class="mr">8 мин</span></a></li>
+    <li><a href="#ch3"><span class="mt">Золотой век и тьма</span><span class="mr">8 мин</span></a></li>
+    <li><a href="#ch4"><span class="mt">Миф о толерантности</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#ch5"><span class="mt">Политика сейчас (2026)</span><span class="mr">8 мин</span></a></li>
+    <li><a href="#ch6"><span class="mt">Велосипед как победа</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#ch7"><span class="mt">Амстердам изнутри</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#ch8"><span class="mt">Ван Гог в лесу</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#ch9"><span class="mt">Роттердам</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#ch10"><span class="mt">Утрехт</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#ch11"><span class="mt">Повседневный код</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#ch12"><span class="mt">Прямо сейчас</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#cheat"><span class="mt">🛏 Шпаргалка</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#top"><span class="mt">↑ В начало</span><span class="mr"></span></a></li>
+  </ol>
+</aside>
+
+<header class="cover" id="top">
+  <div class="kicker">Лонгрид для поезда · читать офлайн · 11–15 июня 2026</div>
+  <h1 class="title">Погружение<br>в <em>Нидерланды</em></h1>
+  <p class="dek">Не «10 фактов о тюльпанах», а взрослый разговор о стране, которую построили вопреки морю, истории и здравому смыслу. Для тех, кто думает про политику, города и кадр.</p>
+  <div class="meta-row">
+    <span>⏱ <b>~75 минут</b> суммарно</span>
+    <span>📖 <b>12 глав</b> по 5–10 мин</span>
+    <span>🚲 <b>База:</b> Overtoom 57, Oud-West</span>
+    <span>📶 <b>Работает офлайн</b></span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="toc">
+    <h2>Маршрут чтения</h2>
+    <ol>
+      <li><a href="#ch1"><span class="t">Имя и карта: почему Holland ≠ Netherlands</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#ch2"><span class="t">Вода как политическая система</span><span class="rt">8 мин</span></a></li>
+      <li><a href="#ch3"><span class="t">Золотой век и его тёмная сторона</span><span class="rt">8 мин</span></a></li>
+      <li><a href="#ch4"><span class="t">Миф о толерантности</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#ch5"><span class="t">Политика сейчас: кто у власти в июне 2026</span><span class="rt">8 мин</span></a></li>
+      <li><a href="#ch6"><span class="t">Велосипед как политическое достижение</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#ch7"><span class="t">Амстердам изнутри: каналы, кризис, овертуризм</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#ch8"><span class="t">Ван Гог и Хелена Крёллер-Мюллер</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#ch9"><span class="t">Роттердам: травма, ставшая архитектурой</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#ch10"><span class="t">Утрехт и «не-Амстердам»</span><span class="rt">5 мин</span></a></li>
+      <li><a href="#ch11"><span class="t">Повседневный код: gezelligheid и селёдка</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#ch12"><span class="t">Что происходит прямо сейчас</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#cheat"><span class="t">🛏 Шпаргалка перед сном</span><span class="rt">5 мин</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- ════════════════════ ГЛАВА 1 ════════════════════ -->
+  <section class="ch" id="ch1">
+    <div class="ch-head">
+      <div class="ch-num">Глава первая</div>
+      <h2 class="ch-title">Имя и карта</h2>
+    </div>
+    <div class="ch-meta">
+      <span class="badge day">контекст для всех дней</span>
+      <span class="badge time">⏱ 6 мин</span>
+    </div>
+
+    <p>Начнём со скандала, который вы устроите, сами того не зная. Когда вы скажете местному «как мне нравится у вас в Голландии», человек из Утрехта или Маастрихта вежливо улыбнётся, но внутри слегка поморщится — примерно как минчанин, которого назвали россиянином. <strong>Holland</strong> — это две из двенадцати провинций страны: Северная и Южная Голландия, узкая полоса вдоль моря, где сидят Амстердам, Гаага и Роттердам. <strong>Nederland</strong> (буквально «низкая земля») — это всё государство целиком. То, что часть стала называть целым, — не случайность, а след того самого Золотого века: именно приморская Голландия делала деньги, корабли и картины, и для иностранца XVII века «Голландия» и была страной.</p>
+
+    <p>В 2020 году правительство официально попросило перестать продвигать страну как «Holland»: туристический бренд, спортивные федерации, министерства — все перешли на <em>the Netherlands</em>. Решение было наполовину про идентичность провинций, наполовину — про маркетинг: «Голландия» в голове иностранца это кофешопы и Квартал красных фонарей, а страна хотела продавать себя как родину дизайна, воды и хай-тека. Вот вам первая тема, которая будет возвращаться весь маршрут: <strong>в Нидерландах самопрезентация — всегда немного политика</strong>.</p>
+
+    <h3>Что такое «низкие земли»</h3>
+    <p>Название — не метафора. Около четверти страны лежит <em>ниже</em> уровня моря, а примерно половина — меньше чем на метр выше. Самая низкая точка, Зюйдпласполдер под Роттердамом, — почти семь метров под уровнем моря. Это значит, что без насосов, дамб и плотин значительная часть того, по чему вы будете ехать на велосипеде в пятницу, просто стояла бы под водой. Запомните это ощущение: вы будете крутить педали по дну бывшего моря. Об этом — вся вторая глава.</p>
+
+    <div class="route">
+      <span class="pin">📍</span>
+      <div>Ваша квартира на <b>Overtoom</b> — это уже подсказка. Overtoom когда-то был «волоком»: место, где лодки перетаскивали через дамбу из одного канала в другой, потому что прямого водного хода не было. Улицу засыпали только в начале XX века. Вы живёте на бывшей воде — как почти все в этом городе.</div>
+    </div>
+
+    <h3>Рандстад: один город, который притворяется четырьмя</h3>
+    <p>Теперь главная карта, которую стоит держать в голове всю поездку. Амстердам, Гаага, Роттердам и Утрехт образуют подкову вокруг зелёной сельской сердцевины — её называют <strong>Randstad</strong> («город-кольцо»), и в ней живёт около 8 миллионов человек, почти половина страны. По плотности связей это фактически один мегаполис: вы за полчаса-час на поезде перемещаетесь между «городами», как между районами. Сельская дырка внутри кольца называется <em>Het Groene Hart</em> — «Зелёное сердце», и её сознательно защищают от застройки. Это уже урбанистическое решение: вместо одного расплывающегося монстра — несколько компактных центров и охраняемая пустота между ними.</p>
+
+    <figure>
+      <svg viewBox="0 0 440 300" role="img" aria-label="Схема Рандстада">
+        <rect x="0" y="0" width="440" height="300" fill="none"/>
+        <ellipse cx="220" cy="155" rx="150" ry="105" fill="#bcd9b8" opacity="0.5"/>
+        <text x="220" y="160" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="17" fill="#3a6b34">Groene Hart</text>
+        <text x="220" y="180" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="11" fill="#3a6b34">«зелёное сердце» — защищено от застройки</text>
+        <!-- города -->
+        <g font-family="DM Sans, sans-serif" font-size="13" font-weight="700">
+          <circle cx="245" cy="60" r="9" fill="#E8631A"/>
+          <text x="245" y="46" text-anchor="middle" fill="#0D1B2A">Амстердам</text>
+          <circle cx="95" cy="150" r="8" fill="#0D1B2A"/>
+          <text x="95" y="135" text-anchor="middle" fill="#0D1B2A">Гаага</text>
+          <circle cx="130" cy="235" r="8" fill="#0D1B2A"/>
+          <text x="130" y="258" text-anchor="middle" fill="#0D1B2A">Роттердам</text>
+          <circle cx="345" cy="170" r="8" fill="#0D1B2A"/>
+          <text x="345" y="155" text-anchor="middle" fill="#0D1B2A">Утрехт</text>
+        </g>
+        <!-- связи -->
+        <g stroke="#E8631A" stroke-width="2" stroke-dasharray="5 4" fill="none" opacity="0.8">
+          <path d="M245 69 Q 320 110 345 162"/>
+          <path d="M345 178 Q 250 250 138 235"/>
+          <path d="M122 235 Q 80 195 95 158"/>
+          <path d="M103 145 Q 180 70 236 60"/>
+        </g>
+        <text x="220" y="290" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#888">пунктир — 30–60 мин на поезде между «районами» одного мегаполиса</text>
+      </svg>
+      <figcaption>Рандстад: четыре центра вокруг охраняемой зелёной пустоты. За поездку вы пройдёте три угла из четырёх.</figcaption>
+    </figure>
+
+    <p>Почему это важно вам как людям из медиа и кампаний: Рандстад — редкий пример того, как страна сознательно <em>отказалась</em> от логики одной столицы, которая высасывает всё. Амстердам — столица по конституции, но правительство и король сидят в Гааге, главный порт — в Роттердаме, железнодорожный узел и многие штаб-квартиры — в Утрехте. Власть, деньги, символика и логистика намеренно разнесены. Держите этот контраст в уме к пятой главе, где будет разговор про то, как устроена голландская политика — она тоже про <em>распределение</em>, а не концентрацию.</p>
+
+    <blockquote>«Голландия» — это бренд. «Нидерланды» — это страна. А «Рандстад» — это то, как они на самом деле живут.</blockquote>
+  </section>
+
+  <!-- ════════════════════ ГЛАВА 2 ════════════════════ -->
+  <section class="ch" id="ch2">
+    <div class="ch-head">
+      <div class="ch-num">Глава вторая</div>
+      <h2 class="ch-title">Вода как политическая система</h2>
+    </div>
+    <div class="ch-meta">
+      <span class="badge day">увидите в пятницу · велодень Waterland</span>
+      <span class="badge time">⏱ 8 мин</span>
+    </div>
+
+    <p>Есть фраза, которую голландцы повторяют с такой смесью гордости и иронии, что её стоит расшифровать: <em>«God schiep de wereld, maar de Nederlanders schiepen Nederland»</em> — «Бог создал мир, а Нидерланды создали голландцы». Это не похвальба. Это буквальное техническое описание. Половина страны — рукотворная. И, что для вас важнее, <strong>борьба с водой породила здесь демократию раньше, чем в большинстве Европы</strong> — не из идеалов, а из инженерной необходимости.</p>
+
+    <h3>Польдер: машина из земли</h3>
+    <p>Польдер — это участок суши, отвоёванный у воды и огороженный дамбой, внутри которого уровень воды держат искусственно: дренажные каналы собирают воду, насосы (раньше — ветряные мельницы) перекачивают её через дамбу наружу. Стоит насосам встать на несколько дней — польдер тонет. Теперь ключевая мысль: <strong>польдер невозможно поддерживать в одиночку</strong>. Если ваш сосед не чинит свой участок дамбы, тонете вы оба. Вода не признаёт частной собственности и не интересуется тем, кто богаче. Поэтому ещё в XIII веке крестьяне и землевладельцы были вынуждены договариваться, скидываться и подчиняться общим правилам — независимо от сословия.</p>
+
+    <figure>
+      <svg viewBox="0 0 460 230" role="img" aria-label="Разрез польдера">
+        <defs></defs>
+        <rect x="0" y="0" width="460" height="230" fill="none"/>
+        <!-- море -->
+        <rect x="0" y="60" width="120" height="120" fill="#3d7ea6" opacity="0.85"/>
+        <text x="55" y="100" text-anchor="middle" font-family="DM Sans" font-size="12" fill="#fff" font-weight="700">МОРЕ</text>
+        <path d="M0 70 q 15 -6 30 0 t 30 0 t 30 0 t 30 0" stroke="#fff" fill="none" opacity="0.5"/>
+        <!-- дамба -->
+        <path d="M120 180 L150 60 L180 180 Z" fill="#7a6a4f"/>
+        <text x="150" y="200" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#7a6a4f" font-weight="700">дамба</text>
+        <!-- польдер ниже уровня моря -->
+        <rect x="180" y="120" width="280" height="60" fill="#9ec089"/>
+        <rect x="180" y="115" width="280" height="5" fill="#6f9a57"/>
+        <text x="320" y="155" text-anchor="middle" font-family="DM Sans" font-size="12" fill="#2e4a1f" font-weight="700">ПОЛЬДЕР (ниже уровня моря)</text>
+        <!-- уровень моря пунктир -->
+        <line x1="180" y1="80" x2="460" y2="80" stroke="#3d7ea6" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <text x="455" y="74" text-anchor="end" font-family="DM Sans" font-size="10" fill="#3d7ea6">уровень моря</text>
+        <!-- мельница/насос -->
+        <rect x="210" y="92" width="14" height="28" fill="#5b4632"/>
+        <g stroke="#5b4632" stroke-width="3">
+          <line x1="217" y1="92" x2="217" y2="70"/>
+          <line x1="217" y1="92" x2="239" y2="92"/>
+          <line x1="217" y1="92" x2="195" y2="92"/>
+        </g>
+        <text x="217" y="135" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#5b4632">насос ↑ воду наружу</text>
+        <!-- стрелка перекачки -->
+        <path d="M205 110 Q 165 110 150 95" stroke="#E8631A" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+        <defs><marker id="a" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#E8631A"/></marker></defs>
+      </svg>
+      <figcaption>Польдер — это насос размером с пейзаж. Уровень воды внутри держат вручную, иначе земля уходит под море.</figcaption>
+    </figure>
+
+    <h3>Waterschappen: старейшая демократия Европы</h3>
+    <p>Из этой необходимости выросли <strong>waterschappen</strong> — «водные советы», органы управления водой с собственными выборами, бюджетом и налогами. Старейшие — вроде <em>Hoogheemraadschap van Rijnland</em> — отсчитывают историю с XIII века (около 1255 года). Это, по распространённому утверждению, древнейшие непрерывно действующие демократические институты Европы: они старше, чем почти все национальные парламенты. И они не музейный экспонат — <strong>в 2023 году в Нидерландах проходили обычные выборы в водные советы</strong>, со списками, дебатами и явкой. Граждане голосуют за тех, кто управляет дамбами и качеством воды, и платят отдельный «водный налог».</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · парадокс</div>
+      <p>Вдумайтесь в это профессионально, вы же про устройство общества: тут демократия родилась не из философии прав человека и не из революции, а из того, что <strong>вода не делает различий между богатым и бедным</strong>. Перед наводнением все равны буквально, технически. Историки даже спорят, не отсюда ли знаменитый голландский эгалитаризм и привычка к консенсусу (помните это слово — оно вернётся в главе про политику как <em>polder model</em>). «Договориться или утонуть» — это не метафора. Это был выбор.</p>
+    </div>
+
+    <h3>Бывшее море, по которому вы поедете</h3>
+    <p>В пятницу вы садитесь на бесплатный паром через залив IJ за центральным вокзалом и попадаете в <strong>Waterland</strong> — землю дамб, каналов и деревень на сваях. Дорога Дюргердам → дамба Уйтдам → Моннендам → Волендам идёт вдоль воды, которая называется <strong>Markermeer</strong>. И вот сюрприз: ещё сто лет назад это было <em>солёное море</em> — залив Зёйдерзе (Zuiderzee), открытый в Северное море.</p>
+
+    <p>В 1932 году голландцы закончили <strong>Afsluitdijk</strong> — «Замыкающую дамбу» длиной 32 километра, которая наглухо отрезала Зёйдерзе от моря. Постепенно дожди и реки опреснили отгороженный залив, и он стал пресным озером <em>IJsselmeer</em>. Позже его перегородили ещё раз дамбой Houtribdijk (1976), и южная часть стала отдельным озером — тем самым Маркермеер. Вывод, который стоит прочувствовать, глядя на воду с велосипеда: <strong>вы едете вдоль рукотворного озера, которое голландцы сделали из настоящего моря, просто перегородив его</strong>. А целая провинция по ту сторону — Флеволанд — это и вовсе бывшее дно, осушенное и заселённое; она стала провинцией только в 1986 году. Самая новая земля в Европе моложе многих читателей этого текста.</p>
+
+    <div class="route">
+      <span class="pin">🚲</span>
+      <div>На дамбе <b>Уйтдам</b> между Дюргердамом и Моннендамом остановитесь и посмотрите на воду по обе стороны: справа — Маркермеер (бывшее море), слева — польдер, который <em>ниже</em>, чем вода справа. Вы стоите на тонкой границе между двумя уровнями. Это и есть вся страна в одном кадре — отличный план для видео, кстати: один проезд камеры поперёк дамбы рассказывает всю драму.</div>
+    </div>
+
+    <h3>1953 год, Дельта-проект и климат сегодня</h3>
+    <p>Договариваться о воде здесь умеют не только в мирное время. В ночь на <strong>1 февраля 1953 года</strong> шторм с приливом прорвал дамбы на юго-западе: погибло около 1836 человек, затопило огромные территории. Травма была национальной — и ответом стал <strong>Дельта-проект (Deltawerken)</strong>, система барьеров и шлюзов, которую называют одним из чудес инженерии XX века. Его жемчужина — <em>Maeslantkering</em> под Роттердамом: два гигантских подвижных щита размером с Эйфелеву башню каждый, которые автоматически закрывают вход в порт при угрозе шторма. Вы будете совсем рядом с этой логикой в понедельник.</p>
+
+    <p>А теперь честно про сегодня. Подъём уровня моря и климат — для Нидерландов не абстракция из новостей, а экзистенциальный вопрос. Страна перешла от философии «строить стену выше» к идее <strong>«Room for the River»</strong> («место для реки») — местами специально дают воде разливаться, отселяют людей, делают польдеры-«предохранители». Это редкий пример государства, которое планирует не на годы, а на век вперёд и спорит о климате не «верю/не верю», а «на сколько сантиметров и за чей счёт». Когда в пятой главе будете читать про политику — держите в уме, что вода здесь — это не экология как хобби, а вопрос физического выживания территории.</p>
+
+    <blockquote>Остальная Европа спорит, существует ли климатический кризис. Нидерланды спорят, какой высоты должна быть дамба к 2125 году.</blockquote>
+  </section>
+
+  <!-- ════════════════════ ГЛАВА 3 ════════════════════ -->
+  <section class="ch" id="ch3">
+    <div class="ch-head">
+      <div class="ch-num">Глава третья</div>
+      <h2 class="ch-title">Золотой век и его тёмная сторона</h2>
+    </div>
+    <div class="ch-meta">
+      <span class="badge day">фон для субботы и Рейксмузеума</span>
+      <span class="badge time">⏱ 8 мин</span>
+    </div>
+
+    <p>В XVII веке крошечная республика на болоте вдруг стала богатейшим обществом планеты. Её корабли ходили от Нагасаки до Манхэттена (да, Нью-Йорк начинался как Новый Амстердам), её банки изобрели финансовый капитализм, её художники написали столько картин, что ими были увешаны дома сапожников. Это и есть <strong>Gouden Eeuw</strong>, Золотой век. И весь он держался на двух вещах, о которых здесь принято говорить вместе: на гениальной финансовой машине — и на рабстве.</p>
+
+    <h3>VOC: первая в мире корпорация</h3>
+    <p>В 1602 году была основана <strong>Vereenigde Oostindische Compagnie (VOC)</strong> — Голландская Ост-Индская компания. Это не просто «старая торговая фирма». Это первая в истории компания, которая <strong>продала акции широкой публике</strong> и торговала ими на постоянной бирже — Амстердамская биржа стала первым в мире фондовым рынком. VOC выпускала облигации, платила дивиденды, имела совет директоров — словом, изобрела почти всё, что сегодня называется «публичная компания». При этом у неё были собственная армия, флот и право объявлять войну и подписывать договоры от имени государства. Представьте корпорацию с правом вести войны — и вы поймёте, почему историки называют VOC прообразом и Google, и колониальной империи одновременно.</p>
+
+    <figure>
+      <svg viewBox="0 0 460 240" role="img" aria-label="Взлёт и падение VOC">
+        <rect x="0" y="0" width="460" height="240" fill="none"/>
+        <line x1="50" y1="200" x2="440" y2="200" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+        <line x1="50" y1="200" x2="50" y2="25" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+        <!-- кривая -->
+        <path d="M50 195 C 120 185, 150 70, 230 55 C 300 45, 340 130, 440 195" fill="none" stroke="#E8631A" stroke-width="3"/>
+        <!-- точки -->
+        <g font-family="DM Sans" font-size="11">
+          <circle cx="50" cy="195" r="4" fill="#E8631A"/><text x="50" y="218" text-anchor="middle" fill="currentColor">1602</text>
+          <text x="50" y="232" text-anchor="middle" fill="currentColor" opacity="0.6">основание</text>
+          <circle cx="230" cy="55" r="4" fill="#E8631A"/><text x="230" y="44" text-anchor="middle" fill="currentColor">~1670</text>
+          <text x="230" y="30" text-anchor="middle" fill="currentColor" opacity="0.6">пик: ~50 000 служащих, флот в сотни судов</text>
+          <circle cx="440" cy="195" r="4" fill="#E8631A"/><text x="440" y="218" text-anchor="middle" fill="currentColor">1799</text>
+          <text x="440" y="232" text-anchor="middle" fill="currentColor" opacity="0.6">банкрот</text>
+        </g>
+        <text x="248" y="180" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="14" fill="#E8631A">коррупция, долги, конкуренция англичан</text>
+      </svg>
+      <figcaption>Два века VOC: от первой публичной акции до банкротства. Аббревиатуру вы увидите выбитой на фронтонах складов вдоль каналов.</figcaption>
+    </figure>
+
+    <h3>Рембрандт и рынок, который создал гения</h3>
+    <p>Богатство хлынуло в искусство — но не так, как в католической Италии, где платили церковь и князья. В протестантской республике картины покупал средний класс: купцы, врачи, ремесленники. Возник первый в истории массовый <strong>арт-рынок</strong>: по оценкам, за столетие в стране написали несколько <em>миллионов</em> картин. Художник стал предпринимателем, реагирующим на спрос, — отсюда жанры «на любой кошелёк»: натюрморты, пейзажи, бытовые сценки.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · человек</div>
+      <p>Рембрандт ван Рейн был суперзвездой и при этом — финансовой катастрофой. Он гениально считывал свет и совершенно не умел считать деньги: накупил дом не по средствам, коллекционировал диковины, и в 1656 году объявил о неплатёжеспособности — имущество распродали с молотка. «Ночной дозор» (1642) ему заказала гильдия стрелков как групповой портрет; есть стойкая легенда, что заказчики были недовольны (мол, кого-то задвинул в тень) — историки считают это мифом, но миф живуч, потому что слишком хорош. Умер Рембрандт в 1669-м, небогатым, в Йордане. <strong>Величайший художник Золотого века кончил банкротом — отличная рифма к тому, что и сам Золотой век был во многом про деньги и про то, как легко их потерять.</strong></p>
+    </div>
+
+    <h3>Тёмная сторона: рабство и колонии</h3>
+    <p>Теперь то, о чём в школьных версиях молчали полвека, а сейчас говорят на государственном уровне. Голландская Вест-Индская компания (WIC, 1621) и плантации в Суринаме и на Карибах работали на труде порабощённых африканцев. По оценкам, голландцы перевезли через Атлантику <strong>около 600 000 человек</strong>, не считая работорговли в Азии. Сахар, кофе и какао, на которых росли состояния амстердамских семей, чьи дома вы увидите на каналах, — это в значительной мере прибыль с рабовладельческих плантаций. Рабство в голландских колониях отменили только в <strong>1863 году</strong>, причём с десятилетним «переходным» периодом принудительного труда — реальная свобода пришла в <strong>1873-м</strong>.</p>
+
+    <h3>Как страна это сейчас проговаривает</h3>
+    <p>Самое интересное для вас — не сам факт, а то, как общество с ним работает <em>сегодня</em>. Это происходит на ваших глазах, в реальном времени:</p>
+    <ul>
+      <li>В <strong>2021 году</strong> Рейксмузеум — главный храм национальной гордости — провёл большую выставку <em>«Slavernij» («Рабство»)</em>, рассказав историю через десять конкретных судеб. Для главного музея страны это был тектонический сдвиг.</li>
+      <li>В том же году мэр Амстердама Фемке Халсема <strong>извинилась</strong> от имени города за участие в работорговле.</li>
+      <li>В декабре <strong>2022-го</strong> премьер Марк Рютте принёс национальные извинения от имени государства.</li>
+      <li>1 июля <strong>2023 года</strong> на празднике <em>Keti Koti</em> («цепь разорвана») в амстердамском Остерпарке <strong>король Виллем-Александр публично извинился</strong> за роль Нидерландов и собственных предков в рабстве и попросил прощения за «преступление против человечности». Король также заказал исследование о причастности Дома Оранских к работорговле (ранее уже подсчитали, что монархия заработала на ней эквивалент сотен миллионов евро).</li>
+    </ul>
+
+    <div class="route">
+      <span class="pin">🖼</span>
+      <div>Если в субботу выберетесь к Рейксмузеуму или будете гулять по «золотой излучине» Херенграхта — приглядитесь к табличкам и фронтонам. Город сейчас методично <b>маркирует</b> здания, связанные с рабством, добавляет контекст к памятникам, переписывает экспликации. Это живой кейс «работы с прошлым» — ровно ваша профессиональная тема. Сравните мысленно с тем, как (не) проговаривается имперское прошлое в других странах, которые вам близки.</div>
+    </div>
+
+    <blockquote>Золотой век дал миру фондовую биржу, Рембрандта и сахар. Все три — об одном и том же: о деньгах, и о том, чьими руками они сделаны.</blockquote>
+  </section>
+
+  <!-- ════════════════════ ГЛАВА 4 ════════════════════ -->
+  <section class="ch" id="ch4">
+    <div class="ch-head">
+      <div class="ch-num">Глава четвёртая</div>
+      <h2 class="ch-title">Миф о толерантности</h2>
+    </div>
+    <div class="ch-meta">
+      <span class="badge day">контекст для Амстердама</span>
+      <span class="badge time">⏱ 7 мин</span>
+    </div>
+
+    <p>Нидерланды продали миру образ страны всеобщего «можно»: лёгкие наркотики, эвтаназия, однополые браки, Квартал красных фонарей. Но если копнуть, под этим лежит не вседозволенность, а очень специфическая, почти иезуитски тонкая правовая конструкция, которой нет точного перевода: <strong>gedoogbeleid</strong> — «политика терпимого попустительства». И понимание её разницы с «разрешено» — ключ ко всему голландскому отношению к свободе.</p>
+
+    <h3>Gedogen: «запрещено, но мы смотрим в сторону»</h3>
+    <p>Буквально <em>gedogen</em> значит «терпеть, попускать». Юридически это значит: деяние формально остаётся <strong>незаконным</strong>, но государство официально и письменно решает <em>не преследовать</em> его при соблюдении условий. Классический пример — кофешопы. Продажа каннабиса в Нидерландах <strong>не легализована</strong>. Она «терпится»: кофешоп может продать вам до 5 граммов, и его за это не тронут, — но вот <em>откуда</em> кофешоп берёт товар, закон не разрешил никак.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · абсурд системы</div>
+      <p>Это породило знаменитую «проблему задней двери» (<em>achterdeurprobleem</em>): продавать через парадную дверь — терпимо, а вот закупать через заднюю — по-прежнему уголовка. То есть кофешоп легально продаёт то, что нелегально купил. Полвека вся отрасль жила в этом логическом противоречии. Только недавно государство запустило контролируемый <strong>эксперимент с легальной цепочкой поставок</strong> в нескольких городах — попытка наконец «закрыть заднюю дверь». Идеальная иллюстрация того, что gedoogbeleid — это не свобода, а управляемая неопределённость.</p>
+    </div>
+
+    <h3>Почему трюфели легальны, а грибы — нет</h3>
+    <p>Любимый пример того, как тонко тут проведены границы. Псилоцибиновые <strong>грибы</strong> запретили в 2008 году — после того как в 2007-м туристка под их действием спрыгнула с крыши в Амстердаме. Запретили конкретно грибы — плодовые тела. Но психоактивный <strong>трюфель</strong> (склероций, подземная часть того же организма) в список запрещённого <em>не попал</em> — и потому его до сих пор легально продают в смартшопах. Один и тот же гриб: одна его часть вне закона, другая лежит на витрине. Это и есть голландский подход к регулированию в чистом виде: не запрещают «явление», а очень буквально перечисляют, что именно нельзя — а остальное живёт в щели.</p>
+
+    <h3>Эвтаназия: терпимость как ответственность</h3>
+    <p>Нидерланды стали <strong>первой страной в мире, легализовавшей эвтаназию</strong> (2002). И вот тут «толерантность» оборачивается своей серьёзной стороной: это не «делай что хочешь», а жёстко обставленная процедура. Нужны невыносимые страдания без перспективы улучшения, добровольная и осознанная просьба, второе независимое врачебное мнение и проверка специальной комиссией <em>после</em>. Это не либертарианское «моя жизнь — моё дело», а коллективно выстроенный, контролируемый институт. Та же логика, что и в водных советах: общество берёт сложное и опасное и не отворачивается, а <em>регулирует</em>.</p>
+
+    <h3>Терпимость ≠ одобрение</h3>
+    <p>Вот сердцевина главы. Голландская модель никогда не говорила «это хорошо». Она говорила «это <em>есть</em>, оно всё равно будет, так давайте выведем это на свет и поставим под контроль, чтобы было меньше вреда». Это прагматизм кальвинистского торгового народа, а не гедонизм. Отсюда исторические «терпимые» практики ещё с XVII века — например, тайные католические церкви в протестантской республике: верить «неправильно» было нельзя, но если тихо и не напоказ — смотрели в сторону.</p>
+
+    <div class="route">
+      <span class="pin">⛪</span>
+      <div>В субботу во дворе <b>Бегейнхоф</b> вы стоите ровно на материальном следе этой логики. Там есть скромная <b>«скрытая церковь»</b> (schuilkerk) — католическая капелла, замаскированная под обычный дом, потому что открыто служить мессу было запрещено. «Нельзя, но если тихо — мы не заметим» — это gedogen за три века до кофешопов. Один и тот же национальный приём, просто про разные грехи.</div>
+    </div>
+
+    <h3>Где трещины</h3>
+    <p>Честно: модель скрипит. Квартал красных фонарей (проституция легализована в 2000-м) город сейчас пытается <strong>сократить и вынести</strong> — мэрия годами продвигает идею «эротического центра» на окраине, потому что центр задыхается от секс-туризма. Кофешопы в приграничных городах ограничивают для иностранцев. А на политическом уровне сам дух «живи и дай жить другим» проверяется на прочность подъёмом правого популизма — об этом ровно следующая глава. Иронично: страна, ставшая всемирным символом терпимости, последнее десятилетие мучительно спорит о том, до какого предела эта терпимость распространяется на новых соседей. <strong>Толерантность как национальный бренд и толерантность как ежедневная практика — это, оказывается, очень разные вещи.</strong></p>
+
+    <blockquote>Голландское «можно» почти всегда означает «нельзя, но мы решили этого не замечать — пока вы соблюдаете правила».</blockquote>
+  </section>
+
+  <!-- ════════════════════ ГЛАВА 5 ════════════════════ -->
+  <section class="ch" id="ch5">
+    <div class="ch-head">
+      <div class="ch-num">Глава пятая</div>
+      <h2 class="ch-title">Политика сейчас: кто у власти в июне 2026</h2>
+    </div>
+    <div class="ch-meta">
+      <span class="badge day">актуально на вашу поездку</span>
+      <span class="badge time">⏱ 8 мин</span>
+    </div>
+
+    <p>Эту главу я специально сверял со свежими новостями, потому что в Нидерландах за последний год сменилось всё. Если коротко: страна только что прошла досрочные выборы, получила самого молодого премьера в своей истории — и при этом правительство, которое управляет страной во время вашей поездки, по сути <em>не имеет большинства</em> в парламенте. Чтобы понять, почему это нормально, а не кризис, начнём с устройства.</p>
+
+    <h3>Почему здесь всегда коалиция</h3>
+    <p>Нижняя палата (<em>Tweede Kamer</em>) — 150 мест, и они распределяются по <strong>чистейшей пропорциональной системе</strong>: получил 1/150 голосов — получил кресло. Никакого проходного барьера в привычном виде, никаких округов «победитель забирает всё». Результат: в парламенте обычно <em>15–20 партий</em>, и ни одна никогда не получает большинства. Поэтому правительство в Нидерландах — это всегда <strong>коалиция</strong>, которую собирают месяцами после выборов в ходе мучительных переговоров (<em>formatie</em>) с участием особых посредников — <em>informateur</em> и <em>formateur</em>. То, что у нас назвали бы «политическим кризисом» («полгода без правительства!»), здесь — штатная процедура.</p>
+
+    <h3>Polder model: консенсус как национальный спорт</h3>
+    <p>Помните водные советы из второй главы — «договориться или утонуть»? Их прямой потомок в политике называется <strong>poldermodel</strong>: культура управления через бесконечный поиск компромисса между правительством, профсоюзами, работодателями и партиями. Решения принимают не голосованием 51 на 49, а долгим перемалыванием, пока не получится вариант, с которым все способны жить. Это медленно, иногда душно, над этим смеются сами голландцы — но это национальный механизм по умолчанию. <strong>Власть здесь устроена так, чтобы её было трудно сконцентрировать в одних руках.</strong> Для вас, людей, профессионально чувствительных к разнице между демократией и её имитацией, это важнейший контраст: тут вся машина спроектирована против «вертикали».</p>
+
+    <figure>
+      <svg viewBox="0 0 460 250" role="img" aria-label="Состав парламента и коалиция">
+        <rect x="0" y="0" width="460" height="250" fill="none"/>
+        <text x="230" y="24" text-anchor="middle" font-family="Playfair Display, serif" font-weight="700" font-size="16" fill="currentColor">Выборы 29 октября 2025 · 150 мест</text>
+        <!-- bars -->
+        <g font-family="DM Sans" font-size="12">
+          <!-- D66 -->
+          <rect x="160" y="44" width="160" height="20" fill="#E8631A"/><text x="150" y="59" text-anchor="end" fill="currentColor">D66</text><text x="326" y="59" fill="currentColor">26</text>
+          <!-- PVV -->
+          <rect x="160" y="70" width="160" height="20" fill="#7a8aa0"/><text x="150" y="85" text-anchor="end" fill="currentColor">PVV (Вилдерс)</text><text x="326" y="85" fill="currentColor">26</text>
+          <!-- VVD -->
+          <rect x="160" y="96" width="135" height="20" fill="#E8631A" opacity="0.7"/><text x="150" y="111" text-anchor="end" fill="currentColor">VVD</text><text x="301" y="111" fill="currentColor">~22</text>
+          <!-- CDA -->
+          <rect x="160" y="122" width="110" height="20" fill="#E8631A" opacity="0.5"/><text x="150" y="137" text-anchor="end" fill="currentColor">CDA</text><text x="276" y="137" fill="currentColor">~18</text>
+          <text x="150" y="163" text-anchor="end" fill="currentColor" opacity="0.6">…ещё десяток партий</text>
+          <rect x="160" y="150" width="200" height="14" fill="currentColor" opacity="0.2"/>
+        </g>
+        <!-- coalition bracket -->
+        <path d="M335 44 q 12 0 12 12 v 74 q 0 12 12 12" fill="none" stroke="#0D1B2A" stroke-width="2"/>
+        <text x="368" y="100" font-family="DM Sans" font-size="12" font-weight="700" fill="#E8631A">коалиция</text>
+        <text x="368" y="116" font-family="DM Sans" font-size="12" font-weight="700" fill="#E8631A">D66+VVD+CDA</text>
+        <text x="368" y="132" font-family="DM Sans" font-size="12" fill="currentColor">= 66 мест</text>
+        <text x="230" y="200" text-anchor="middle" font-family="DM Sans" font-size="13" fill="currentColor">Большинство = 76. У коалиции — 66.</text>
+        <text x="230" y="222" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="15" fill="#E8631A">Это меньшинство: каждый закон надо выторговывать.</text>
+        <text x="230" y="242" text-anchor="middle" font-family="DM Sans" font-size="10" fill="currentColor" opacity="0.55">места указаны приблизительно для VVD/CDA</text>
+      </svg>
+      <figcaption>Парламент-2025: D66 и PVV сравнялись по 26 мест. Правящая тройка набирает лишь 66 — отсюда правительство меньшинства.</figcaption>
+    </figure>
+
+    <h3>Что произошло на выборах и кто у власти сейчас</h3>
+    <p>Предыстория драматичная. После выборов 2023 года к власти впервые пришла коалиция с участием крайне правой <strong>PVV Герта Вилдерса</strong> (того самого, с антиисламской риторикой) — кабинет Схоофа. Он развалился летом 2025-го, когда Вилдерс вышел из коалиции. Назначили <strong>досрочные выборы — 29 октября 2025 года</strong>. Результат стал сенсацией:</p>
+    <ul>
+      <li>Социал-либеральная <strong>D66</strong> и правопопулистская <strong>PVV</strong> <em>сравнялись</em> — по 26 мест каждая. Для D66 это лучший результат в истории; рывок объясняют усталостью от хаоса и ставкой на молодого харизматичного лидера.</li>
+      <li>Партии прежнего кабинета — PVV, VVD, NSC, BBB — все потеряли мандаты. Особенно показательно рухнула <strong>NSC</strong> (год назад набравшая 20 мест) — она лишилась <em>всех</em> до единого. Голландский избиратель умеет наказывать.</li>
+    </ul>
+
+    <p>Дальше — снова poldermodel в действии. Переговоры тянулись до зимы. 9 января 2026-го три партии — <strong>D66, либеральная VVD и христианско-демократическая CDA</strong> — решили формировать правительство <em>меньшинства</em>, 30 января представили коалиционное соглашение, а <strong>23 февраля 2026 года</strong> кабинет принёс присягу во дворце Хёйс-тен-Бос. Премьер-министром стал <strong>Роб Йеттен (Rob Jetten), лидер D66</strong> — самый молодой премьер в истории страны и первый открыто гей-премьер. В кабинете почти поровну мужчин и женщин (15/13).</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · хрупкость власти</div>
+      <p>Вот что делает момент по-настоящему любопытным. У коалиции Йеттена — всего <strong>66 мест из 150</strong>, до большинства не хватает десяти. Это <em>первое за десятилетия правительство меньшинства</em>: чтобы провести каждый закон, Йеттену приходится всякий раз заново договариваться с оппозицией. Polder model, доведённый до предела: власть, у которой по определению нет права продавить своё. А к началу июня 2026-го пресса уже пишет, что после первых 100 дней доверие к кабинету проседает — мол, «много слов, мало результатов». Поездку вы совершаете в страну, которой правит самый молодой и при этом один из самых уязвимых премьеров в её истории.</p>
+    </div>
+
+    <h3>Контраст, который вам близок профессионально</h3>
+    <p>Остановитесь на секунду. Вы приехали из мира, где власть устроена прямо противоположным образом: концентрация вместо распределения, вертикаль вместо коалиции, «результат» вместо переговоров, единый голос вместо двадцати партий. Голландская система — почти лабораторная антитеза авторитарной модели. У неё свои болезни: медлительность, размытость ответственности, ощущение, что «никто ни за что не отвечает». Но в ней встроен фундаментальный страховочный механизм — <strong>власть, которую трудно захватить целиком, потому что её всё время приходится с кем-то делить</strong>. На свежем примере про оборону это видно буквально: 1 июня 2026-го Йеттен заявил, что Европе пора перестать прятаться «под зонтиком США», и пообещал прописать в законе натовскую цель в 3,5% ВВП на оборону, — но даже это ему придётся проводить через парламент, где у него нет большинства. Запомните это ощущение «договорной власти» — оно проступает буквально в пейзаже, в тех же дамбах, которые нельзя построить в одиночку.</p>
+
+    <blockquote>Самый молодой премьер в истории страны управляет, не имея большинства. В Нидерландах это не провал системы. Это и есть система.</blockquote>
+  </section>
+
+  <!-- ════════════════════ ГЛАВА 6 ════════════════════ -->
+  <section class="ch" id="ch6">
+    <div class="ch-head">
+      <div class="ch-num">Глава шестая</div>
+      <h2 class="ch-title">Велосипед как политическое достижение</h2>
+    </div>
+    <div class="ch-meta">
+      <span class="badge day">почувствуете в пятницу всем телом</span>
+      <span class="badge time">⏱ 7 мин</span>
+    </div>
+
+    <p>Сейчас в это невозможно поверить, особенно когда вы в пятницу будете катить по идеальной велодорожке вдоль Маркермеера, но: <strong>в начале 1970-х Амстердам был городом для машин и собирался снести половину центра ради автострад и парковок</strong>. То, что вы примете за «вечную голландскую традицию», — на самом деле результат жёсткого политического конфликта, который горожане выиграли всего полвека назад. Это, возможно, самый успешный кейс урбанистического активизма в мире, и вам как людям про кампании он будет особенно близок.</p>
+
+    <h3>Город, который чуть не закатали в асфальт</h3>
+    <p>После войны Нидерланды богатели, машин становилось всё больше, и градостроители — как везде на Западе — молились на автомобиль. Узкие средневековые улицы и каналы считались помехой. Существовали реальные планы засыпать часть каналов под дороги и пробить магистрали через исторические кварталы (как раз район Йордан и еврейский квартал были под угрозой). Велосипед воспринимался как пережиток бедности, транспорт прошлого. Кривая поехала в ту же сторону, что в Лос-Анджелесе или Бирмингеме.</p>
+
+    <h3>Stop de Kindermoord: «Хватит убивать детей»</h3>
+    <p>А потом начали гибнуть дети. К началу 1970-х на дорогах Нидерландов ежегодно погибали более <strong>3000 человек</strong>, и среди них <em>сотни детей</em> — около 400 в один только 1971 год. Машины давили детей у их собственных домов.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · человек и движение</div>
+      <p>В 1972 году журналист <strong>Вик Лангенхофф</strong> потерял в ДТП ребёнка. Он написал колонку под яростным заголовком <em>«Stop de Kindermoord»</em> — «Остановите детоубийство». Фраза стала названием общенационального движения. Родители выходили перекрывать улицы, устраивали велосипедные блокады, требовали отбирать пространство у машин и отдавать людям. Совпало с нефтяным кризисом 1973-го: правительство ввело «воскресенья без машин» — и горожане внезапно увидели свой город пустым, тихим, пригодным для жизни. Два эти удара — гибель детей и дефицит бензина — переломили общественное мнение. <strong>Голландцы не «всегда любили велосипеды» — они сознательно отвоевали улицы у автомобиля, под лозунгом про детей.</strong></p>
+    </div>
+
+    <p>Был ещё анархо-художественный пролог: в 1960-х амстердамское движение <strong>Provo</strong> придумало «Белый велосипедный план» (<em>Witte Fietsenplan</em>) — выкрасить велосипеды в белый, бросить по городу и сделать общими и бесплатными. Полиция их тут же изъяла, план провалился практически — но как идея, как провокация, как образ «город без частных машин» он попал в десятку. (Кстати, прообраз всех современных систем велошеринга — отсюда.)</p>
+
+    <h3>Что они построили</h3>
+    <p>Победа была не разовой акцией, а полувеком последовательной инженерии. Ключевое слово — <strong>fietspad</strong>: <em>физически отделённая</em> велодорожка, не нарисованная краской полоса на проезжей части, а собственное полотно с бордюром, своими светофорами и приоритетом. Плюс «велосипедные улицы», где машина — гостья и обязана плестись за велосипедистом; плюс перекрёстки, спроектированные под велосипед; плюс гигантские веломаршруты между городами. Сегодня в стране десятки тысяч километров велодорожек, а в Амстердаме на велосипеде совершается больше поездок, чем на машине. Велосипедов в стране больше, чем людей.</p>
+
+    <div class="route">
+      <span class="pin">🚲</span>
+      <div>В пятницу вы это почувствуете телом, а не прочитаете. Как только сойдёте с парома в Северном Амстердаме и поедете в сторону <b>Дюргердама</b>, обратите внимание: вы почти не пересекаетесь с машинами, у вас <em>своя</em> дорога с собственной разметкой и знаками, а на перекрёстках уступают <em>вам</em>. Это не «повезло с тропинкой» — это спроектированное десятилетиями пространство, прямое материальное наследие колонки «Stop de Kindermoord». Каждый комфортный километр между Уйтдамом и Моннендамом — это выигранная политическая кампания.</div>
+    </div>
+
+    <p>Мораль главы, важная именно для вашей профессии: <strong>инфраструктура — это застывшая политика</strong>. То, что ощущается как нейтральный «городской комфорт», на деле — результат конкретных людей, лозунгов, протестов и решений, которые могли бы пойти иначе. Амстердам — живое доказательство, что город не «дан», а выбран. И что хорошо организованная гражданская кампания способна переписать пейзаж на поколения вперёд.</p>
+
+    <blockquote>Велодорожка под вашими колёсами — не традиция. Это памятник выигранному протесту.</blockquote>
+  </section>
+
+  <!-- ════════════════════ ГЛАВА 7 ════════════════════ -->
+  <section class="ch" id="ch7">
+    <div class="ch-head">
+      <div class="ch-num">Глава седьмая</div>
+      <h2 class="ch-title">Амстердам изнутри</h2>
+    </div>
+    <div class="ch-meta">
+      <span class="badge day">ваш дом всю неделю · круиз в пятницу вечером</span>
+      <span class="badge time">⏱ 7 мин</span>
+    </div>
+
+    <p>Когда в пятницу вечером вы поплывёте на канальном круизе, вы будете двигаться внутри одного из самых амбициозных градостроительных проектов в истории Европы — и одновременно внутри города, который прямо сейчас задыхается от собственного успеха. Амстердам — это про то, как гениальный план XVII века столкнулся с туризмом и рынком недвижимости XXI-го.</p>
+
+    <h3>Grachtengordel: планировка, а не живописный хаос</h3>
+    <p>Кольцо главных каналов — <strong>Grachtengordel</strong> (Херенграхт, Кейзерсграхт, Принсенграхт) — кажется романтически-стихийным, но это холодный расчёт. В начале XVII века город задыхался от роста, и власти приняли <em>генеральный план</em>: прорыть три концентрических полукольца каналов с радиальными перемычками. Каналы были одновременно транспортом (товар подвозили прямо к складу), дренажём, противопожарным разрывом и престижным адресом. Это была спекулятивная застройка — землю продавали стандартными узкими участками вдоль воды. В 2010 году кольцо каналов внесли в список <strong>Всемирного наследия ЮНЕСКО</strong> именно как образец осознанного городского планирования эпохи.</p>
+
+    <figure>
+      <svg viewBox="0 0 320 300" role="img" aria-label="Схема кольца каналов">
+        <rect x="0" y="0" width="320" height="300" fill="none"/>
+        <!-- полукольца -->
+        <g fill="none" stroke-width="6" opacity="0.85">
+          <path d="M40 270 A 120 120 0 0 1 280 270" stroke="#3d7ea6"/>
+          <path d="M65 270 A 95 95 0 0 1 255 270" stroke="#5a9bc4"/>
+          <path d="M90 270 A 70 70 0 0 1 230 270" stroke="#7bb8d8"/>
+        </g>
+        <!-- ядро -->
+        <circle cx="160" cy="270" r="34" fill="#c9b58e" opacity="0.6"/>
+        <text x="160" y="262" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="700" fill="#5a4a2a">старый</text>
+        <text x="160" y="274" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="700" fill="#5a4a2a">город</text>
+        <!-- радиальный -->
+        <line x1="160" y1="236" x2="160" y2="150" stroke="#7bb8d8" stroke-width="4"/>
+        <!-- подписи -->
+        <g font-family="Playfair Display, serif" font-size="11" font-style="italic" fill="currentColor">
+          <text x="285" y="262" text-anchor="end">Prinsengracht</text>
+          <text x="259" y="240" text-anchor="end">Keizersgracht</text>
+          <text x="234" y="218" text-anchor="end">Herengracht</text>
+        </g>
+        <text x="160" y="24" text-anchor="middle" font-family="Playfair Display, serif" font-weight="700" font-size="14" fill="#E8631A">Grachtengordel · 1600-е · ЮНЕСКО</text>
+      </svg>
+      <figcaption>Не хаос, а проект: три концентрических полукольца каналов, прорытых по генеральному плану растущего города.</figcaption>
+    </figure>
+
+    <h3>Почему дома узкие, кривые и с крюком наверху</h3>
+    <p>Три загадки фасадов, которые вы будете разглядывать с воды, и у каждой — рациональная причина:</p>
+    <ul>
+      <li><strong>Узкие.</strong> Налог на дом считали по ширине фасада вдоль канала. Логичный ответ горожанина: строить узко и тянуть вглубь и вверх. Отсюда фирменные «пеналы» — два-три окна в ширину, четыре этажа в высоту, длинный «хвост» во двор.</li>
+      <li><strong>Крюк наверху (<em>hijsbalk</em>).</strong> По таким узким и крутым лестницам невозможно затащить шкаф или рояль. Поэтому почти на каждом фронтоне торчит балка с крюком: грузы (и мебель) поднимали на верёвке снаружи и заносили через окно. Это работает до сих пор — увидите, как переезжают амстердамцы.</li>
+      <li><strong>Кривые/наклонённые вперёд.</strong> Многие дома сознательно построены с наклоном фасада наружу (<em>op de vlucht</em>) — чтобы груз на верёвке не бился о стену и окна при подъёме. Плюс город стоит на сваях в мягком грунте, сваи неравномерно проседают — отсюда «танцующие дома», которые подпирают друг друга. То, что выглядит как живописная небрежность, — наполовину инженерия, наполовину налоговая оптимизация.</li>
+    </ul>
+
+    <div class="route">
+      <span class="pin">⛵</span>
+      <div>На пятничном круизе сыграйте в игру: ищите фасады, наклонённые <b>вперёд</b> (это нарочно, для подъёма грузов) и отличайте их от тех, что наклонились <b>вбок</b> (это просели сваи — то есть «по-настоящему» кривые). И почти на каждом коньке крыши найдёте крюк. Хороший повод для серии кадров: один и тот же элемент — <em>hijsbalk</em> — повторяется сотни раз вдоль всего канала, готовый визуальный ритм.</div>
+    </div>
+
+    <h3>Жилищный кризис и джентрификация</h3>
+    <p>Теперь о боли. Амстердам — эпицентр одного из самых тяжёлых жилищных кризисов Европы. Жильё мучительно дефицитно и дорого; молодёжи и обычным работникам — учителям, медсёстрам — почти невозможно снять или купить в городе. Причины знакомые: десятилетия недостроя, скупка квартир инвесторами и под краткосрочную аренду, приток экспатов на высоких зарплатах. Город отбивается регуляторно: ввёл <em>opkoopbescherming</em> (запрет скупать недорогое жильё под сдачу — покупай, только если сам будешь жить), резко ограничил Airbnb. Это прямое следствие того же успеха, что притягивает и вас как туристов.</p>
+
+    <h3>Война с овертуризмом — и она вас касается</h3>
+    <p>Амстердам открыто проводит, возможно, самую жёсткую в Европе политику <strong>против</strong> туристов, точнее — против «неправильных» туристов. Это та самая тема пропаганды наоборот, что вам близка: город ведёт кампанию <em>«Stay Away»</em>, адресно отпугивающую (буквально таргетированной рекламой) британских парней, едущих за дешёвой выпивкой и наркотиками. Параллельно власти:</p>
+    <ul>
+      <li>ввели <strong>запрет на строительство новых отелей</strong> в городе («хватит»);</li>
+      <li>с 2026 года режут морские круизы — жёсткий потолок около <strong>100 заходов в год</strong> вместо прежних ~190, с планом вообще вынести пассажирский терминал из центра к 2035-му;</li>
+      <li>сделали туристический налог одним из самых высоких в Европе: с 1 января 2026-го НДС на гостиницы подняли с 9% до 21%, и вместе с городским сбором набегает порядка 33% сверху; есть план довести турналог до 20% к 2030 году;</li>
+      <li>с апреля 2026-го урезали лимит на краткосрочную сдачу жилья в центре и в Пейпе до 15 ночей в год.</li>
+    </ul>
+
+    <div class="hook">
+      <div class="lbl">Крючок · парадокс для медийщиков</div>
+      <p>Вот сюжет ровно про вашу профессию: город, живущий с туризма, тратит силы и бюджет на <strong>антирекламу</strong> собственного главного актива. Это «деблендинг», демаркетинг — редчайший жанр. Власти прямо говорят: нам не нужно <em>больше</em> гостей, нам нужны <em>другие</em>. Когда в субботу будете на рынке Альберта Кёйпа в Пейпе, вы окажетесь в одном из районов, по которому этот конфликт «местные против туристов» проходит трещиной. Хороший вопрос для разговора за кофе: можно ли вообще «отучить» место быть туристическим — и не лицемерие ли это, когда ты сам в этот момент турист?</p>
+    </div>
+
+    <blockquote>Амстердам — единственный известный мне город, который тратит деньги на то, чтобы вы передумали приезжать. И всё равно вы здесь.</blockquote>
+  </section>
+
+  <!-- ════════════════════ ГЛАВА 8 ════════════════════ -->
+  <section class="ch" id="ch8">
+    <div class="ch-head">
+      <div class="ch-num">Глава восьмая</div>
+      <h2 class="ch-title">Ван Гог и женщина, собравшая его в лесу</h2>
+    </div>
+    <div class="ch-meta">
+      <span class="badge day">увидите в воскресенье · Хоге-Велюве + Крёллер-Мюллер</span>
+      <span class="badge time">⏱ 6 мин</span>
+    </div>
+
+    <p>В воскресенье вы поедете смотреть вторую по величине в мире коллекцию Ван Гога — и она будет стоять <em>посреди леса</em>, в национальном парке, в часе езды от любого крупного города. Это странно. Почему почти 90 картин и около 180 рисунков Винсента ван Гога оказались не в столичном музее, а среди сосен и оленей на песчаных пустошах Велюве? Ответ — это история одной богатой, одинокой и одержимой женщины.</p>
+
+    <h3>Хелена Крёллер-Мюллер</h3>
+    <p><strong>Хелена Крёллер-Мюллер</strong> (1869–1939), немка по рождению, вышла замуж за Антона Крёллера — главу мощной судоходно-торговой компании. Деньги были огромные. В 1900-х, уже сорокалетней, Хелена пошла на курсы по искусству к харизматичному наставнику Х. П. Бреммеру — и это перевернуло её жизнь. Она начала собирать живопись с энергией одержимого и с расчётом инвестора, и одной из первых в мире разглядела в тогда ещё полупризнанном Ван Гоге великого художника.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · человек</div>
+      <p>За пару десятилетий Хелена собрала около <strong>11 500 произведений</strong> — одну из крупнейших частных коллекций своего времени, с ядром из работ Ван Гога, которое уступает только семейному собранию (нынешнему амстердамскому Музею Ван Гога). Она хотела не просто владеть — она хотела <em>отдать</em>: построить «дом-музей», открытый людям. Великая депрессия и кризис подкосили семейный бизнес, мечта о роскошном музее рухнула. И тогда Хелена в 1935 году <strong>передала всю коллекцию и землю государству</strong> — в обмен на обещание построить музей. Он открылся в 1938-м, за год до её смерти; первым директором стала она сама. Женщина, по сути в одиночку, на свои деньги, против вкусов эпохи, спасла и подарила стране сокровище — а сегодня её имя знают куда меньше, чем имена художников, которых она собрала.</p>
+    </div>
+
+    <h3>Почему музей в лесу</h3>
+    <p>Супруги Крёллер-Мюллер скупили под охотничьи угодья и личный «рай» огромный кусок пустошей и лесов — это и стал <strong>национальный парк Де-Хоге-Велюве</strong>. Идея Хелены была романтической и очень современной одновременно: искусство и природа должны соседствовать, картину нужно смотреть, придя через лес. Поэтому музей и сад скульптур стоят внутри парка — это часть художественного высказывания, а не недоразумение логистики. По парку, кстати, разбросаны бесплатные <strong>белые велосипеды</strong> — поздняя, уже мирная реинкарнация той самой провоковской идеи из шестой главы.</p>
+
+    <h3>Что смотреть</h3>
+    <p>Не пытайтесь объять всё — идите к нескольким вещам и побудьте с ними:</p>
+    <ul>
+      <li><strong>«Терраса кафе ночью» (1888, Арль)</strong> — та самая жёлто-синяя ночь без единого мазка чёрного: Ван Гог писал тьму цветом, а не темнотой. Жемчужина коллекции.</li>
+      <li><strong>«Едоки картофеля»</strong> (одна из версий/литография) и ранние тёмные крестьянские вещи — контраст с южным взрывом цвета.</li>
+      <li>Поздние пейзажи и <strong>автопортреты</strong> — посмотрите подряд, как за несколько лет менялась рука и психика.</li>
+      <li>Сад скульптур и работы пуантилистов (Сёра, Синьяк), которых Хелена тоже любила, — её глаз был шире, чем «только Ван Гог».</li>
+    </ul>
+
+    <div class="route">
+      <span class="pin">🏛</span>
+      <div>В том же парке стоит <b>охотничий дом Сент-Хюбертюс (Jachthuis Sint Hubertus)</b> — построен в 1920-м великим архитектором <b>Х. П. Берлаге</b> для самих Крёллер-Мюллеров. Запомните это имя: Берлаге — отец современной голландской архитектуры, «дедушка» той линии, что в понедельник взорвётся в Роттердаме. Так что воскресенье и понедельник у вас срифмованы: тихий загородный Берлаге → дерзкие наследники в большом городе.</div>
+    </div>
+
+    <blockquote>Самую трепетную ночь Ван Гога вам придётся искать в сосновом лесу. Так захотела женщина, которую почти никто не помнит по имени.</blockquote>
+  </section>
+
+  <!-- ════════════════════ ГЛАВА 9 ════════════════════ -->
+  <section class="ch" id="ch9">
+    <div class="ch-head">
+      <div class="ch-num">Глава девятая</div>
+      <h2 class="ch-title">Роттердам: травма, ставшая архитектурой</h2>
+    </div>
+    <div class="ch-meta">
+      <span class="badge day">увидите в понедельник</span>
+      <span class="badge time">⏱ 7 мин</span>
+    </div>
+
+    <p>Если Амстердам — это бережно законсервированный XVII век, то Роттердам — это город, у которого однажды отняли всё прошлое за полтора часа, и который решил из этого сделать не трагедию, а полигон. В понедельник вы выйдете из футуристического Centraal и окажетесь в единственном городе Нидерландов, где можно задрать голову и увидеть небоскрёбы. Чтобы понять, почему он такой, нужно вернуться в один день мая 1940-го.</p>
+
+    <h3>14 мая 1940 года</h3>
+    <p>Германия вторглась в нейтральные Нидерланды 10 мая. Через четыре дня, <strong>14 мая 1940 года</strong>, немецкая авиация подвергла центр Роттердама массированной бомбардировке. За считанные часы исторический центр был стёрт: сгорело около <strong>24 000 домов</strong>, без крова осталось порядка <strong>80 000 человек</strong>, погибли сотни. Немцы пригрозили так же бомбить Утрехт — и Нидерланды капитулировали на следующий день. Старого Роттердама не стало почти целиком: на месте средневекового города осталась выжженная пустошь, которую горожане назвали <em>de brandgrens</em> — «линия пожара» (её след сегодня обозначен в мостовой светящимися метками).</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · решение</div>
+      <p>И вот ключевой выбор, определивший лицо города. После войны Роттердам мог пойти путём Варшавы — которую вы хорошо знаете — и <strong>скрупулёзно восстановить</strong> старый центр по довоенным чертежам. Город сознательно решил <em>не делать этого</em>. Вместо ностальгической реконструкции выбрали взгляд вперёд: современный город, открытый эксперименту. Появился даже неофициальный девиз-настроение — <em>«Geen woorden, maar daden»</em>, «не слова, а дела». Сравните с Варшавой, где восстановленный Старый город сам стал актом сопротивления и памяти, занесённым в ЮНЕСКО именно <em>как реконструкция</em>. Два города, две травмы, два противоположных ответа на один вопрос: что делать с уничтоженным прошлым — воскресить или перешагнуть? Для вас это почти личная тема.</p>
+    </div>
+
+    <h3>Полигон мировой архитектуры</h3>
+    <p>Пустота оказалась приглашением. За послевоенные десятилетия Роттердам стал местом, где архитекторы пробуют то, что в музейном Амстердаме немыслимо:</p>
+    <ul>
+      <li><strong>Кубические дома (Kubuswoningen)</strong> Пита Блома (1984) — жёлтые кубы, поставленные на угол и насаженные на «стволы»: дом-дерево, квартал-лес. Вы их специально идёте смотреть. Зайти можно в один — он музей-образец.</li>
+      <li><strong>Markthal</strong> бюро <strong>MVRDV</strong> (2014) — гигантская подкова из жилья, под аркой которой спрятан крытый рынок, а свод расписан исполинским фруктово-цветочным «Рогом изобилия». Жить над рынком в арке — очень роттердамская идея.</li>
+      <li><strong>Rem Koolhaas / OMA</strong> — бюро, основанное в Роттердаме, одно из самых влиятельных в мире; Колхас отсюда переписал саму теорию того, что такое современный город.</li>
+      <li><strong>Depot Boijmans Van Beuningen</strong> (MVRDV, 2021) — первое в мире <em>публично доступное хранилище</em> музея: зеркальная чаша-«цветочный горшок», в которой можно ходить между стеллажей с запасниками. Вы смотрите его снаружи — и правильно: всё здание и есть аттракцион, гигантское кривое зеркало, отражающее весь город.</li>
+    </ul>
+
+    <h3>Мост-лебедь и уцелевший свидетель</h3>
+    <p>Через реку Маас перекинут <strong>Эразмусбрюг</strong> (Erasmusbrug, 1996, бюро UNStudio Бена ван Беркеля) — белый вантовый мост с изогнутым пилоном, за силуэт прозванный «Лебедем». Он соединяет центр с южным берегом — <strong>Wilhelminapier</strong> на мысе Коп-ван-Зёйд, бывшими портовыми причалами, ныне кварталом небоскрёбов. А рядом с Маасхавеном стоит <strong>Witte Huis</strong> («Белый дом», 1898) — один из немногих, кто пережил бомбардировку: 43 метра, десять этажей, его называют первым «небоскрёбом» Европы. Уцелевший дом XIX века посреди города будущего — сам по себе памятник тому, что было утрачено вокруг.</p>
+
+    <div class="route">
+      <span class="pin">🗽</span>
+      <div>На самом конце Вильгельмина-пира стоит <b>Hotel New York</b> — и вот тут поездка делает вам личный реверанс. Это бывшая штаб-квартира <b>Holland-Amerika Lijn</b>, пароходной компании, от причалов которой с конца XIX века <b>миллионы европейцев отплывали в Америку</b> в поисках новой жизни — поляки, евреи, немцы, итальянцы, белорусы. Отсюда уходили те, кто бежал от погромов, бедности и войн. Для пары, которая сама сделала шаг через границу из Беларуси в Варшаву, это место с прямой рифмой: причал прощания с Европой. Закажите там кофе и посмотрите на воду — с этого самого места люди в последний раз видели Старый Свет.</div>
+    </div>
+
+    <blockquote>Варшава воскресила свой уничтоженный город. Роттердам похоронил свой и построил будущее на могиле. Оба ответа — про память. Просто разные.</blockquote>
+  </section>
+
+  <!-- ════════════════════ ГЛАВА 10 ════════════════════ -->
+  <section class="ch" id="ch10">
+    <div class="ch-head">
+      <div class="ch-num">Глава десятая</div>
+      <h2 class="ch-title">Утрехт и «не-Амстердам»</h2>
+    </div>
+    <div class="ch-meta">
+      <span class="badge day">увидите в воскресенье вечером</span>
+      <span class="badge time">⏱ 5 мин</span>
+    </div>
+
+    <p>В воскресенье вечером, после леса и Ван Гога, вы заедете в Утрехт — и, если повезёт настроиться, почувствуете разницу, которую местные ценят больше всего: это «настоящий» голландский город, который живёт для себя, а не для вас. Четвёртый по величине, древний церковный центр, главный железнодорожный узел страны, город студентов — и при этом без амстердамской усталости от туристов.</p>
+
+    <h3>Domtoren: башня, потерявшая свою церковь</h3>
+    <p><strong>Domtoren</strong> — самая высокая церковная башня Нидерландов, около 112,5 метра, построена в XIV веке. Но приглядитесь к площади Домплейн: башня стоит <em>отдельно</em> от собора, между ними — странный пустой разрыв.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · катастрофа</div>
+      <p>Причина драматична. 1 августа <strong>1674 года</strong> над Утрехтом прошёл свирепый шторм — по описаниям, похожий на смерч, — и обрушил недостроенный центральный неф собора, соединявший башню с хором. Денег на восстановление так и не нашли, руины со временем разобрали, а пустырь оставили. Так и получилось: башня по одну сторону площади, уцелевшая часть собора — по другую, а между ними — <strong>«призрак» рухнувшего нефа</strong>, контур которого выложен в мостовой. Стоя на Домплейн, вы стоите внутри здания, которого больше нет. Тихая рифма с роттердамской «линией пожара» — у голландцев есть привычка отмечать в мостовой то, что они потеряли.</p>
+    </div>
+
+    <h3>Двухъярусные каналы</h3>
+    <p>Главная улица-канал — <strong>Oudegracht</strong> — устроена уникально: в два уровня. Наверху обычная улица, а у самой воды идёт нижняя набережная с <strong>werfkelders</strong> — складскими погребами прямо на уровне канала, куда в Средние века разгружали лодки. Сегодня в этих сводчатых погребах — кафе и террасы у воды: вы сидите с бокалом ниже уровня улицы, у самой воды, под старинными кирпичными сводами. Такого «двухэтажного» канала больше нет нигде в стране — Амстердам так и не догадался, а Утрехт сделал.</p>
+
+    <p>Если коротко, чем «не-Амстердам» отличается: меньше витринности и больше повседневности, студенческий ритм вместо туристического, и фирменная нежность к деталям (Утрехт — родина художника Дика Бруны и его кролика <em>nijntje</em> / Мифи, тут же — знаменитый дом-икона Ритвельда-Шрёдер, манифест группы «Де Стейл»). Это город, где голландцы живут, когда им не нужно никому ничего продавать. Хороший контрапункт к выходным в туристическом Амстердаме — и спокойный финал длинного воскресного дня.</p>
+
+    <blockquote>В Амстердаме вы — зритель. В Утрехте — случайный гость на чужой кухне. Второе обычно приятнее.</blockquote>
+  </section>
+
+  <!-- ════════════════════ ГЛАВА 11 ════════════════════ -->
+  <section class="ch" id="ch11">
+    <div class="ch-head">
+      <div class="ch-num">Глава одиннадцатая</div>
+      <h2 class="ch-title">Повседневный код</h2>
+    </div>
+    <div class="ch-meta">
+      <span class="badge day">пригодится каждый день</span>
+      <span class="badge time">⏱ 6 мин</span>
+    </div>
+
+    <p>Чтобы не просто смотреть на голландцев, а немного понимать, что у них в голове, держите несколько ключей. Все они, как ни странно, ведут к одной и той же черте: к плоской, эгалитарной, договорной культуре, которую вы уже встречали в дамбах и в poldermodel.</p>
+
+    <h3>Gezelligheid — слово, ради которого живут</h3>
+    <p><strong>Gezelligheid</strong> (прилагательное — <em>gezellig</em>) — главное непереводимое слово страны, предмет национальной гордости. Это не просто «уют» и не датское hygge. Это особое тёплое состояние совместности: когда хорошо, по-домашнему, в приятной компании, без понтов и спешки — свечи, пиво, разговор, дождь за окном, ничего особенного и всё идеально. Кафе бывает gezellig, вечер бывает gezellig, даже человек. Если хотите сделать голландцу комплимент его дому или бару — скажите, что тут <em>gezellig</em>, и попадёте в самое сердце.</p>
+
+    <h3>Почему все говорят по-английски (и почему это ловушка)</h3>
+    <p>Нидерланды стабильно занимают первое-второе место в мире среди стран, где английский не родной, по уровню владения им: на нём свободно говорят 90–95% людей. Причины: маленький язык, на который мало что переводят (фильмы и сериалы идут с субтитрами, а не дублируются — дети растут, читая английский с экрана), торговая открытость и качественная школа. Для вас это рай — вас поймут везде. Но есть нюанс: лёгкость, с которой голландец переходит на английский, иногда мешает учить нидерландский даже тем, кто здесь живёт годами, — язык как бы «не нужен». Пара слов от вас (см. шпаргалку) всё равно ценится — как жест уважения, не как необходимость.</p>
+
+    <h3>Голландская прямота</h3>
+    <p>Будьте готовы: голландцы говорят то, что думают, без обёртки, и это не грубость, а культурная норма. Вам прямо скажут, что идея плохая, что вы не правы, что счёт делим пополам. За этим — кальвинистская честность и радикальный эгалитаризм: ходить вокруг да около считается неуважением к собеседнику и к его времени. Есть народная формула этой скромной горизонтальности: <em>«Doe maar gewoon, dan doe je al gek genoeg»</em> — «Веди себя нормально, этого уже вполне достаточно (чтобы быть достаточно безумным)». Не выпендривайся, не строй из себя — и всё. Для людей из культуры, где статус и иерархия проговариваются постоянно, голландская плоскость может быть и шоком, и отдыхом.</p>
+
+    <h3>Еда: честно, что хорошо, а что — селёдка</h3>
+    <p>Высокая кухня — не голландский конёк, и местные первыми пошутят про это. Но есть честные радости:</p>
+    <ul>
+      <li><strong>Что правда хорошо:</strong> <em>stroopwafel</em> (вафля с карамельной начинкой, положите на чашку — пар размягчит), <em>bitterballen</em> (хрустящие шарики с рагу — обязательный спутник пива), сыры (Гауда, Эдам — берите выдержанный, <em>oude kaas</em>), свежая картошка фри <em>patat</em> с майонезом, мини-блинчики <em>poffertjes</em>, яблочный пирог.</li>
+      <li><strong>Селёдка (<em>haring</em>):</strong> вот гастрономический обряд посвящения. <em>Hollandse Nieuwe</em> — слабосолёная сырая селёдка нового улова, которую едят с сырым луком и иногда корнишоном. Канонично — взять за хвост, запрокинуть голову и опустить рыбу в рот целиком (в киоске вам, скорее, нарежут кусочками с флажком-зубочисткой). Многим непривычно — но это honest food, часть идентичности, и попробовать стоит хотя бы раз. Не понравится — будете честны, по-голландски.</li>
+    </ul>
+
+    <h3>Кофейная азбука и borrel</h3>
+    <p>Два слова спасут вас от недоразумений. Если просто сказать <em>«koffie»</em> — принесут чёрный фильтр-кофе. А вот <strong>koffie verkeerd</strong> — буквально «неправильный кофе» — это кофе с большим количеством горячего молока, местный аналог латте/кофе с молоком (название — мол, «неправильно много» молока). И главное социальное слово: <strong>borrel</strong> — это вечерний ритуал «по бокальчику»: неформальные напитки (часто пиво или можжевеловый <em>jenever</em>) с закусками вроде биттербаллен, после работы или с друзьями. «Пойти на borrel» = «зависнуть с выпивкой и снеками в gezellig-компании». По сути это глагол для всего, что делает голландский вечер голландским.</p>
+
+    <div class="route">
+      <span class="pin">🍻</span>
+      <div>Практический совет на каждый вечер: в коричневом баре (<b>bruin café</b> — традиционный паб с деревянными панелями, потемневшими от века табачного дыма) закажите местное пиво и порцию биттербаллен — и вы автоматически провели <i>borrel</i>. После велодня в пятницу или Роттердама в понедельник это ровно то, что прописал доктор. И да — там почти наверняка будет <i>gezellig</i>.</div>
+    </div>
+
+    <blockquote>Голландец скажет вам в лицо, что ваша идея плохая, а потом позовёт на borrel. И то и другое — знак уважения.</blockquote>
+  </section>
+
+  <!-- ════════════════════ ГЛАВА 12 ════════════════════ -->
+  <section class="ch" id="ch12">
+    <div class="ch-head">
+      <div class="ch-num">Глава двенадцатая</div>
+      <h2 class="ch-title">Что происходит прямо сейчас</h2>
+    </div>
+    <div class="ch-meta">
+      <span class="badge day">ваша неделя · 11–15 июня 2026</span>
+      <span class="badge time">⏱ 6 мин</span>
+    </div>
+
+    <p>Эту главу я собрал из свежих новостей под конкретные даты вашей поездки, чтобы вы приехали не в «вообще Нидерланды», а в страну этой недели — с её разговорами и афишей. (Проверяйте время и билеты на месте: расписания музеев иногда меняются.)</p>
+
+    <h3>О чём спорят в стране</h3>
+    <ul>
+      <li><strong>Молодой премьер под давлением.</strong> Главная политическая тема июня — пробуксовка кабинета Роба Йеттена (см. пятую главу). После первых ~100 дней пресса фиксирует падение доверия: правительство меньшинства с трудом проводит решения, оппозиция чует слабость. Если увидите в газетном киоске обложку с Йеттеном — речь, скорее всего, об этом.</li>
+      <li><strong>Оборона и «European naïveté».</strong> 1 июня Йеттен громко заявил, что Европе пора слезть с «зонтика США», и пообещал законодательно закрепить расходы на оборону в 3,5% ВВП. Для региона, из которого вы приехали, это разговор по очень больной теме — и он сейчас в самом разгаре.</li>
+      <li><strong>Туризм против горожан.</strong> Вступившие в силу с начала 2026-го меры (удвоенный НДС на отели, потолок круизов, лимит аренды с апреля) — постоянный фон городских новостей. Вы — участники этого сюжета буквально по факту приезда.</li>
+    </ul>
+
+    <h3>Афиша Амстердама на вашу неделю</h3>
+    <div class="hook">
+      <div class="lbl">Прямо по вашей профессии</div>
+      <p><strong>World Press Photo 2026</strong> — главная мировая выставка фотожурналистики — открыта в <strong>De Nieuwe Kerk на площади Дам</strong> (идёт с 24 апреля по 27 сентября, ежедневно 10:00–17:00). Это <em>обязательный</em> пункт для пары из медиа и видеопродакшена: победившие кадры года, истории за ними, разговор о правде, постановке и этике изображения — всё то, чем вы живёте. Маленькая практическая деталь: 10–26 июня в церкви идут строительные работы, возможен шум — но выставка работает.</p>
+    </div>
+    <ul>
+      <li><strong>«Rembrandt &amp; Life» в Доме-музее Рембрандта</strong> — подборка из ~50 офортов мастера о быстротечности жизни. Открывается аккурат <strong>12 июня</strong> (в вашу пятницу) и идёт до 30 августа. Камерный контрапункт к Золотому веку из третьей главы.</li>
+      <li><strong>Рейксмузеум:</strong> в саду — выставка скульптур <strong>Карела Виссера</strong> (с 5 июня), геометрическая абстракция под открытым небом, бесплатно зайти в сад. Большая ретроспектива фотографа <strong>Эда ван дер Элскена</strong> открывается чуть позже, 19 июня, — вы её, увы, на пару дней не застаёте.</li>
+      <li><strong>Музей Ван Гога:</strong> идёт тематическая экспозиция <em>«In search of stability»</em> (до 20 сентября). Если в воскресенье вы «распробуете» Ван Гога в Крёллер-Мюллере, городской музей в Амстердаме — логичное продолжение.</li>
+      <li><strong>Open Garden Days</strong> (открытые частные сады вдоль каналов) пройдут 19–21 июня — на неделю позже вашего отъезда. Упоминаю, чтобы знали, чего «чуть-чуть не хватило»: вернётесь — спланируете.</li>
+    </ul>
+
+    <h3>Роттердам в понедельник</h3>
+    <ul>
+      <li><strong>Месяц архитектуры в Роттердаме</strong> (Rotterdam Architecture Month) идёт весь июнь — по городу экскурсии, выставки, открытые здания. Идеально ложится на вашу архитектурную программу понедельника (кубические дома, Маркетхал, Депот).</li>
+      <li><strong>Kunsthal</strong> рядом с Депо: идут <em>«Flowers Forever»</em> (культурная история цветка в искусстве, до 30 августа) и под занавес — иллюстрации Флор Ридер (до 21 июня). Забавная деталь сезона: в Кюнстхале до ноября «поселились» больше сотни надувных гелиевых пингвинов-малышей под потолком. Учтите: с 18 мая по 30 июня вход в Кюнстхал временно перенесён из-за ремонта — ищите его на середине пандуса.</li>
+      <li><strong>Depot Boijmans</strong> вы смотрите снаружи — и не прогадаете: зеркальная чаша интереснее любого расписания внутри.</li>
+    </ul>
+
+    <p>И общий совет на неделю: с новым 21-процентным НДС и высоким турналогом Амстердам в 2026-м — дорогой город. Кофе, музеи, ужины ощутимо «кусаются» сильнее, чем пару лет назад. Это, кстати, ровно та политика «меньше, но осознаннее», о которой шла речь в седьмой главе, — теперь вы чувствуете её собственным кошельком.</p>
+
+    <blockquote>Вы приехали в неделю, когда страна спорит о слабом правительстве и сильном турналоге, а на главной площади показывают лучшие фотографии года. Удачно совпало.</blockquote>
+  </section>
+
+  <!-- ════════════════════ ШПАРГАЛКА ════════════════════ -->
+  <section class="cheat" id="cheat">
+    <h2>🛏 Шпаргалка перед сном</h2>
+    <p class="sub">Если усну на середине — вот всё, что нужно помнить наутро.</p>
+
+    <h3>20 строк самого важного</h3>
+    <ol class="twenty">
+      <li><b>Holland ≠ Netherlands.</b> Голландия — две провинции; страна — Нидерланды.</li>
+      <li>Половина страны — ниже или почти на уровне моря. Земля тут <b>сделана</b>, не дана.</li>
+      <li><b>Польдер</b> = осушенный участок за дамбой; стоит насосам встать — тонет.</li>
+      <li><b>Waterschappen</b> (водные советы) — старейшая выборная демократия Европы, с XIII века. Выборы реально идут до сих пор.</li>
+      <li>Маркермеер, вдоль которого вы едете в пятницу, — <b>бывшее море</b>, отрезанное дамбой Afsluitdijk (1932).</li>
+      <li>Девиз: «Бог создал мир, а голландцы — Нидерланды». Буквально.</li>
+      <li><b>VOC (1602)</b> — первая публичная компания и первая фондовая биржа в истории.</li>
+      <li>Золотой век стоял и на арт-рынке (Рембрандт), и на <b>рабстве</b>; в 2023-м король извинился за него.</li>
+      <li><b>Gedoogbeleid</b> — «терпимо, но не разрешено». Кофешопы не легальны — их «терпят».</li>
+      <li>Трюфели легальны, грибы — нет: запретили только плодовые тела (с 2008).</li>
+      <li>Эвтаназия легальна с 2002 — но это строгая процедура, а не «свобода».</li>
+      <li>Система выборов — чистая пропорция → 15+ партий → всегда <b>коалиция</b>.</li>
+      <li><b>Июнь 2026:</b> премьер — <b>Роб Йеттен (D66)</b>, самый молодой в истории; коалиция D66+VVD+CDA — правительство <b>меньшинства</b> (66 из 150).</li>
+      <li><b>Poldermodel</b> — управление через консенсус. Власть здесь трудно сконцентрировать — это by design.</li>
+      <li>Велодорожки — не традиция, а итог кампании <b>«Stop de Kindermoord»</b> 1970-х.</li>
+      <li><b>Grachtengordel</b> (кольцо каналов, ЮНЕСКО) — план XVII века; дома узкие из-за налога на ширину, крюк наверху — для подъёма мебели.</li>
+      <li>Амстердам борется с <b>овертуризмом</b>: запрет новых отелей, лимит круизов, турналог под 33%, кампания «Stay Away».</li>
+      <li><b>Хелена Крёллер-Мюллер</b> собрала №2 коллекцию Ван Гога в мире и подарила её стране — музей стоит в лесу (Хоге-Велюве).</li>
+      <li><b>Роттердам</b> разбомбили 14 мая 1940; город решил <b>не</b> восстанавливать старое и стал полигоном архитектуры (Блом, Колхас/OMA, MVRDV).</li>
+      <li><b>Hotel New York</b> — причал Holland-America Line, откуда Европа уплывала в Америку. <b>Gezellig</b> — главное слово; <b>borrel</b> — вечер с пивом и биттербаллен.</li>
+    </ol>
+
+    <h3>15 голландских слов с произношением</h3>
+    <table class="words">
+      <tr><td class="nl">Dank je wel</td><td class="pr">данк йе вел</td><td>спасибо (нефор.)</td></tr>
+      <tr><td class="nl">Alsjeblieft</td><td class="pr">альсйеблифт</td><td>пожалуйста / вот, держите</td></tr>
+      <tr><td class="nl">Hoeveel?</td><td class="pr">хувэйл</td><td>сколько (стоит)?</td></tr>
+      <tr><td class="nl">Lekker</td><td class="pr">лэккер</td><td>вкусно / классно</td></tr>
+      <tr><td class="nl">Gezellig</td><td class="pr">хеzэллех</td><td>уютно-тёплое «хорошо вместе»</td></tr>
+      <tr><td class="nl">Proost!</td><td class="pr">прост</td><td>будем! (тост)</td></tr>
+      <tr><td class="nl">Fiets</td><td class="pr">фитс</td><td>велосипед</td></tr>
+      <tr><td class="nl">Fietspad</td><td class="pr">фитспат</td><td>велодорожка</td></tr>
+      <tr><td class="nl">Gracht</td><td class="pr">храхт</td><td>канал (городской)</td></tr>
+      <tr><td class="nl">Borrel</td><td class="pr">боррел</td><td>вечерние напитки с закуской</td></tr>
+      <tr><td class="nl">Koffie verkeerd</td><td class="pr">коффи феркэйрт</td><td>кофе с молоком («неправильный»)</td></tr>
+      <tr><td class="nl">Uitgang</td><td class="pr">аутханг</td><td>выход</td></tr>
+      <tr><td class="nl">Sorry / Pardon</td><td class="pr">сорри / пардон</td><td>извините</td></tr>
+      <tr><td class="nl">Tot ziens</td><td class="pr">тот зинс</td><td>до свидания</td></tr>
+      <tr><td class="nl">Spreekt u Engels?</td><td class="pr">спрэйкт ю энгелс</td><td>вы говорите по-английски?</td></tr>
+    </table>
+    <p class="sub" style="margin-top:22px;">Подсказка по звуку: голландское «g/ch» — это жёсткое горловое «х» (как при отхаркивании), фирменный звук языка. «ij» ≈ «эй». «oe» ≈ «у». «ui» ≈ нечто среднее между «ау» и «ой». Не бойтесь — англ. вас выручит везде.</p>
+  </section>
+
+  <footer class="src">
+    <h3>Источники и сверка фактов</h3>
+    <p>Политика и правительство (июнь 2026) сверены по: <a href="https://en.wikipedia.org/wiki/2025%E2%80%932026_Dutch_cabinet_formation">Wikipedia — 2025–2026 Dutch cabinet formation</a>, <a href="https://www.euronews.com/2026/02/23/new-dutch-minority-government-sworn-in-under-the-nations-youngest-prime-minister-rob-jette">Euronews (23.02.2026)</a>, <a href="https://www.government.nl/government">Government.nl</a>, <a href="https://www.dutchnews.nl/2026/05/jetten-europe-naive-to-shelter-under-us-security-umbrella/">DutchNews (оборона, 06.2026)</a>. Овертуризм и налоги: <a href="https://traveltomorrow.com/amsterdam-targets-overtourism-with-20-tourist-tax-and-cruise-terminal-closure/">Travel Tomorrow</a>, <a href="https://weoncruise.com/amsterdam-cruise-limits-day-tax-2026-2035/">cruise limits 2026</a>. Извинения за рабство: <a href="https://www.dutchnews.nl/2023/07/king-expected-to-apologise-for-slavery-150-years-after-abolition/">DutchNews (07.2023)</a>, <a href="https://www.cnn.com/2023/07/01/europe/dutch-king-apologizes-netherlands-slavery-intl/index.html">CNN</a>. Афиша 11–15 июня 2026: <a href="https://www.nieuwekerk.nl/tentoonstellingen/world-press-photo-exhibition-2026/">De Nieuwe Kerk — World Press Photo 2026</a>, <a href="https://amsterdamspotted.com/exhibitions-markets-events-june-2026-amsterdam/">Amsterdam Spotted</a>, <a href="https://www.kunsthal.nl/en/plan-your-visit/exhibitions/">Kunsthal</a>. Исторические факты (VOC, Grachtengordel, Дельта-проект, Крёллер-Мюллер, бомбардировка Роттердама, Domtoren) — общеизвестные, по совокупности энциклопедических источников.</p>
+    <p style="opacity:.7;margin-top:14px;">Текст подготовлен как дорожный лонгрид; даты музейных расписаний и цены стоит перепроверять на местах. Приятной дороги — и пусть будет gezellig. 🚲🧀</p>
+    <a class="back-top" href="#top">↑ Наверх, к оглавлению</a>
+  </footer>
+
+</div>
+
+<script>
+/* Тема и меню переключаются чистым CSS (чекбоксы + :has) и работают без JS.
+   Скрипт ниже — только усиление: запоминание темы, прогресс, активная глава. */
+(function(){
+  var themeCb = document.getElementById('theme-cb');
+  var navCb   = document.getElementById('nav-cb');
+
+  // 1) Тема: восстановить выбор, иначе уважать системную тему
+  try{
+    var saved = localStorage.getItem('nl-theme');
+    if(saved === 'dark') themeCb.checked = true;
+    else if(saved === 'light') themeCb.checked = false;
+    else if(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) themeCb.checked = true;
+  }catch(e){}
+  themeCb.addEventListener('change', function(){
+    try{ localStorage.setItem('nl-theme', themeCb.checked ? 'dark' : 'light'); }catch(e){}
+  });
+
+  // 2) Меню: закрывать по клику на пункт и по Escape
+  var menu = document.getElementById('menu');
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) navCb.checked = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') navCb.checked = false;
+  });
+
+  // 3) Прогресс чтения
+  var bar = document.getElementById('progress');
+  var pct = document.getElementById('pct');
+  // 4) Текущая глава: подпись в панели + подсветка в меню
+  var here = document.getElementById('here');
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section.ch, section.cheat'));
+  var links = {};
+  Array.prototype.forEach.call(menu.querySelectorAll('a[href^="#"]'), function(a){
+    links[a.getAttribute('href').slice(1)] = a;
+  });
+  function titleOf(sec){
+    var t = sec.querySelector('.ch-title') || sec.querySelector('h2');
+    return t ? t.textContent.trim() : '';
+  }
+  function update(){
+    var h = document.documentElement;
+    var scrolled = h.scrollTop || document.body.scrollTop;
+    var height = (h.scrollHeight - h.clientHeight) || 1;
+    var p = Math.min(100, Math.max(0, Math.round((scrolled / height) * 100)));
+    bar.style.width = p + '%';
+    pct.textContent = p + '%';
+
+    var mid = scrolled + window.innerHeight * 0.30, current = null;
+    for(var i=0;i<sections.length;i++){
+      if(sections[i].offsetTop <= mid) current = sections[i];
+    }
+    var id = current ? current.id : null;
+    here.textContent = current ? titleOf(current) : 'Погружение в Нидерланды';
+    for(var k in links){ links[k].classList.toggle('active', k === id); }
+  }
+  var ticking = false;
+  function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(function(){ update(); ticking=false; }); } }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  update();
+})();
+</script>
+
+<script>
+/* Аудиогид: озвучка через Web Speech API (голос самого устройства, офлайн). */
+(function(){
+  if(!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') return;
+  var synth = window.speechSynthesis;
+  var voice = null, rate = 1, items = [], idx = 0, playing = false, paused = false, seq = 0, hl = null;
+
+  function pickVoice(){
+    var vs = synth.getVoices() || [];
+    voice = vs.filter(function(v){ return /ru[-_]?ru/i.test(v.lang); })[0]
+         || vs.filter(function(v){ return /^ru/i.test(v.lang); })[0] || null;
+  }
+  pickVoice();
+  if(synth.onvoiceschanged !== undefined) synth.onvoiceschanged = pickVoice;
+
+  function clean(s){ return (s || '').replace(/\s+/g,' ').trim(); }
+  function chunk(t){
+    if(t.length <= 240) return [t];
+    var parts = t.match(/[^.!?…]+[.!?…]*/g) || [t], out = [], buf = '';
+    parts.forEach(function(p){
+      if((buf + p).length > 240){ if(buf) out.push(buf.trim()); buf = p; }
+      else buf += p;
+    });
+    if(buf.trim()) out.push(buf.trim());
+    return out;
+  }
+
+  // плеер
+  var player = document.createElement('div');
+  player.id = 'player';
+  player.innerHTML =
+    '<button class="p-pp" aria-label="Пауза или воспроизведение">⏸</button>' +
+    '<button class="p-stop" aria-label="Остановить">⏹</button>' +
+    '<span class="p-title"></span>' +
+    '<span class="p-note"></span>' +
+    '<button class="p-rate" aria-label="Скорость">1×</button>';
+  document.body.appendChild(player);
+  var ppBtn = player.querySelector('.p-pp'),
+      stopBtn = player.querySelector('.p-stop'),
+      titleEl = player.querySelector('.p-title'),
+      noteEl = player.querySelector('.p-note'),
+      rateBtn = player.querySelector('.p-rate');
+
+  function setNote(){ noteEl.textContent = items.length ? ('§ ' + Math.min(idx + 1, items.length) + '/' + items.length) : ''; }
+  function highlight(el){
+    if(el === hl) return;
+    if(hl) hl.classList.remove('speaking');
+    hl = el;
+    if(el){ el.classList.add('speaking'); el.scrollIntoView({behavior:'smooth', block:'center'}); }
+  }
+  function clearHl(){ if(hl) hl.classList.remove('speaking'); hl = null; }
+
+  function build(section){
+    items = [];
+    var title = section.querySelector('.ch-title') || section.querySelector('h2');
+    if(title) chunk(clean(title.textContent)).forEach(function(c){ items.push({el:title, text:c}); });
+    section.querySelectorAll('p, h3, li, blockquote').forEach(function(n){
+      var t = clean(n.textContent);
+      if(t) chunk(t).forEach(function(c){ items.push({el:n, text:c}); });
+    });
+  }
+
+  function speak(){
+    if(idx >= items.length){ stop(); return; }
+    var my = ++seq, it = items[idx];
+    highlight(it.el); setNote();
+    var u = new SpeechSynthesisUtterance(it.text);
+    u.lang = 'ru-RU'; if(voice) u.voice = voice; u.rate = rate; u.pitch = 1;
+    u.onend   = function(){ if(my === seq && playing && !paused){ idx++; speak(); } };
+    u.onerror = function(){ if(my === seq && playing && !paused){ idx++; speak(); } };
+    synth.speak(u);
+  }
+
+  function start(section, label){
+    synth.cancel();                 // синхронно, чтобы сохранить «жест пользователя» на iOS
+    build(section); idx = 0; playing = true; paused = false;
+    ppBtn.textContent = '⏸';
+    titleEl.textContent = label;
+    player.classList.add('show');
+    speak();
+  }
+  function stop(){ playing = false; paused = false; ++seq; synth.cancel(); clearHl(); player.classList.remove('show'); }
+
+  ppBtn.addEventListener('click', function(){
+    if(!playing) return;
+    if(paused){ paused = false; synth.resume(); ppBtn.textContent = '⏸'; }
+    else { paused = true; synth.pause(); ppBtn.textContent = '▶'; }
+  });
+  stopBtn.addEventListener('click', stop);
+  rateBtn.addEventListener('click', function(){
+    var s = [1, 1.2, 1.5, 0.8], i = s.indexOf(rate);
+    rate = s[(i + 1) % s.length];
+    rateBtn.textContent = rate + '×';
+    if(playing && !paused){ synth.cancel(); speak(); }   // тот же фрагмент в новой скорости
+  });
+
+  // Chrome иногда «засыпает» на длинном тексте — мягко поддерживаем
+  setInterval(function(){
+    if(playing && !paused && synth.speaking){ synth.pause(); synth.resume(); }
+  }, 9000);
+
+  // кнопки «Слушать» в каждой главе
+  function mkBtn(label){
+    var b = document.createElement('button');
+    b.className = 'listen-btn';
+    b.textContent = '▶ ' + label;
+    return b;
+  }
+  document.querySelectorAll('section.ch').forEach(function(sec){
+    var meta = sec.querySelector('.ch-meta'); if(!meta) return;
+    var t = sec.querySelector('.ch-title'), name = t ? t.textContent.trim() : 'главу';
+    var b = mkBtn('Слушать');
+    b.addEventListener('click', function(){ start(sec, name); });
+    meta.appendChild(b);
+  });
+  var cheat = document.querySelector('section.cheat');
+  if(cheat){
+    var cb = mkBtn('Слушать шпаргалку'); cb.className += ' cheat-listen';
+    cb.addEventListener('click', function(){ start(cheat, 'Шпаргалка перед сном'); });
+    var sub = cheat.querySelector('.sub');
+    if(sub) sub.insertAdjacentElement('afterend', cb); else cheat.insertBefore(cb, cheat.firstChild);
+  }
+
+  window.addEventListener('beforeunload', function(){ synth.cancel(); });
+})();
+</script>
+</body>
+</html>

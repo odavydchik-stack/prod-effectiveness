@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Страна из воды — как появились Нидерланды</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');
+
+  :root{
+    --cream:#F5F0E8; --navy:#0D1B2A; --orange:#E8631A;
+    --paper:#F5F0E8; --ink:#0D1B2A; --ink-soft:#3a4656;
+    --rule:#d8cfbf; --card:#efe7d8; --accent:#E8631A;
+    --accent-soft:#fbe5d6; --link:#b8480f;
+    --serif:'Playfair Display', Georgia, 'Times New Roman', serif;
+    --sans:'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --maxw:720px;
+  }
+  html[data-theme="dark"], html:has(#theme-cb:checked){
+    --paper:#0D1B2A; --ink:#F5F0E8; --ink-soft:#b9c2cf;
+    --rule:#27384a; --card:#13243a; --accent:#ff7a36;
+    --accent-soft:#1d3147; --link:#ff9a5e;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:19px;line-height:1.72;-webkit-text-size-adjust:100%;transition:background .3s ease,color .3s ease;}
+  @media (max-width:480px){ body{font-size:18px;} }
+  @media (max-width:560px){ .topbar .here{display:none;} }
+
+  #theme-cb,#nav-cb{position:absolute;width:1px;height:1px;opacity:0;margin:-1px;padding:0;border:0;clip:rect(0 0 0 0);overflow:hidden;}
+
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;align-items:center;gap:10px;height:46px;padding:0 12px;background:var(--paper);background:color-mix(in srgb, var(--paper) 88%, transparent);-webkit-backdrop-filter:saturate(160%) blur(10px);backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid var(--rule);}
+  .topbar .ctrl{font-family:var(--sans);font-size:13px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:20px;padding:6px 13px;cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+  .topbar .ctrl:hover{border-color:var(--accent);color:var(--accent);}
+  .topbar .spacer{flex:1;}
+  .topbar .here{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw;}
+  .l-dark{display:none;}
+  html:has(#theme-cb:checked) .l-dark{display:inline;}
+  html:has(#theme-cb:checked) .l-light{display:none;}
+
+  #progress{position:fixed;top:46px;left:0;height:3px;width:0%;background:var(--accent);z-index:91;transition:width .1s linear;}
+  body{padding-top:46px;}
+
+  .menu-backdrop{position:fixed;inset:0;z-index:95;background:rgba(5,12,20,.5);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;}
+  .menu-panel{position:fixed;top:0;left:0;bottom:0;z-index:96;width:min(86vw,360px);background:var(--paper);border-right:1px solid var(--rule);box-shadow:2px 0 28px rgba(0,0,0,.25);transform:translateX(-102%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 18px 40px;}
+  html:has(#nav-cb:checked) .menu-backdrop{opacity:1;visibility:visible;}
+  html:has(#nav-cb:checked) .menu-panel{transform:translateX(0);}
+  .menu-panel h2{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:12px;color:var(--accent);margin:4px 0 14px;font-weight:700;display:flex;justify-content:space-between;align-items:center;}
+  .menu-panel .close-x{font-size:22px;line-height:1;cursor:pointer;color:var(--ink-soft);padding:0 4px;}
+  .menu-panel ol{margin:0;padding:0;list-style:none;counter-reset:m;}
+  .menu-panel li{counter-increment:m;border-top:1px solid var(--rule);}
+  .menu-panel li:first-child{border-top:none;}
+  .menu-panel a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);padding:11px 4px;line-height:1.3;}
+  .menu-panel a:hover,.menu-panel a:focus{color:var(--accent);background:var(--card);}
+  .menu-panel a.active{color:var(--accent);font-weight:700;}
+  .menu-panel a::before{content:counter(m,decimal-leading-zero);font-family:var(--serif);font-weight:700;color:var(--accent);font-size:13px;min-width:22px;flex-shrink:0;}
+  .menu-panel .mt{flex:1;font-size:15px;}
+  .menu-panel .mr{font-size:11px;color:var(--ink-soft);white-space:nowrap;}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px 120px;}
+
+  header.cover{max-width:var(--maxw);margin:0 auto;padding:40px 22px 30px;text-align:left;}
+  .kicker{font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:.22em;font-size:12px;color:var(--accent);margin-bottom:18px;}
+  h1.title{font-family:var(--serif);font-weight:900;line-height:1.02;font-size:clamp(40px,12vw,76px);margin:0 0 18px;letter-spacing:-.01em;}
+  h1.title em{font-style:italic;color:var(--accent);}
+  .dek{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--ink-soft);line-height:1.45;margin:0 0 26px;max-width:600px;}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:14px;color:var(--ink-soft);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;}
+  .meta-row b{color:var(--ink);}
+
+  nav.toc{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:22px 22px 10px;margin:34px 0 10px;}
+  nav.toc h2{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:13px;color:var(--accent);margin:0 0 14px;font-weight:700;}
+  nav.toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;}
+  nav.toc li{counter-increment:toc;border-top:1px solid var(--rule);}
+  nav.toc li:first-of-type{border-top:none;}
+  nav.toc a{display:flex;align-items:baseline;gap:12px;text-decoration:none;color:var(--ink);padding:11px 0;}
+  nav.toc a:hover{color:var(--accent);}
+  nav.toc a::before{content:counter(toc,decimal-leading-zero);font-family:var(--serif);font-weight:700;color:var(--accent);font-size:15px;min-width:26px;}
+  nav.toc .t{flex:1;font-weight:500;}
+  nav.toc .rt{font-size:12px;color:var(--ink-soft);white-space:nowrap;}
+
+  section.ch{padding-top:54px;scroll-margin-top:64px;}
+  #top,#cheat{scroll-margin-top:64px;}
+  .ch-head{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:6px;}
+  .ch-num{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--accent);margin-bottom:6px;}
+  h2.ch-title{font-family:var(--serif);font-weight:800;line-height:1.06;font-size:clamp(28px,7vw,42px);margin:0;letter-spacing:-.01em;}
+  .ch-meta{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 26px;}
+  .badge{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:20px;}
+  .badge.day{background:var(--accent);color:#fff;}
+  html[data-theme="dark"] .badge.day,html:has(#theme-cb:checked) .badge.day{color:#0D1B2A;}
+  .badge.time{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);}
+
+  p{margin:0 0 20px;}
+  .ch p:first-of-type::first-letter{font-family:var(--serif);font-weight:900;float:left;font-size:64px;line-height:.78;padding:6px 10px 0 0;color:var(--accent);}
+  a.inl{color:var(--link);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;}
+  strong{font-weight:700;} em{font-style:italic;}
+  h3{font-family:var(--serif);font-weight:700;font-size:24px;margin:36px 0 12px;line-height:1.15;}
+
+  blockquote{margin:30px 0;padding:6px 0 6px 24px;border-left:4px solid var(--accent);font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.4;color:var(--ink);}
+  blockquote cite{display:block;font-family:var(--sans);font-style:normal;font-size:14px;color:var(--ink-soft);margin-top:12px;font-weight:500;}
+
+  .hook{background:var(--card);border-radius:12px;padding:20px 22px;margin:28px 0;border:1px solid var(--rule);}
+  .hook .lbl{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:10px;}
+  .hook p:last-child{margin-bottom:0;}
+
+  .route{display:flex;gap:13px;align-items:flex-start;background:var(--accent-soft);border-radius:12px;padding:16px 18px;margin:26px 0;font-size:16.5px;line-height:1.55;}
+  .route .pin{font-size:22px;line-height:1.3;flex-shrink:0;}
+  .route b{color:var(--link);}
+  html[data-theme="dark"] .route b,html:has(#theme-cb:checked) .route b{color:var(--accent);}
+
+  figure{margin:32px 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;border-radius:10px;background:var(--card);border:1px solid var(--rule);padding:10px;}
+  figcaption{font-size:14px;color:var(--ink-soft);margin-top:10px;font-style:italic;font-family:var(--serif);}
+
+  hr.soft{border:none;border-top:1px solid var(--rule);margin:34px 0;}
+
+  .listen-btn{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em;color:#fff;background:var(--accent);border:none;border-radius:20px;padding:6px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+  html:has(#theme-cb:checked) .listen-btn{color:#0D1B2A;}
+  .listen-btn:hover{filter:brightness(1.07);}
+  .listen-btn.cheat-listen{margin:4px 0 22px;}
+  .speaking{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--accent);border-radius:5px;transition:background .2s ease;}
+  #player{position:fixed;left:50%;bottom:14px;z-index:97;width:min(94vw,560px);transform:translateX(-50%) translateY(160%);display:flex;align-items:center;gap:8px;background:var(--navy);color:var(--cream);border-radius:30px;padding:9px 12px;box-shadow:0 8px 30px rgba(0,0,0,.4);transition:transform .3s cubic-bezier(.4,0,.2,1);}
+  html:has(#theme-cb:checked) #player{border:1px solid var(--rule);background:#08121d;}
+  #player.show{transform:translateX(-50%) translateY(0);}
+  #player button{background:none;border:none;color:var(--cream);font-size:19px;cursor:pointer;width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  #player button:hover{background:rgba(255,255,255,.13);}
+  #player .p-title{flex:1;font-family:var(--serif);font-style:italic;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e7ddcd;min-width:0;}
+  #player .p-note{font-size:11px;color:#9fb0c2;white-space:nowrap;}
+  #player .p-rate{background:rgba(255,255,255,.13);color:#fff;border-radius:15px;font-family:var(--sans);font-size:12px;font-weight:700;width:auto;padding:0 11px;}
+
+  section.cheat{margin-top:64px;background:var(--navy);color:var(--cream);border-radius:16px;padding:34px 26px;}
+  html[data-theme="dark"] section.cheat,html:has(#theme-cb:checked) section.cheat{border:1px solid var(--rule);background:#08121d;}
+  section.cheat h2{font-family:var(--serif);font-weight:800;font-size:30px;margin:0 0 6px;color:var(--cream);}
+  section.cheat .sub{color:#9fb0c2;font-size:14px;margin-bottom:24px;font-family:var(--sans);}
+  section.cheat h3{color:var(--orange);font-size:18px;margin:26px 0 12px;font-family:var(--sans);text-transform:uppercase;letter-spacing:.1em;font-weight:700;}
+  ol.twenty{margin:0;padding-left:22px;} ol.twenty li{margin-bottom:9px;line-height:1.5;color:#e7ddcd;} ol.twenty li b{color:#fff;}
+  table.words{width:100%;border-collapse:collapse;font-size:15px;}
+  table.words td{padding:8px 6px;border-bottom:1px solid #243748;vertical-align:top;color:#e7ddcd;}
+  table.words td.nl{font-family:var(--serif);font-weight:700;color:#fff;white-space:nowrap;}
+  table.words td.pr{color:var(--orange);font-style:italic;white-space:nowrap;}
+
+  footer.src{margin-top:44px;font-size:13px;color:var(--ink-soft);line-height:1.6;}
+  footer.src h3{font-family:var(--sans);text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--accent);}
+  footer.src a{color:var(--link);}
+  .back-top{display:inline-block;margin-top:18px;font-size:14px;color:var(--accent);text-decoration:none;font-weight:700;}
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="theme-cb" aria-hidden="true" tabindex="-1">
+<input type="checkbox" id="nav-cb" aria-hidden="true" tabindex="-1">
+
+<div class="topbar">
+  <label class="ctrl" for="nav-cb" role="button" aria-label="Открыть оглавление">☰&nbsp;Главы</label>
+  <span class="here" id="here">Страна из воды</span>
+  <span class="spacer"></span>
+  <span class="ctrl" id="pct">0%</span>
+  <label class="ctrl" for="theme-cb" role="button" aria-label="Переключить тему">
+    <span class="l-light">🌙&nbsp;Тёмная</span><span class="l-dark">☀️&nbsp;Светлая</span>
+  </label>
+</div>
+<div id="progress"></div>
+
+<label class="menu-backdrop" for="nav-cb" aria-hidden="true"></label>
+<aside class="menu-panel" id="menu" aria-label="Главы">
+  <h2>Оглавление <label class="close-x" for="nav-cb" role="button" aria-label="Закрыть">✕</label></h2>
+  <ol>
+    <li><a href="#c1"><span class="mt">Дельта на краю мира</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#c2"><span class="mt">Жизнь на холмах: терпы</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#c3"><span class="mt">Как они утопили сами себя</span><span class="mr">8 мин</span></a></li>
+    <li><a href="#c4"><span class="mt">Мельница, делавшая землю</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#c5"><span class="mt">Дамба по имени Амстердам</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#c6"><span class="mt">Как купцы уволили короля</span><span class="mr">8 мин</span></a></li>
+    <li><a href="#c7"><span class="mt">Падение Антверпена</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#c8"><span class="mt">Первая современная экономика</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#c9"><span class="mt">Год катастроф и приход королей</span><span class="mr">8 мин</span></a></li>
+    <li><a href="#c10"><span class="mt">Снова делают сушу: XX век</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#cheat"><span class="mt">🧭 Шпаргалка по истории</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#top"><span class="mt">↑ В начало</span><span class="mr"></span></a></li>
+  </ol>
+</aside>
+
+<header class="cover" id="top">
+  <div class="kicker">Книга третья · приквел · спутник «Погружения в Нидерланды»</div>
+  <h1 class="title">Страна<br>из <em>воды</em></h1>
+  <p class="dek">Никто в мире не строил государство, осушая море. Голландцы — построили. Как на болоте в дельте трёх рек, ниже уровня воды, без короля и без права тут жить, возникла одна из богатейших стран планеты — и почему вода сделала их такими, какие они есть.</p>
+  <div class="meta-row">
+    <span>⏱ <b>~70 минут</b> суммарно</span>
+    <span>📖 <b>10 глав</b> по 6–8 мин</span>
+    <span>🔊 <b>Аудиогид</b> у каждой</span>
+    <span>📶 <b>Работает офлайн</b></span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="toc">
+    <h2>С чего всё началось</h2>
+    <ol>
+      <li><a href="#c1"><span class="t">Дельта на краю мира: место, где нельзя жить</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#c2"><span class="t">Жизнь на холмах: две тысячи лет до дамб</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#c3"><span class="t">Как они утопили сами себя (главный парадокс)</span><span class="rt">8 мин</span></a></li>
+      <li><a href="#c4"><span class="t">Мельница, которая делала землю</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#c5"><span class="t">Дамба по имени Амстердам</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#c6"><span class="t">Восстание: как купцы уволили своего короля</span><span class="rt">8 мин</span></a></li>
+      <li><a href="#c7"><span class="t">Падение Антверпена — взлёт Амстердама</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#c8"><span class="t">Первая современная экономика мира</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#c9"><span class="t">Год катастроф и неожиданный приход королей</span><span class="rt">8 мин</span></a></li>
+      <li><a href="#c10"><span class="t">Снова делают сушу: XX век и сегодня</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#cheat"><span class="t">🧭 Шпаргалка: вся история на одном экране</span><span class="rt">5 мин</span></a></li>
+    </ol>
+  </nav>
+
+  <figure>
+    <svg viewBox="0 0 460 360" role="img" aria-label="Хронология возникновения страны">
+      <rect x="0" y="0" width="460" height="360" fill="none"/>
+      <line x1="60" y1="20" x2="60" y2="340" stroke="var(--accent)" stroke-width="2"/>
+      <g font-family="DM Sans" font-size="12" fill="currentColor">
+        <circle cx="60" cy="40" r="5" fill="#E8631A"/><text x="78" y="38" font-weight="700">~500 до н.э.</text><text x="78" y="54" opacity="0.7">жизнь на терпах — холмах среди воды</text>
+        <circle cx="60" cy="90" r="5" fill="#E8631A"/><text x="78" y="88" font-weight="700">~1000–1250</text><text x="78" y="104" opacity="0.7">осушение болот, первые дамбы и waterschappen</text>
+        <circle cx="60" cy="140" r="5" fill="#E8631A"/><text x="78" y="138" font-weight="700">1275 / 1306</text><text x="78" y="154" opacity="0.7">дамба на Амстеле → город Амстердам</text>
+        <circle cx="60" cy="190" r="5" fill="#E8631A"/><text x="78" y="188" font-weight="700">1568–1648</text><text x="78" y="204" opacity="0.7">война за независимость, рождение Республики</text>
+        <circle cx="60" cy="240" r="5" fill="#E8631A"/><text x="78" y="238" font-weight="700">1602–1672</text><text x="78" y="254" opacity="0.7">Золотой век: VOC, биржа, мировая торговля</text>
+        <circle cx="60" cy="290" r="5" fill="#E8631A"/><text x="78" y="288" font-weight="700">1806 / 1815</text><text x="78" y="304" opacity="0.7">Республика становится Королевством</text>
+        <circle cx="60" cy="335" r="5" fill="#E8631A"/><text x="78" y="333" font-weight="700">1932 / 1953</text><text x="78" y="349" opacity="0.7">Afsluitdijk, потоп, Дельта-проект</text>
+      </g>
+    </svg>
+    <figcaption>Семь точек, из которых сложилась страна. Дальше — подробно и с людьми.</figcaption>
+  </figure>
+
+  <!-- 1 -->
+  <section class="ch" id="c1">
+    <div class="ch-head"><div class="ch-num">Глава первая</div><h2 class="ch-title">Дельта на краю мира</h2></div>
+    <div class="ch-meta"><span class="badge day">пролог · ~до н.э.</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Начнём с вопроса, который вы задали и который мало кому приходит в голову: а с чего вообще <em>здесь</em> возникла страна? Если посмотреть на это место глазами древнего человека, оно выглядит как издевательство природы. Три большие европейские реки — Рейн, Маас и Шельда — добегают до Северного моря и здесь, на последних километрах, разваливаются на рукава, протоки и болота. Море с одной стороны давит приливами, реки с другой несут воду и ил, а между ними — низкая, мокрая, вечно подтопляемая губка из торфа, песка и глины. Это не «суша у моря». Это <strong>зона переговоров между сушей и морем, где граница каждый день в другом месте</strong>.</p>
+
+    <p>Нормальная человеческая реакция на такой ландшафт — обойти его стороной. Так и делали: античные авторы описывали эти земли как унылую глушь на краю обитаемого мира. Здесь не было камня для крепостей, не было гор для защиты, почва — то солончак, то трясина. Любая цивилизация, выбирая, где строиться, выбрала бы что угодно другое. И вот первый ключ ко всей голландской истории: <strong>страну основали не там, где было удобно, а там, где было почти невозможно</strong>. Всё остальное — дамбы, мельницы, кооперативы, республика — это длинный ответ на один вопрос: как вообще тут выжить.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · взгляд римлянина</div>
+      <p>Самое раннее описание здешних жителей оставил римлянин <strong>Плиний Старший</strong> (I век н.э.). Он смотрел на племя хавков, живших в устье, с искренним ужасом и жалостью: они ютятся на жалких насыпях, писал он, и когда приходит прилив, «выглядят как мореплаватели, а когда вода уходит — как потерпевшие кораблекрушение». Они пьют дождевую воду, потому что пресной нет, и жгут вытащенный из земли торф, «высушенный скорее ветром, чем солнцем». Для римлянина с его дорогами, акведуками и мрамором это было дно мира. Запомните эту картинку — мокрые люди на холмиках посреди воды. Через полторы тысячи лет их прямые потомки будут управлять мировой торговлей. Никто, включая Плиния, не поставил бы на них и сестерция.</p>
+    </div>
+
+    <p>Почему же не ушли? Потому что у воды была и обратная сторона. Реки — это транспортные артерии в самое сердце Европы; устье — это выход в Северное и дальше в открытое море; рыба, соль и торговля плыли сами. Место было гиблым для земледельца, но идеальным для <strong>посредника</strong> — того, кто перевозит, перепродаёт, складирует. Вся будущая страна — это ставка на то, что выгоды перекрёстка перевесят кошмар болота. Ставка дикая. Она сыграла.</p>
+
+    <blockquote>Голландию основали не там, где было удобно жить, а там, где было удобно торговать — если сначала не утонешь.</blockquote>
+  </section>
+
+  <!-- 2 -->
+  <section class="ch" id="c2">
+    <div class="ch-head"><div class="ch-num">Глава вторая</div><h2 class="ch-title">Жизнь на холмах: две тысячи лет до дамб</h2></div>
+    <div class="ch-meta"><span class="badge day">~500 до н.э. — 1000 н.э.</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Прежде чем научиться отгонять воду, люди научились от неё <em>подниматься</em>. Самое первое инженерное решение здешних жителей было гениально простым: если земля заливается, насыпь себе холм и живи на нём. Эти искусственные насыпи называются <strong>терпы</strong> (terpen), на севере — <em>wierden</em>. Их начали строить примерно с 500 года до нашей эры на нынешних землях Фрисландии и Гронингена, и строили потом больше тысячи лет.</p>
+
+    <p>Масштаб впечатляет, если задуматься. Терп — это не кочка. Большие терпы достигали нескольких метров в высоту и могли вмещать целую деревню с церковью, домами, скотом и кладбищем. Их насыпали поколениями, слой за слоем — из глины, навоза, отходов, всего, что под рукой. Когда море приходило, деревня оставалась сухим островом в свинцовой воде; когда уходило — становилась холмом над блестящей грязью. Люди жили так <strong>столетиями, не пытаясь воду остановить</strong> — только переждать. Многие голландские и фризские деревни до сих пор стоят на этих древних холмах; их выдаёт церковь, заметно возвышающаяся над окрестными полями.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · смена философии</div>
+      <p>Здесь — важнейший перелом в мышлении, и он случился где-то около X–XII веков. Тысячу лет стратегия была <em>оборонительной</em>: поднимись над водой и терпи. А потом, с ростом населения и приходом монастырей с их организацией труда, философия перевернулась: <strong>зачем подниматься над водой, если можно воду прогнать?</strong> Не «жить на острове посреди потопа», а «отгородиться дамбой и осушить то, что внутри». Это переход от смирения к наступлению — и именно он сделал голландцев голландцами. Терп говорит «я пережду стихию». Дамба говорит «я отниму у стихии землю». Между этими двумя фразами — вся разница между древним человеком и тем народом, который вы сейчас навещаете.</p>
+    </div>
+
+    <p>Заметьте, что у этого наступления с самого начала был встроен коллективизм. Один человек может насыпать себе терп в одиночку. Но дамбу вокруг общего поля в одиночку не построить и не содержать — нужна вся округа. Поэтому, как только начинается эпоха дамб, тут же появляется и необходимость <em>договариваться, скидываться и заставлять соседа чинить его участок</em>. Помните водные советы (<em>waterschappen</em>) из первой книги — старейшую выборную власть Европы? Вот их зародыш, в этих первых общих дамбах XII–XIII веков. Демократия здесь выросла из грязи в самом буквальном смысле: из необходимости коллективно держать стену против моря.</p>
+
+    <blockquote>Терп говорит: «я пережду потоп». Дамба говорит: «я отниму землю». Вся страна выросла на второй фразе.</blockquote>
+  </section>
+
+  <!-- 3 -->
+  <section class="ch" id="c3">
+    <div class="ch-head"><div class="ch-num">Глава третья</div><h2 class="ch-title">Как они утопили сами себя</h2></div>
+    <div class="ch-meta"><span class="badge day">главный парадокс · 1000–1500</span><span class="badge time">⏱ 8 мин</span></div>
+
+    <p>Вот глава, которая отвечает на ваш самый острый вопрос: <em>как так вышло, что они оказались ниже уровня моря?</em> Ответ почти комический и совершенно нелогичный на первый взгляд: <strong>во многом голландцы опустили свою землю под воду сами, своими руками, и сделали это ради топлива.</strong> Это не стихия загнала их в яму. Это они её выкопали.</p>
+
+    <h3>Торф: топливо, которое съело страну</h3>
+    <p>Под этими болотами лежали колоссальные залежи <strong>торфа</strong> — спрессованных за тысячелетия растительных остатков. В стране без лесов и без угля торф был главным топливом: им топили дома, варили пиво, обжигали кирпич, кормили мануфактуры. Начиная со Средневековья торф добывали в промышленных масштабах — вырезали, сушили, жгли. И вот ловушка, которую тогда никто не понимал.</p>
+
+    <p>Болотный торф на 90% состоит из воды. Когда местность осушают и распахивают, торф впервые встречается с воздухом — и начинает <strong>окисляться, уплотняться и буквально исчезать</strong>, проседая год за годом. А если его ещё и выкапывают на топливо — земля проваливается тем быстрее. Чем больше осушали и жгли, тем ниже опускалась поверхность. Тем больше нужно было дамб и насосов, чтобы держать воду снаружи. Тем активнее осушали, чтобы насосы работали, — и тем сильнее проседала земля. <strong>Замкнутый круг длиной в столетия</strong>: каждый шаг к сухой земле делал землю ещё ниже и ещё опаснее.</p>
+
+    <figure>
+      <svg viewBox="0 0 460 250" role="img" aria-label="Как земля опускалась ниже моря">
+        <rect x="0" y="0" width="460" height="250" fill="none"/>
+        <line x1="30" y1="95" x2="440" y2="95" stroke="#3d7ea6" stroke-width="2" stroke-dasharray="7 4"/>
+        <text x="435" y="88" text-anchor="end" font-family="DM Sans" font-size="11" fill="#3d7ea6">уровень моря</text>
+        <!-- три стадии -->
+        <g font-family="DM Sans" font-size="11" fill="currentColor">
+          <rect x="50" y="60" width="90" height="60" fill="#8a6f4a"/><rect x="50" y="55" width="90" height="6" fill="#5a9b3f"/>
+          <text x="95" y="140" text-anchor="middle" font-weight="700">~1000 г.</text>
+          <text x="95" y="155" text-anchor="middle" opacity="0.7">болото ВЫШЕ</text><text x="95" y="168" text-anchor="middle" opacity="0.7">уровня моря</text>
+
+          <rect x="185" y="95" width="90" height="40" fill="#8a6f4a"/><rect x="185" y="90" width="90" height="6" fill="#5a9b3f"/>
+          <text x="230" y="152" text-anchor="middle" font-weight="700">осушили,</text><text x="230" y="166" text-anchor="middle" font-weight="700">жгли торф</text>
+
+          <rect x="320" y="120" width="90" height="25" fill="#8a6f4a"/><rect x="320" y="115" width="90" height="6" fill="#5a9b3f"/>
+          <text x="365" y="162" text-anchor="middle" font-weight="700">сегодня:</text><text x="365" y="176" text-anchor="middle" opacity="0.7">НИЖЕ моря,</text><text x="365" y="189" text-anchor="middle" opacity="0.7">держат насосы</text>
+        </g>
+        <path d="M150 90 Q 170 90 183 100" stroke="#E8631A" stroke-width="2" fill="none" marker-end="url(#ar)"/>
+        <path d="M285 110 Q 305 110 318 122" stroke="#E8631A" stroke-width="2" fill="none" marker-end="url(#ar)"/>
+        <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#E8631A"/></marker></defs>
+        <text x="230" y="225" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="14" fill="#E8631A">Земля опускалась оттого, что её осушали. Чем суше — тем ниже.</text>
+      </svg>
+      <figcaption>Парадокс наоборот: тысячу лет назад болото лежало выше моря. Осушение и добыча торфа опустили его. «Ниже уровня моря» — рукотворная яма.</figcaption>
+    </figure>
+
+    <div class="hook">
+      <div class="lbl">Крючок · цена пива и кирпича</div>
+      <p>Вдумайтесь в иронию: страну под воду загнала не жадность завоевателей и не гнев богов, а <strong>бытовая экономика</strong> — потребность согреться, сварить пиво, обжечь кирпич для тех самых узких домов на каналах. Голландцы веками выкапывали и сжигали землю у себя под ногами, не понимая, что роют себе ванну. К XVI–XVII векам огромные пространства уже лежали ниже моря и реки, а добыча торфа местами выгрызала такие котлованы, что они превращались в новые озёра — которые потом приходилось осушать заново (об этом — следующая глава). Это очень человеческая история: цивилизация, попавшая в ловушку собственного успеха и вынужденная всё быстрее бежать, чтобы просто стоять на месте.</p>
+    </div>
+
+    <h3>Когда круг рвётся: большие потопы</h3>
+    <p>Пока система работала, всё держалось. Но стоило где-то прорвать дамбу — и проседавшая, лежащая ниже воды земля превращалась в смертельную ловушку: воде некуда было уйти. Самая страшная из таких катастроф — <strong>наводнение святой Елизаветы в ночь на 19 ноября 1421 года</strong>: штормовой прилив прорвал дамбы на юго-западе, затопил плодородную область Гроте-Ваард, смыл десятки деревень и убил тысячи людей. На месте утонувшей земли возникла обширная заболоченная область Бисбос — она существует и сегодня.</p>
+
+    <p>С тем потопом связана и трогательная легенда про название <em>Kinderdijk</em> («детская дамба»): будто бы после наводнения на воде заметили плывущую колыбель, а на ней балансировала кошка, не давая ей перевернуться, — и младенец внутри был жив. Историки морщатся, но голландцы легенду берегут: в стране, где вода веками отнимала детей, история про спасённого младенца на дамбе — это почти национальная молитва.</p>
+
+    <blockquote>Их не море загнало ниже своего уровня. Они сами выкопали и сожгли свою землю — ради тепла и пива. «Ниже уровня моря» — это рукотворная яма, из которой теперь нельзя перестать откачивать.</blockquote>
+  </section>
+
+  <!-- 4 -->
+  <section class="ch" id="c4">
+    <div class="ch-head"><div class="ch-num">Глава четвёртая</div><h2 class="ch-title">Мельница, которая делала землю</h2></div>
+    <div class="ch-meta"><span class="badge day">проедете в пятницу · XVI–XVII вв.</span><span class="badge time">⏱ 7 мин</span></div>
+
+    <p>Итак, к XVI веку у голландцев накопилась куча проблемных озёр — частью природных, частью выкопанных добытчиками торфа. Эти озёра были опасны: в шторм ветер гнал по ним волну, она грызла берега и грозила прорывом. И тут появляется технология, превратившая оборону в бизнес: <strong>ветряная мельница как насос</strong>.</p>
+
+    <p>Идея проста и красива. Раньше мельница только молола зерно. Теперь её приспособили вращать <strong>водочерпальное колесо</strong>: ветер крутит крылья, колесо поднимает воду из низкого озера в канал повыше, оттуда — в ещё более высокий, и так ступенями вода выгоняется за дамбу. Поставьте кольцо дамб вокруг озера, расставьте мельницы — и через несколько лет на месте озера лежит сухое плодородное дно. Этот осушённый участок и есть <strong>польдер</strong>, а само действие — <em>droogmakerij</em>, «сделать сухим». Голландцы научились не отвоёвывать землю у моря по кусочку, а <strong>производить её целыми озёрами, как продукт</strong>.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · человек по фамилии «Осушай-воду»</div>
+      <p>У этой эпохи есть идеальный герой с идеальной фамилией. Инженера-самоучку звали <strong>Ян Адриансзон, по прозвищу Леегватер (Leeghwater)</strong> — что буквально значит «пустая вода» / «вычерпай воду». Он стал звездой осушения, мастером, которого нанимали проектировать польдеры по всей стране. Его шедевр — <strong>Бемстер (Beemster)</strong>, большое озеро к северу от Амстердама, осушённое в 1607–1612 годах силами целой батареи мельниц (их было несколько десятков, работавших ступенями). Получившийся польдер расчертили идеальной ренессансной сеткой прямых каналов, дорог и квадратных полей — рациональный геометрический рай, явное высказывание эпохи: вот как разум упорядочивает хаос воды. Сегодня Бемстер — объект ЮНЕСКО, образец того, как человек спроектировал ландшафт с нуля.</p>
+    </div>
+
+    <h3>Землю делали ради прибыли</h3>
+    <p>А вот деталь, особенно близкая вам как людям, думающим про устройство общества. Осушение Бемстера и подобных озёр финансировали не короли и не церковь — а <strong>богатые амстердамские купцы как инвестицию</strong>. Они скидывались в товарищество, оплачивали дамбы и мельницы, а потом получали в собственность новую землю и сдавали или продавали её. То есть осушение было ранней формой <em>акционерного предприятия с расчётом на доход</em> — той же логики, что через несколько лет породит Ост-Индскую компанию и биржу (глава 8). <strong>Голландцы превратили борьбу со стихией в инвестиционный проект.</strong> Земля у них — не дар божий и не наследие предков, а актив, созданный вложением капитала и приносящий процент. Это многое объясняет в их характере.</p>
+
+    <div class="route">
+      <span class="pin">🚲</span>
+      <div>Это не абстракция для вас: в пятницу, катя на велосипедах по <b>Ватерланду</b> севернее Амстердама, вы будете ехать по краю этого мира осушённых озёр — рядом лежит и сам <b>Бемстер</b>. Если поля вокруг подозрительно ровные, расчерченные как по линейке, и дорога идёт по гребню, а поля — заметно <em>ниже</em> вас: вы едете по дну бывшего озера, которое человек выкачал мельницами 400 лет назад. Та самая «земля как продукт» — прямо под колёсами.</div>
+    </div>
+
+    <blockquote>Они не молились о суше и не ждали её от моря. Они её производили — мельницами, по проекту, на деньги инвесторов, под процент.</blockquote>
+  </section>
+
+  <!-- 5 -->
+  <section class="ch" id="c5">
+    <div class="ch-head"><div class="ch-num">Глава пятая</div><h2 class="ch-title">Дамба по имени Амстердам</h2></div>
+    <div class="ch-meta"><span class="badge day">площадь Дам · 1270–1500</span><span class="badge time">⏱ 7 мин</span></div>
+
+    <p>Теперь — как из всего этого вырос <em>город</em>. История Амстердама начинается не с дворца и не с собора, а с инженерного сооружения, и это очень в его духе. Около <strong>1270 года</strong> рыбаки и крестьяне, жившие в устье маленькой речки <strong>Амстел</strong>, построили поперёк неё <strong>дамбу</strong> — чтобы морские приливы не заливали земли вверх по течению. Поселение, выросшее у этой плотины, так и назвали: <em>Aemstelledamme</em> — «дамба на Амстеле». Со временем — Амстердам.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · вы будете стоять на той самой дамбе</div>
+      <p>Вот связь, которая переворачивает взгляд на город. <strong>Площадь Дам</strong> — главная площадь Амстердама, та, где Королевский дворец и Новая церковь, где толпы туристов и голуби, — это <em>и есть та самая дамба</em>. «Dam» — это буквально «плотина». Вы будете стоять не на «исторической площади», а на гидротехническом сооружении XIII века, вокруг которого налип целый город. Название столицы — это название куска инфраструктуры для борьбы с водой. Более голландского происхождения у города быть не может: даже имя — про дамбу.</p>
+    </div>
+
+    <h3>Толль-привилегия 1275 и рыбьи кости</h3>
+    <p>Первое письменное упоминание города — <strong>27 октября 1275 года</strong>: граф Голландии <strong>Флорис V</strong> освободил жителей «Амстеллединне» от уплаты пошлин при провозе товаров. Этот документ считают «свидетельством о рождении» Амстердама. Звучит как скучная бумажка — но это был мощнейший экономический стимул: освобождённые от пошлин торговцы могли возить и продавать дешевле конкурентов. Город сразу получил конкурентное преимущество и стал расти как перевалочный пункт. Полноценные <strong>городские права</strong> Амстердам получил около <strong>1306 года</strong> от епископа Утрехтского.</p>
+
+    <p>На чём поднялись? На двух очень голландских вещах — <strong>селёдке и пиве</strong>. Есть поговорка: «Амстердам построен на рыбьих костях». Северное море кишело сельдью, а голландцы освоили её массовый промысел и, главное, <strong>консервацию прямо в море</strong>: рыбу потрошили особым способом (удаляя часть внутренностей, но оставляя поджелудочную железу для ферментации) и тут же засаливали в бочках на борту. Изобретение этого приёма легенда приписывает некоему Виллему Бёкельсзону. Результат — рыба, которая хранилась месяцами и которую можно было продавать по всей Европе. Плюс торговля балтийским зерном и пивом из Гамбурга. Скучно? Зато на этом выросли первые капиталы.</p>
+
+    <h3>Город-чудо до того, как стал городом-биржей</h3>
+    <p>И ещё один неожиданный слой, про который мало кто знает. До того как стать торговой столицей, Амстердам успел побыть <strong>местом паломничества</strong>. В <strong>1345 году</strong> здесь произошло так называемое «Амстердамское чудо» — церковное чудо с причастием, которое объявили подлинным. К месту чуда потекли паломники со всей Европы, а с ними — деньги, гостиницы, торговля. Город рос на вере не хуже, чем потом на селёдке. До сих пор в Амстердаме проходит <em>Stille Omgang</em> — ночной «тихий ход» в память о чуде. Забавно держать это в голове, гуляя по кварталу красных фонарей из второй книги: один и тот же средневековый город был и центром католического паломничества, и портовым вертепом — и не видел тут противоречия.</p>
+
+    <blockquote>Столицу назвали в честь плотины. Разбогатела она на селёдке и пиве. Прежде чем стать городом денег, побыла городом чуда. Всё это — один и тот же Амстердам.</blockquote>
+  </section>
+
+  <!-- 6 -->
+  <section class="ch" id="c6">
+    <div class="ch-head"><div class="ch-num">Глава шестая</div><h2 class="ch-title">Восстание: как купцы уволили своего короля</h2></div>
+    <div class="ch-meta"><span class="badge day">1568–1648 · рождение нации</span><span class="badge time">⏱ 8 мин</span></div>
+
+    <p>До сих пор мы говорили про землю и воду. Теперь — про то, как из набора провинций на болоте родилось <em>государство</em>, и притом государство уникальное: <strong>республика без короля в эпоху, когда вся Европа стояла на коленях перед монархами</strong>. Это, возможно, главный политический сюжет в истории страны — и он вам как людям про власть будет особенно вкусен.</p>
+
+    <h3>Конфликт: деньги, Бог и испанский король</h3>
+    <p>В XVI веке Нидерланды (тогда — Семнадцать провинций, включая нынешнюю Бельгию) принадлежали испанской ветви Габсбургов. Король <strong>Филипп II</strong> правил ими из далёкого Мадрида и хотел двух вещей: выжимать из богатых торговых провинций налоги и силой давить расползавшийся здесь <strong>протестантизм</strong> (кальвинизм). Местные элиты и города взбесились от обоих требований: их облагали поборами на чужие войны и жгли их единоверцев на кострах инквизиции. В <strong>1568 году</strong> вспыхнуло восстание, которое растянется на <strong>восемьдесят лет</strong> (Восьмидесятилетняя война, 1568–1648).</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · отец отечества, застреленный за деньги</div>
+      <p>Лицом восстания стал <strong>Вильгельм Оранский</strong> по прозвищу Молчаливый — аристократ, перешедший на сторону мятежных провинций и ставший «отцом отечества» (он и сегодня предок голландской королевской династии, а гимн страны — старейший в мире — посвящён ему). Филипп II объявил за его голову награду. И в <strong>1584 году</strong> в Делфте фанатик-католик Бальтазар Жерар застрелил Вильгельма из пистолета прямо на лестнице его дома — это часто называют <strong>первым в истории убийством главы государства из огнестрельного оружия</strong>. Убийца пришёл за наградой; его казнили с чудовищной жестокостью. Но восстание уже было не остановить — у него появился мученик.</p>
+    </div>
+
+    <h3>Документ, уволивший монарха</h3>
+    <p>А вот центральный момент — и для вас он золотой. В <strong>1581 году</strong> северные провинции приняли <strong>«Акт о клятвенном отречении» (Plakkaat van Verlatinghe)</strong>. Это был, по сути, <em>приказ об увольнении короля</em>. Логика документа была по тем временам революционной до дерзости: <strong>правитель существует ради подданных, а не подданные ради правителя; если государь обращается со своим народом как тиран, а не как пастырь, народ вправе его низложить</strong> и поискать себе другого. Перечислив длинный список злоупотреблений Филиппа, провинции официально объявили, что больше не признают его своим государем.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · неожиданная связь с Америкой</div>
+      <p>Если вам это напомнило другой знаменитый текст — вы не одиноки. Структура «Акта» 1581 года поразительно похожа на <strong>американскую Декларацию независимости 1776 года</strong>: та же конструкция — развёрнутое идейное вступление о правах, затем длинный список злоупотреблений монарха как доказательство тирании, затем вывод о праве на восстание. Историки до сих пор спорят, насколько прямым было влияние: одни (как Стивен Лукас) считают, что отцы-основатели США знали голландский образец и держали его перед глазами; другие (как Полин Майер) говорят об опосредованном влиянии через английские документы. Прямых доказательств, что Джефферсон копировал именно его, нет — но сходство слишком велико, чтобы быть случайным. Так или иначе: <strong>идея, что народ может законно «уволить» тирана, получила одну из первых своих громких формулировок здесь, на голландском болоте, за два века до Филадельфии.</strong> Для людей, чувствительных к языку власти и сопротивления, — стоит подержать в голове.</p>
+    </div>
+
+    <h3>Республика торговцев</h3>
+    <p>Объявив, что короля у них больше нет, провинции столкнулись с вопросом: а кто тогда правит? И дали ответ, невозможный для той эпохи: <strong>никакой король не нужен</strong>. В 1579 году семь северных провинций скрепили союз (Утрехтская уния), и из него выросла <strong>Республика Соединённых провинций</strong> — конфедерация, где власть принадлежала не монарху, а городам, купеческим элитам и провинциальным штатам, договаривающимся между собой. Был выборный «штатгальтер» (часто из дома Оранских) как военный и исполнительный лидер, но он не был сувереном — настоящая власть размазывалась по регентам и торговым городам, прежде всего по Амстердаму.</p>
+
+    <p>Узнаёте? Это прямой предок всего, о чём шла речь в первой книге: децентрализованная, договорная, «полдерная» власть, которую невозможно собрать в один кулак. Республика была шумной, торгашеской, местами олигархической — но она дала то, чего не давали монархии: относительную веротерпимость, защиту собственности и пространство для денег и идей. Война формально закончилась лишь в <strong>1648 году</strong> Вестфальским миром, который признал независимость Республики. К тому времени эта странная страна без короля уже была богатейшей в Европе.</p>
+
+    <blockquote>В мире королей они написали бумагу о том, что король тут лишний — и сто лет дрались за это право. Власть, которую нельзя собрать в один кулак, начинается отсюда.</blockquote>
+  </section>
+
+  <!-- 7 -->
+  <section class="ch" id="c7">
+    <div class="ch-head"><div class="ch-num">Глава седьмая</div><h2 class="ch-title">Падение Антверпена — взлёт Амстердама</h2></div>
+    <div class="ch-meta"><span class="badge day">1585 · точка перелома</span><span class="badge time">⏱ 7 мин</span></div>
+
+    <p>Богатство не свалилось на Амстердам с неба — во многом оно <em>переехало</em> к нему из соседнего города, и переехало по принуждению. Чтобы понять взлёт Амстердама, надо понять падение <strong>Антверпена</strong>. Это отличная иллюстрация мрачноватого закона истории: чужая катастрофа бывает твоим стартовым капиталом.</p>
+
+    <p>До конца XVI века торговой столицей всех Нидерландов был не Амстердам, а Антверпен (на юге, в нынешней Бельгии) — крупнейший порт и финансовый центр Северной Европы. Но во время войны за независимость юг остался под испанцами, а север отбился. В <strong>1585 году</strong> испанские войска после долгой осады взяли Антверпен. Победители не стали резать жителей — но протестантам велели либо перейти в католичество, либо убираться. А затем север сделал ход, добивший южный город экономически: <strong>голландцы заблокировали устье реки Шельды</strong>, на которой стоит Антверпен, отрезав его от моря. Великий порт остался без выхода к океану — на десятилетия.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · переезд целого класса</div>
+      <p>И тогда случился один из крупнейших «перетоков мозгов и денег» в истории Европы. Из павшего Антверпена и всего юга на свободный север хлынули <strong>десятки тысяч беженцев</strong> — и не абы какие, а самые ценные: купцы со своими торговыми связями и капиталом, банкиры, опытные ремесленники, печатники, ювелиры, искусные ткачи. Амстердам принял их — и фактически <strong>унаследовал готовую торговую цивилизацию Антверпена</strong>: его сети, его ноу-хау, его деньги. Историки прямо говорят, что Золотой век Амстердама был во многом построен на антверпенском фундаменте. Один город задушили — второй вырос на этом вдвое. Циничный, но точный закон: капитал течёт туда, где безопаснее, и беженец с навыком — это не обуза, а топливо.</p>
+    </div>
+
+    <h3>Терпимость как бизнес-модель</h3>
+    <p>Вот здесь рождается знаменитая голландская веротерпимость — и важно понять её честную природу. Республика принимала гонимых не столько из идеализма, сколько по <strong>холодному расчёту</strong>: беженцы привозили деньги, умения и связи. В Амстердам ехали <strong>сефардские евреи</strong>, бежавшие от испанской и португальской инквизиции (их потомком был философ Спиноза, а их соседство писал Рембрандт); позже — французские гугеноты, фламандские протестанты, английские диссиденты, печатники, издававшие книги, запрещённые во всей остальной Европе. Город не требовал от них «правильной» веры — он требовал, чтобы они работали и торговали. Так прагматизм обернулся принципом: <strong>там, где не спрашивают, как ты молишься, собираются самые предприимчивые</strong>. Это та же «терпимость по-голландски» из первой книги — не одобрение, а сознательное решение не мешать, потому что так выгоднее.</p>
+
+    <div class="route">
+      <span class="pin">🛶</span>
+      <div>Именно этот наплыв людей и денег после 1585-го заставил Амстердам взрывообразно расти — и в начале XVII века город затеял то самое грандиозное расширение, <b>кольцо каналов (Grachtengordel)</b>, по которому вы плывёте на круизе из первой книги. Узкие дома, о которых мы говорили, строились в том числе для и на деньги вчерашних беженцев. Когда будете смотреть на эти фасады — помните: половина этого великолепия выросла из чужой беды и открытых дверей.</div>
+    </div>
+
+    <blockquote>Один город задушили блокадой — второй удвоился на его беженцах. Голландская терпимость родилась не из доброты, а из точного расчёта: гонимый с навыком — это топливо.</blockquote>
+  </section>
+
+  <!-- 8 -->
+  <section class="ch" id="c8">
+    <div class="ch-head"><div class="ch-num">Глава восьмая</div><h2 class="ch-title">Первая современная экономика мира</h2></div>
+    <div class="ch-meta"><span class="badge day">Золотой век · 1602–1672</span><span class="badge time">⏱ 7 мин</span></div>
+
+    <p>К XVII веку сошлось всё: отвоёванная и произведённая земля, республика без короля, капитал и мозги беженцев, флот и торговые сети. И крошечная страна размером с пару областей сделала то, чего история ещё не видела, — <strong>построила первую в мире современную капиталистическую экономику</strong> и на пару поколений стала богатейшим обществом планеты. (Тёмную сторону этого богатства — рабство и колонии — мы подробно разбирали в первой книге; здесь сосредоточимся на том, <em>как</em> работала машина.)</p>
+
+    <h3>Изобретения, которыми вы пользуетесь до сих пор</h3>
+    <p>Посмотрите, сколько привычных нам финансовых институтов родилось здесь за два десятилетия:</p>
+    <ul>
+      <li><strong>Акционерная компания (VOC, 1602).</strong> Голландская Ост-Индская компания первой стала продавать акции <em>широкой публике</em> — любой житель мог купить долю в заморской торговле и получать дивиденды. Так изобрели то, что сегодня называется публичной корпорацией.</li>
+      <li><strong>Фондовая биржа.</strong> Чтобы этими акциями торговать постоянно, в Амстердаме появился первый в мире <em>вторичный рынок ценных бумаг</em> — биржа, где доли VOC переходили из рук в руки каждый день. Со спекуляциями, слухами и игрой на понижение — всё как сейчас.</li>
+      <li><strong>Банк (Wisselbank, 1609).</strong> Амстердамский обменный банк сделал расчёты между купцами надёжными и стандартизированными — прообраз центрального банка.</li>
+    </ul>
+    <p>Иными словами, <strong>современные финансы во многом изобрели тут, на болоте</strong>, потому что обществу торговцев без короля нужно было как-то доверять друг другу деньги в больших масштабах. Не дворянская честь и не королевская казна, а контракт, акция и репутация — вот на чём держалась эта экономика.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · первый в истории «пузырь»</div>
+      <p>А раз есть рынок — есть и его болезнь. В Нидерландах надулся и лопнул <strong>первый в задокументированной истории спекулятивный пузырь — «тюльпанная лихорадка» (Tulpenmanie), пик в феврале 1637 года</strong>. Луковицы редких тюльпанов стали предметом бешеной спекуляции: цена одной престижной луковицы взлетала до стоимости целого дома на канале, торговали ещё не выкопанными луковицами «на бумаге». А потом, в один зимний день, покупатели просто не пришли на торги — и рынок рухнул в пыль за недели. Масштабы катастрофы историки сейчас считают преувеличенными моралистами того времени, но как <em>притча</em> это бессмертно: первый в мире биржевой психоз случился из-за цветов. Голландцы изобрели не только акцию и биржу — но и финансовый пузырь, и поучительную историю о человеческой жадности впридачу.</p>
+    </div>
+
+    <h3>Почему именно они</h3>
+    <p>Главный вопрос — почему мировую торговлю на век подмяла под себя страна, которой по всем меркам не должно было существовать. Короткий ответ: <strong>всё, что мешало другим, голландцам помогало</strong>. Не было плодородных полей и сословной аристократии, живущей с земли, — значит, энергия общества ушла в торговлю и ремесло. Не было сильного короля — значит, купцы сами управляли политикой в своих интересах и не боялись, что монарх конфискует капитал по прихоти. Была привычка к коллективному финансированию рискованных проектов (вспомните осушение озёр в складчину) — она же сработала и для заморских экспедиций. И была открытость к чужакам и идеям. Бедность ресурсами и слабость короны, которые должны были погубить страну, стали её главным конкурентным преимуществом.</p>
+
+    <blockquote>Акция, биржа, центральный банк — и первый в мире финансовый пузырь из-за цветов. Современные деньги придумали на болоте, потому что обществу без короля надо было как-то доверять друг другу.</blockquote>
+  </section>
+
+  <!-- 9 -->
+  <section class="ch" id="c9">
+    <div class="ch-head"><div class="ch-num">Глава девятая</div><h2 class="ch-title">Год катастроф и неожиданный приход королей</h2></div>
+    <div class="ch-meta"><span class="badge day">1672–1815 · от Республики к Королевству</span><span class="badge time">⏱ 8 мин</span></div>
+
+    <p>Золотой век не мог длиться вечно — и не длился. Эта глава про то, как богатейшая республика мира выдохлась, попала под чужой сапог и, по горькой иронии, в итоге обзавелась <em>королём</em> — тем самым, без которого гордо прожила два века. Заодно поймёте, почему голландская монархия такая молодая.</p>
+
+    <h3>Rampjaar: год катастроф 1672</h3>
+    <p>Перелом часто датируют конкретным годом. <strong>1672-й</strong> вошёл в историю как <em>Rampjaar</em> — «год катастроф». На Республику разом напали Франция Людовика XIV, Англия и два немецких княжества. Французская армия покатилась вглубь страны, и казалось, конец близок. Голландцы прибегли к своему древнейшему оружию — <strong>воде</strong>: открыли дамбы и затопили полосу земли поперёк страны (так называемую «Голландскую водную линию»), сделав её непроходимой для войск. Страну спасло то самое море, с которым она воевала тысячу лет.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · толпа растерзала премьера</div>
+      <p>О том годе есть поговорка: народ был <em>redeloos</em> (обезумевший), правительство — <em>radeloos</em> (в отчаянии), а страна — <em>reddeloos</em> (обречённая). И случилось страшное: разъярённая толпа в Гааге растерзала <strong>Яна де Витта</strong> — фактического главу республики, великого пенсионария, символ «купеческого» правления без сильного штатгальтера, — вместе с братом. Их буквально разорвали на части на улице. На фоне этого ужаса к власти поднялся молодой принц <strong>Вильгельм III Оранский</strong>. И вот ещё одна неожиданная связь: этот самый Вильгельм III в <strong>1688 году</strong> по приглашению англичан высадился в Англии, сверг тестя и стал <strong>королём Англии</strong> (Славная революция). На минуту вдумайтесь: голландский штатгальтер сел на английский трон. Маленькая республика с болота не только торговала с миром — она ещё и поставила короля главному будущему сопернику.</p>
+    </div>
+
+    <h3>Медленный закат</h3>
+    <p>После 1672-го Республика ещё долго была богата, но инициатива уходила. Бесконечные дорогие войны истощали казну; Англия и Франция, большие и централизованные, переигрывали маленькую конфедерацию. Деньги всё чаще не вкладывали в торговлю и флот, а просто <em>ссужали под процент</em> — страна богатых рантье вместо страны дерзких купцов. Та самая децентрализация, что когда-то давала свободу, теперь мешала действовать быстро. К концу XVIII века Республика была уставшей, расколотой и беднеющей тенью себя прежней.</p>
+
+    <h3>Французы, Наполеон — и первый король</h3>
+    <p>Финал республики пришёл извне. В <strong>1795 году</strong> революционная Франция при поддержке местных «патриотов» заняла страну, и Республика Соединённых провинций пала, сменившись зависимой <strong>Батавской республикой</strong>. А дальше — поворот, достойный анекдота. В <strong>1806 году</strong> Наполеон, перекраивавший Европу под свою семью, посадил на голландский трон своего младшего брата <strong>Людовика Бонапарта</strong>, провозгласив <em>Королевство Голландия</em>. Страна, которая в 1581-м гордо уволила своего короля, получила нового — по разнарядке из Парижа.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · «я кролик Голландии»</div>
+      <p>Людовик оказался неожиданно симпатичным правителем. Он искренне старался: учил голландский язык, оставался в Амстердаме во время наводнений и эпидемий, заботился о подданных — и тем безмерно раздражал брата-императора, которому нужен был послушный наместник, а не «голландский патриот». С его языком связан милый исторический анекдот (возможно, приукрашенный): желая сказать подданным «я ваш король» (<em>koning</em>), Людовик якобы оговорился и объявил себя <em>konijn van Olland</em> — «кроликом Голландии». Именно Людовик превратил старую <strong>ратушу на площади Дам в королевский дворец</strong> (он стоит там и сегодня) и основал музей, ставший прародителем <strong>Рейксмузеума</strong>. В 1810-м Наполеон, потеряв терпение, заставил брата отречься и попросту присоединил Голландию к Франции.</p>
+    </div>
+
+    <p>После падения Наполеона победители на Венском конгрессе решили судьбу страны — и решили её в пользу монархии: в <strong>1815 году</strong> возникло <strong>Королевство Нидерландов</strong> во главе с <strong>Виллемом I</strong> из дома Оранских (поначалу вместе с Бельгией, которая отделится в 1830-м). Вот почему голландская монархия такая молодая и почему она такая «скромная»: эта страна <em>помнит</em>, что веками жила республикой, что король ей был навязан историей, — и относится к короне без придыхания, по-деловому. Король тут — символ единства и уважаемый служащий нации, а не помазанник. Очень голландское решение: даже монархию они носят как удобную, а не священную.</p>
+
+    <blockquote>Страна, гордо уволившая короля в 1581-м, получила нового по разнарядке Наполеона в 1806-м. Оттого и корона здесь молодая, а отношение к ней — по-деловому трезвое.</blockquote>
+  </section>
+
+  <!-- 10 -->
+  <section class="ch" id="c10">
+    <div class="ch-head"><div class="ch-num">Глава десятая</div><h2 class="ch-title">Снова делают сушу: XX век и сегодня</h2></div>
+    <div class="ch-meta"><span class="badge day">1885–наши дни · как всё сошлось</span><span class="badge time">⏱ 7 мин</span></div>
+
+    <p>История могла бы кончиться на тихом королевстве рантье — но у воды были другие планы, и именно борьба с ней в XX веке вернула стране её главный сюжет и характер. Финальная глава — о том, как древнейшая голландская тема (отнять землю у моря) дошла до индустриального размаха и сомкнулась с тем, что вы видите сегодня.</p>
+
+    <h3>Второе дыхание города</h3>
+    <p>Сначала про Амстердам. После вялого XVIII–начала XIX века город ожил во второй половине XIX века — пошли железные дороги, открылся канал к морю, вернулась торговля. Символы этого возрождения вы увидите своими глазами: <strong>Рейксмузеум</strong> (1885) и <strong>Центральный вокзал</strong> (1889), оба построены архитектором <strong>Пьером Кёйперсом</strong> в пышном неоготическом «голландском» стиле. Кстати, маленький конфликт в тему первой книги: протестантская верхушка ворчала, что оба здания вышли «слишком католическими» по духу. А вокзал ещё и поставили на искусственном острове <em>между городом и морем</em>, фактически отгородив Амстердам от воды, на которой он стоял, — горожане спорили об этом десятилетиями. Город снова, как и 600 лет назад, перестраивал свои отношения с водой.</p>
+
+    <h3>Осушить целое море</h3>
+    <p>Но настоящий размах вернулся туда, где всё начиналось, — к воде. В первой книге вы уже встречали <strong>Afsluitdijk</strong> — 32-километровую «Замыкающую дамбу», достроенную в <strong>1932 году</strong>, которая наглухо отрезала залив Зёйдерзе от моря и превратила бывшее море в пресное озеро. Это была кульминация тысячелетней логики «отгородись и осуши», доведённая до индустриального предела: <strong>голландцы перегородили дамбой целый морской залив</strong>. А затем осушили его части, создав с нуля новую провинцию — <strong>Флеволанд</strong>, крупнейший в мире рукотворный участок суши, ставший провинцией лишь в <strong>1986 году</strong>. Идея принадлежала инженеру Корнелису Лели, и осуществили её ровно тем же способом, что и Бемстер 300 лет назад, — только масштаб вырос с озера до моря. Та же мельница, тот же польдер, просто теперь с электронасосами и бетоном.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · ночь, которая всё подытожила</div>
+      <p>И финальный аккорд всей этой истории — трагический. В ночь на <strong>1 февраля 1953 года</strong> мощнейший шторм с приливом прорвал старые дамбы на юго-западе. Погибло около <strong>1836 человек</strong> — это была худшая природная катастрофа в стране XX века, прямой потомок наводнения святой Елизаветы 1421 года из третьей главы. Море напомнило, что тысячелетняя война не выиграна, а лишь продолжается. Ответом стал <strong>Дельта-проект (Deltawerken)</strong> — грандиозная система барьеров и шлюзов, одно из инженерных чудес света, с гигантскими подвижными штормовыми заслонами вроде Маслантского барьера под Роттердамом (вы были рядом в понедельник). После 1953-го страна сказала себе: «больше — никогда» — и снова, как тысячу лет назад, всем миром встала против воды.</p>
+    </div>
+
+    <p>Вот и вся дуга, которую вы просили: от мокрых людей Плиния на холмиках — до общества, которое планирует дамбы на сто лет вперёд и спорит о климате не «верю/не верю», а «на сколько сантиметров поднимется море к 2125 году». Всё, что вы встретили в этих трёх книгах, выросло из одного корня. Вода научила их <strong>кооперации</strong> (нельзя держать дамбу в одиночку) — отсюда водные советы и «полдерная» политика. Вода научила их <strong>прагматизму и расчёту</strong> (землю производят за деньги, под процент) — отсюда биржа и купеческая республика. Вода научила их <strong>трезвости и недоверию к величию</strong> (стихия не уважает корон) — отсюда плоское общество, скромная монархия и привычка договариваться. Это не страна, которой «повезло» с характером. Это характер, выкованный тысячелетней дракой с морем.</p>
+
+    <blockquote>Сначала был потоп. Всё остальное — кооперация, республика, биржа, скромный король, велодорожки — это длинный, упрямый ответ одного народа на один вопрос: как не утонуть вместе.</blockquote>
+  </section>
+
+  <!-- ── ШПАРГАЛКА ── -->
+  <section class="cheat" id="cheat">
+    <h2>🧭 Шпаргалка по истории</h2>
+    <p class="sub">Вся книга — в двух десятках строк, чтобы пересказать за ужином.</p>
+
+    <h3>18 опорных точек</h3>
+    <ol class="twenty">
+      <li>Страну основали в <b>дельте трёх рек</b> (Рейн, Маас, Шельда) — на болоте, где «нельзя жить», но удобно торговать.</li>
+      <li>Первые жители <b>2000+ лет жили на терпах</b> — искусственных холмах, пережидая приливы.</li>
+      <li>Около X–XII вв. философия сменилась: от «пережду воду» к <b>«отниму у воды землю»</b> (дамбы).</li>
+      <li>Дамбу в одиночку не держать → возникли <b>waterschappen</b>, выборные водные советы (демократия из грязи).</li>
+      <li><b>Главный парадокс:</b> ниже уровня моря они оказались сами — осушали землю и жгли <b>торф</b> на топливо, отчего грунт проседал.</li>
+      <li>Чем суше делали — тем ниже опускалась земля → вечная зависимость от насосов.</li>
+      <li><b>Наводнение св. Елизаветы (1421)</b> — одна из великих катастроф; легенда о младенце в колыбели → название Kinderdijk.</li>
+      <li><b>Мельница-насос</b> позволила осушать целые озёра (<i>droogmakerij</i>); инженер <b>Леегватер</b>, польдер <b>Бемстер</b> (1612, ЮНЕСКО).</li>
+      <li>Землю осушали <b>купцы как инвестицию</b>, в складчину, под процент — репетиция биржи.</li>
+      <li>Амстердам начался с <b>дамбы на реке Амстел (~1270)</b>; площадь <b>Дам — это и есть та дамба</b>.</li>
+      <li>Толль-привилегия <b>1275</b> (граф Флорис V) — «свидетельство о рождении»; городские права <b>1306</b>.</li>
+      <li>Разбогател на <b>селёдке и пиве</b> («построен на рыбьих костях»); до того был городом паломничества (чудо 1345).</li>
+      <li><b>Восьмидесятилетняя война (1568–1648)</b> против испанских Габсбургов: налоги + религия.</li>
+      <li><b>Акт о клятвенном отречении (1581)</b> — «уволили короля»; идея созвучна Декларации независимости США.</li>
+      <li>Возникла <b>Республика без короля</b> — децентрализованная власть купцов и городов.</li>
+      <li><b>Падение Антверпена (1585)</b> + блокада Шельды → беженцы, деньги и мозги хлынули в Амстердам = топливо Золотого века; терпимость по расчёту.</li>
+      <li><b>Первая современная экономика:</b> VOC (1602), фондовая биржа, банк (1609); первый пузырь — <b>тюльпаны (1637)</b>.</li>
+      <li><b>1672</b> — год катастроф; <b>1806</b> Наполеон даёт брата в короли; <b>1815</b> — Королевство Нидерландов (оттого монархия молодая). <b>1932</b> Afsluitdijk, <b>1953</b> потоп → Дельта-проект.</li>
+    </ol>
+
+    <h3>10 слов и имён</h3>
+    <table class="words">
+      <tr><td class="nl">Terp</td><td class="pr">терп</td><td>искусственный жилой холм</td></tr>
+      <tr><td class="nl">Polder</td><td class="pr">по́лдер</td><td>осушённая земля за дамбой</td></tr>
+      <tr><td class="nl">Droogmakerij</td><td class="pr">дро́хмакерэй</td><td>осушение озера «в сухую землю»</td></tr>
+      <tr><td class="nl">Waterschap</td><td class="pr">ва́терсхап</td><td>водный совет (выборный)</td></tr>
+      <tr><td class="nl">Veen / turf</td><td class="pr">вейн / турф</td><td>торф — топливо, утопившее страну</td></tr>
+      <tr><td class="nl">Dam</td><td class="pr">дам</td><td>плотина (и площадь, и полгорода)</td></tr>
+      <tr><td class="nl">Republiek</td><td class="pr">репюбли́к</td><td>Республика провинций (1581–1795)</td></tr>
+      <tr><td class="nl">Gouden Eeuw</td><td class="pr">ха́уден эйв</td><td>Золотой век (XVII в.)</td></tr>
+      <tr><td class="nl">Rampjaar</td><td class="pr">ра́мпьяр</td><td>«год катастроф» — 1672</td></tr>
+      <tr><td class="nl">Stadhouder</td><td class="pr">ста́тхаудер</td><td>штатгальтер — лидер без короны</td></tr>
+    </table>
+    <p class="sub" style="margin-top:22px;">Звук «g/ch» — горловое «х»; «ij» ≈ «эй»; «oe» ≈ «у»; «ui» ≈ среднее между «ау» и «ой». Вся страна — длинный ответ на вопрос «как не утонуть».</p>
+  </section>
+
+  <footer class="src">
+    <h3>Источники и сверка фактов</h3>
+    <p>Основание Амстердама (дамба ~1270, толль-привилегия Флориса V 27.10.1275, городские права 1306): <a href="https://en.wikipedia.org/wiki/History_of_Amsterdam">History of Amsterdam — Wikipedia</a>, <a href="https://www.britannica.com/place/Amsterdam/History">Britannica</a>, <a href="https://www.dutchamsterdam.nl/2394-amsterdam-toll-privilege">DutchAmsterdam (толль-привилегия)</a>. «Акт о клятвенном отречении» 1581 и параллель с Декларацией независимости США: <a href="https://en.wikipedia.org/wiki/Act_of_Abjuration">Act of Abjuration — Wikipedia</a>, <a href="https://www.newnetherlandinstitute.org/history-and-heritage/additional-resources/dutch-treats/the-act-of-abjuration">New Netherland Institute</a> (влияние дискуссионно: Lucas vs Maier). Остальное (терпы и Плиний, добыча торфа и проседание грунта, наводнение св. Елизаветы 1421, Бемстер и Леегватер, Восьмидесятилетняя война, убийство Вильгельма Оранского 1584, падение Антверпена 1585, VOC/биржа/Wisselbank, тюльпаномания 1637, Rampjaar 1672, Вильгельм III и Англия 1688, Людовик Бонапарт 1806, Королевство 1815, Afsluitdijk 1932, потоп 1953 и Дельта-проект) — по совокупности энциклопедических источников.</p>
+    <p style="opacity:.7;margin-top:14px;">Часть дат и цифр (жертвы потопов, масштаб тюльпаномании) историки оценивают по-разному — где спорно, в тексте это отмечено. Хорошей дороги. 🌊</p>
+    <a class="back-top" href="#top">↑ Наверх, к оглавлению</a>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var themeCb=document.getElementById('theme-cb'), navCb=document.getElementById('nav-cb');
+  try{
+    var saved=localStorage.getItem('nl-theme');
+    if(saved==='dark') themeCb.checked=true;
+    else if(saved==='light') themeCb.checked=false;
+    else if(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) themeCb.checked=true;
+  }catch(e){}
+  themeCb.addEventListener('change',function(){ try{ localStorage.setItem('nl-theme', themeCb.checked?'dark':'light'); }catch(e){} });
+
+  var menu=document.getElementById('menu');
+  menu.addEventListener('click',function(e){ if(e.target.closest('a')) navCb.checked=false; });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') navCb.checked=false; });
+
+  var bar=document.getElementById('progress'), pct=document.getElementById('pct'), here=document.getElementById('here');
+  var sections=Array.prototype.slice.call(document.querySelectorAll('section.ch, section.cheat'));
+  var links={};
+  Array.prototype.forEach.call(menu.querySelectorAll('a[href^="#"]'),function(a){ links[a.getAttribute('href').slice(1)]=a; });
+  function titleOf(sec){ var t=sec.querySelector('.ch-title')||sec.querySelector('h2'); return t?t.textContent.trim():''; }
+  function update(){
+    var h=document.documentElement, scrolled=h.scrollTop||document.body.scrollTop, height=(h.scrollHeight-h.clientHeight)||1;
+    var p=Math.min(100,Math.max(0,Math.round((scrolled/height)*100)));
+    bar.style.width=p+'%'; pct.textContent=p+'%';
+    var mid=scrolled+window.innerHeight*0.30, current=null;
+    for(var i=0;i<sections.length;i++){ if(sections[i].offsetTop<=mid) current=sections[i]; }
+    var id=current?current.id:null;
+    here.textContent=current?titleOf(current):'Страна из воды';
+    for(var k in links){ links[k].classList.toggle('active', k===id); }
+  }
+  var ticking=false;
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(function(){ update(); ticking=false; }); } }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  update();
+})();
+</script>
+
+<script>
+/* Аудиогид: озвучка через Web Speech API (голос устройства, офлайн). */
+(function(){
+  if(!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance==='undefined') return;
+  var synth=window.speechSynthesis;
+  var voice=null, rate=1, items=[], idx=0, playing=false, paused=false, seq=0, hl=null;
+  function pickVoice(){
+    var vs=synth.getVoices()||[];
+    voice=vs.filter(function(v){return /ru[-_]?ru/i.test(v.lang);})[0] || vs.filter(function(v){return /^ru/i.test(v.lang);})[0] || null;
+  }
+  pickVoice();
+  if(synth.onvoiceschanged!==undefined) synth.onvoiceschanged=pickVoice;
+  function clean(s){ return (s||'').replace(/\s+/g,' ').trim(); }
+  function chunk(t){
+    if(t.length<=240) return [t];
+    var parts=t.match(/[^.!?…]+[.!?…]*/g)||[t], out=[], buf='';
+    parts.forEach(function(p){ if((buf+p).length>240){ if(buf) out.push(buf.trim()); buf=p; } else buf+=p; });
+    if(buf.trim()) out.push(buf.trim());
+    return out;
+  }
+  var player=document.createElement('div'); player.id='player';
+  player.innerHTML='<button class="p-pp" aria-label="Пауза или воспроизведение">⏸</button><button class="p-stop" aria-label="Остановить">⏹</button><span class="p-title"></span><span class="p-note"></span><button class="p-rate" aria-label="Скорость">1×</button>';
+  document.body.appendChild(player);
+  var ppBtn=player.querySelector('.p-pp'), stopBtn=player.querySelector('.p-stop'), titleEl=player.querySelector('.p-title'), noteEl=player.querySelector('.p-note'), rateBtn=player.querySelector('.p-rate');
+  function setNote(){ noteEl.textContent=items.length?('§ '+Math.min(idx+1,items.length)+'/'+items.length):''; }
+  function highlight(el){ if(el===hl) return; if(hl) hl.classList.remove('speaking'); hl=el; if(el){ el.classList.add('speaking'); el.scrollIntoView({behavior:'smooth',block:'center'}); } }
+  function clearHl(){ if(hl) hl.classList.remove('speaking'); hl=null; }
+  function build(section){
+    items=[];
+    var title=section.querySelector('.ch-title')||section.querySelector('h2');
+    if(title) chunk(clean(title.textContent)).forEach(function(c){ items.push({el:title,text:c}); });
+    section.querySelectorAll('p, h3, li, blockquote').forEach(function(n){
+      var t=clean(n.textContent); if(t) chunk(t).forEach(function(c){ items.push({el:n,text:c}); });
+    });
+  }
+  function speak(){
+    if(idx>=items.length){ stop(); return; }
+    var my=++seq, it=items[idx]; highlight(it.el); setNote();
+    var u=new SpeechSynthesisUtterance(it.text); u.lang='ru-RU'; if(voice) u.voice=voice; u.rate=rate; u.pitch=1;
+    u.onend=function(){ if(my===seq && playing && !paused){ idx++; speak(); } };
+    u.onerror=function(){ if(my===seq && playing && !paused){ idx++; speak(); } };
+    synth.speak(u);
+  }
+  function start(section,label){ synth.cancel(); build(section); idx=0; playing=true; paused=false; ppBtn.textContent='⏸'; titleEl.textContent=label; player.classList.add('show'); speak(); }
+  function stop(){ playing=false; paused=false; ++seq; synth.cancel(); clearHl(); player.classList.remove('show'); }
+  ppBtn.addEventListener('click',function(){ if(!playing) return; if(paused){ paused=false; synth.resume(); ppBtn.textContent='⏸'; } else { paused=true; synth.pause(); ppBtn.textContent='▶'; } });
+  stopBtn.addEventListener('click',stop);
+  rateBtn.addEventListener('click',function(){ var s=[1,1.2,1.5,0.8], i=s.indexOf(rate); rate=s[(i+1)%s.length]; rateBtn.textContent=rate+'×'; if(playing && !paused){ synth.cancel(); speak(); } });
+  setInterval(function(){ if(playing && !paused && synth.speaking){ synth.pause(); synth.resume(); } },9000);
+  function mkBtn(label){ var b=document.createElement('button'); b.className='listen-btn'; b.textContent='▶ '+label; return b; }
+  document.querySelectorAll('section.ch').forEach(function(sec){
+    var meta=sec.querySelector('.ch-meta'); if(!meta) return;
+    var t=sec.querySelector('.ch-title'), name=t?t.textContent.trim():'главу';
+    var b=mkBtn('Слушать'); b.addEventListener('click',function(){ start(sec,name); }); meta.appendChild(b);
+  });
+  var cheat=document.querySelector('section.cheat');
+  if(cheat){ var cb=mkBtn('Слушать шпаргалку'); cb.className+=' cheat-listen'; cb.addEventListener('click',function(){ start(cheat,'Шпаргалка по истории'); }); var sub=cheat.querySelector('.sub'); if(sub) sub.insertAdjacentElement('afterend',cb); else cheat.insertBefore(cb,cheat.firstChild); }
+  window.addEventListener('beforeunload',function(){ synth.cancel(); });
+})();
+</script>
+</body>
+</html>

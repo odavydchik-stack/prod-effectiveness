@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Де Валлен — прогулка по самому честному кварталу Амстердама</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');
+
+  :root{
+    --cream:#F5F0E8; --navy:#0D1B2A; --orange:#E8631A;
+    --paper:#F5F0E8; --ink:#0D1B2A; --ink-soft:#3a4656;
+    --rule:#d8cfbf; --card:#efe7d8; --accent:#E8631A;
+    --accent-soft:#fbe5d6; --link:#b8480f;
+    --serif:'Playfair Display', Georgia, 'Times New Roman', serif;
+    --sans:'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --maxw:720px;
+  }
+  html[data-theme="dark"], html:has(#theme-cb:checked){
+    --paper:#0D1B2A; --ink:#F5F0E8; --ink-soft:#b9c2cf;
+    --rule:#27384a; --card:#13243a; --accent:#ff7a36;
+    --accent-soft:#1d3147; --link:#ff9a5e;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-size:19px; line-height:1.72;
+    -webkit-text-size-adjust:100%; transition:background .3s ease,color .3s ease;
+  }
+  @media (max-width:480px){ body{font-size:18px;} }
+  @media (max-width:560px){ .topbar .here{display:none;} }
+
+  #theme-cb,#nav-cb{position:absolute;width:1px;height:1px;opacity:0;margin:-1px;padding:0;border:0;clip:rect(0 0 0 0);overflow:hidden;}
+
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:90;
+    display:flex;align-items:center;gap:10px;height:46px;padding:0 12px;
+    background:var(--paper);
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    -webkit-backdrop-filter:saturate(160%) blur(10px);backdrop-filter:saturate(160%) blur(10px);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar .ctrl{
+    font-family:var(--sans);font-size:13px;font-weight:700;color:var(--ink);background:var(--card);
+    border:1px solid var(--rule);border-radius:20px;padding:6px 13px;cursor:pointer;user-select:none;
+    display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+  }
+  .topbar .ctrl:hover{border-color:var(--accent);color:var(--accent);}
+  .topbar .spacer{flex:1;}
+  .topbar .here{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw;}
+  .l-dark{display:none;}
+  html:has(#theme-cb:checked) .l-dark{display:inline;}
+  html:has(#theme-cb:checked) .l-light{display:none;}
+
+  #progress{position:fixed;top:46px;left:0;height:3px;width:0%;background:var(--accent);z-index:91;transition:width .1s linear;}
+  body{padding-top:46px;}
+
+  .menu-backdrop{position:fixed;inset:0;z-index:95;background:rgba(5,12,20,.5);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;}
+  .menu-panel{
+    position:fixed;top:0;left:0;bottom:0;z-index:96;width:min(86vw,360px);
+    background:var(--paper);border-right:1px solid var(--rule);box-shadow:2px 0 28px rgba(0,0,0,.25);
+    transform:translateX(-102%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+    overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 18px 40px;
+  }
+  html:has(#nav-cb:checked) .menu-backdrop{opacity:1;visibility:visible;}
+  html:has(#nav-cb:checked) .menu-panel{transform:translateX(0);}
+  .menu-panel h2{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:12px;color:var(--accent);margin:4px 0 14px;font-weight:700;display:flex;justify-content:space-between;align-items:center;}
+  .menu-panel .close-x{font-size:22px;line-height:1;cursor:pointer;color:var(--ink-soft);padding:0 4px;}
+  .menu-panel ol{margin:0;padding:0;list-style:none;counter-reset:m;}
+  .menu-panel li{counter-increment:m;border-top:1px solid var(--rule);}
+  .menu-panel li:first-child{border-top:none;}
+  .menu-panel a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);padding:11px 4px;line-height:1.3;}
+  .menu-panel a:hover,.menu-panel a:focus{color:var(--accent);background:var(--card);}
+  .menu-panel a.active{color:var(--accent);font-weight:700;}
+  .menu-panel a::before{content:counter(m,decimal-leading-zero);font-family:var(--serif);font-weight:700;color:var(--accent);font-size:13px;min-width:22px;flex-shrink:0;}
+  .menu-panel .mt{flex:1;font-size:15px;}
+  .menu-panel .mr{font-size:11px;color:var(--ink-soft);white-space:nowrap;}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px 120px;}
+
+  header.cover{max-width:var(--maxw);margin:0 auto;padding:40px 22px 30px;text-align:left;}
+  .kicker{font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:.22em;font-size:12px;color:var(--accent);margin-bottom:18px;}
+  h1.title{font-family:var(--serif);font-weight:900;line-height:1.02;font-size:clamp(38px,11vw,70px);margin:0 0 18px;letter-spacing:-.01em;}
+  h1.title em{font-style:italic;color:var(--accent);}
+  .dek{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--ink-soft);line-height:1.45;margin:0 0 26px;max-width:600px;}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:14px;color:var(--ink-soft);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;}
+  .meta-row b{color:var(--ink);}
+
+  nav.toc{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:22px 22px 10px;margin:34px 0 10px;}
+  nav.toc h2{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:13px;color:var(--accent);margin:0 0 14px;font-weight:700;}
+  nav.toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;}
+  nav.toc li{counter-increment:toc;border-top:1px solid var(--rule);}
+  nav.toc li:first-of-type{border-top:none;}
+  nav.toc a{display:flex;align-items:baseline;gap:12px;text-decoration:none;color:var(--ink);padding:11px 0;}
+  nav.toc a:hover{color:var(--accent);}
+  nav.toc a::before{content:counter(toc,decimal-leading-zero);font-family:var(--serif);font-weight:700;color:var(--accent);font-size:15px;min-width:26px;}
+  nav.toc .t{flex:1;font-weight:500;}
+  nav.toc .rt{font-size:12px;color:var(--ink-soft);white-space:nowrap;}
+
+  section.ch{padding-top:54px;scroll-margin-top:64px;}
+  #top,#cheat{scroll-margin-top:64px;}
+  .ch-head{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:6px;}
+  .ch-num{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--accent);margin-bottom:6px;}
+  h2.ch-title{font-family:var(--serif);font-weight:800;line-height:1.06;font-size:clamp(27px,7vw,40px);margin:0;letter-spacing:-.01em;}
+  .ch-meta{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 26px;}
+  .badge{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:20px;}
+  .badge.day{background:var(--accent);color:#fff;}
+  html[data-theme="dark"] .badge.day,html:has(#theme-cb:checked) .badge.day{color:#0D1B2A;}
+  .badge.time{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);}
+
+  p{margin:0 0 20px;}
+  .ch p:first-of-type::first-letter{font-family:var(--serif);font-weight:900;float:left;font-size:64px;line-height:.78;padding:6px 10px 0 0;color:var(--accent);}
+  a.inl{color:var(--link);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;}
+  strong{font-weight:700;} em{font-style:italic;}
+  h3{font-family:var(--serif);font-weight:700;font-size:24px;margin:36px 0 12px;line-height:1.15;}
+
+  blockquote{margin:30px 0;padding:6px 0 6px 24px;border-left:4px solid var(--accent);font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.4;color:var(--ink);}
+  blockquote cite{display:block;font-family:var(--sans);font-style:normal;font-size:14px;color:var(--ink-soft);margin-top:12px;font-weight:500;}
+
+  .hook{background:var(--card);border-radius:12px;padding:20px 22px;margin:28px 0;border:1px solid var(--rule);}
+  .hook .lbl{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:10px;}
+  .hook p:last-child{margin-bottom:0;}
+
+  .route{display:flex;gap:13px;align-items:flex-start;background:var(--accent-soft);border-radius:12px;padding:16px 18px;margin:26px 0;font-size:16.5px;line-height:1.55;}
+  .route .pin{font-size:22px;line-height:1.3;flex-shrink:0;}
+  .route b{color:var(--link);}
+  html[data-theme="dark"] .route b,html:has(#theme-cb:checked) .route b{color:var(--accent);}
+
+  /* предупреждение / этика */
+  .warn{border:1px dashed var(--accent);border-radius:12px;padding:16px 18px;margin:26px 0;font-size:16px;}
+  .warn .lbl{font-family:var(--sans);text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:8px;}
+
+  figure{margin:32px 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;border-radius:10px;background:var(--card);border:1px solid var(--rule);padding:10px;}
+  figcaption{font-size:14px;color:var(--ink-soft);margin-top:10px;font-style:italic;font-family:var(--serif);}
+
+  hr.soft{border:none;border-top:1px solid var(--rule);margin:34px 0;}
+
+  .listen-btn{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em;color:#fff;background:var(--accent);border:none;border-radius:20px;padding:6px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+  html:has(#theme-cb:checked) .listen-btn{color:#0D1B2A;}
+  .listen-btn:hover{filter:brightness(1.07);}
+  .listen-btn.cheat-listen{margin:4px 0 22px;}
+  .speaking{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--accent);border-radius:5px;transition:background .2s ease;}
+  #player{position:fixed;left:50%;bottom:14px;z-index:97;width:min(94vw,560px);transform:translateX(-50%) translateY(160%);display:flex;align-items:center;gap:8px;background:var(--navy);color:var(--cream);border-radius:30px;padding:9px 12px;box-shadow:0 8px 30px rgba(0,0,0,.4);transition:transform .3s cubic-bezier(.4,0,.2,1);}
+  html:has(#theme-cb:checked) #player{border:1px solid var(--rule);background:#08121d;}
+  #player.show{transform:translateX(-50%) translateY(0);}
+  #player button{background:none;border:none;color:var(--cream);font-size:19px;cursor:pointer;width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  #player button:hover{background:rgba(255,255,255,.13);}
+  #player .p-title{flex:1;font-family:var(--serif);font-style:italic;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e7ddcd;min-width:0;}
+  #player .p-note{font-size:11px;color:#9fb0c2;white-space:nowrap;}
+  #player .p-rate{background:rgba(255,255,255,.13);color:#fff;border-radius:15px;font-family:var(--sans);font-size:12px;font-weight:700;width:auto;padding:0 11px;}
+
+  section.cheat{margin-top:64px;background:var(--navy);color:var(--cream);border-radius:16px;padding:34px 26px;}
+  html[data-theme="dark"] section.cheat,html:has(#theme-cb:checked) section.cheat{border:1px solid var(--rule);background:#08121d;}
+  section.cheat h2{font-family:var(--serif);font-weight:800;font-size:30px;margin:0 0 6px;color:var(--cream);}
+  section.cheat .sub{color:#9fb0c2;font-size:14px;margin-bottom:24px;font-family:var(--sans);}
+  section.cheat h3{color:var(--orange);font-size:18px;margin:26px 0 12px;font-family:var(--sans);text-transform:uppercase;letter-spacing:.1em;font-weight:700;}
+  ol.twenty{margin:0;padding-left:22px;} ol.twenty li{margin-bottom:9px;line-height:1.5;color:#e7ddcd;} ol.twenty li b{color:#fff;}
+  table.words{width:100%;border-collapse:collapse;font-size:15px;}
+  table.words td{padding:8px 6px;border-bottom:1px solid #243748;vertical-align:top;color:#e7ddcd;}
+  table.words td.nl{font-family:var(--serif);font-weight:700;color:#fff;white-space:nowrap;}
+  table.words td.pr{color:var(--orange);font-style:italic;white-space:nowrap;}
+
+  footer.src{margin-top:44px;font-size:13px;color:var(--ink-soft);line-height:1.6;}
+  footer.src h3{font-family:var(--sans);text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--accent);}
+  footer.src a{color:var(--link);}
+  .back-top{display:inline-block;margin-top:18px;font-size:14px;color:var(--accent);text-decoration:none;font-weight:700;}
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="theme-cb" aria-hidden="true" tabindex="-1">
+<input type="checkbox" id="nav-cb" aria-hidden="true" tabindex="-1">
+
+<div class="topbar">
+  <label class="ctrl" for="nav-cb" role="button" aria-label="Открыть меню остановок">☰&nbsp;Остановки</label>
+  <span class="here" id="here">Де Валлен · прогулка</span>
+  <span class="spacer"></span>
+  <span class="ctrl" id="pct">0%</span>
+  <label class="ctrl" for="theme-cb" role="button" aria-label="Переключить тему">
+    <span class="l-light">🌙&nbsp;Тёмная</span><span class="l-dark">☀️&nbsp;Светлая</span>
+  </label>
+</div>
+<div id="progress"></div>
+
+<label class="menu-backdrop" for="nav-cb" aria-hidden="true"></label>
+<aside class="menu-panel" id="menu" aria-label="Остановки">
+  <h2>Маршрут прогулки <label class="close-x" for="nav-cb" role="button" aria-label="Закрыть">✕</label></h2>
+  <ol>
+    <li><a href="#s1"><span class="mt">Прежде чем войти</span><span class="mr">4 мин</span></a></li>
+    <li><a href="#s2"><span class="mt">Зеедейк и Чайнатаун</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#s3"><span class="mt">Башня плача и порт</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#s4"><span class="mt">Старая церковь среди окон</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#s5"><span class="mt">Окна: работа, право, риск</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#s6"><span class="mt">Переулки и неон</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#s7"><span class="mt">Бог на чердаке</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#s8"><span class="mt">Кто и зачем сносит квартал</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#s9"><span class="mt">Ньивмаркт: бунт и скальпель</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#s10"><span class="mt">Вармусстраат и выход</span><span class="mr">4 мин</span></a></li>
+    <li><a href="#cheat"><span class="mt">🧭 Шпаргалка прогулки</span><span class="mr">4 мин</span></a></li>
+    <li><a href="#top"><span class="mt">↑ В начало</span><span class="mr"></span></a></li>
+  </ol>
+</aside>
+
+<header class="cover" id="top">
+  <div class="kicker">Книга вторая · читать на ходу · спутник «Погружения в Нидерланды»</div>
+  <h1 class="title">Де Валлен<br>после <em>темноты</em></h1>
+  <p class="dek">Прогулка по самому старому и самому оболганному кварталу Амстердама — где древнейшая церковь города стоит среди витрин с людьми, а городская политика идёт прямо по брусчатке. Читайте на месте, поднимая глаза.</p>
+  <div class="meta-row">
+    <span>🚶 <b>~50 минут</b> чтения + ходьба</span>
+    <span>📍 <b>10 остановок</b> по 4–7 мин</span>
+    <span>🔊 <b>Аудиогид</b> у каждой</span>
+    <span>📶 <b>Работает офлайн</b></span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="toc">
+    <h2>Как идти</h2>
+    <ol>
+      <li><a href="#s1"><span class="t">Прежде чем войти: имя и правила</span><span class="rt">4 мин</span></a></li>
+      <li><a href="#s2"><span class="t">Зеедейк, храм лотоса и бар «Мандье»</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#s3"><span class="t">Башня плача: отсюда уплыли в Нью-Йорк</span><span class="rt">5 мин</span></a></li>
+      <li><a href="#s4"><span class="t">Старая церковь посреди красных окон</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#s5"><span class="t">Окна: работа, право и где тут риск</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#s6"><span class="t">Самый узкий переулок и неон</span><span class="rt">5 мин</span></a></li>
+      <li><a href="#s7"><span class="t">Бог на чердаке: тайная церковь</span><span class="rt">5 мин</span></a></li>
+      <li><a href="#s8"><span class="t">Кто и зачем сносит этот квартал (2026)</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#s9"><span class="t">Ньивмаркт: бунт 1975-го и урок анатомии</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#s10"><span class="t">Вармусстраат и тихий выход</span><span class="rt">4 мин</span></a></li>
+      <li><a href="#cheat"><span class="t">🧭 Шпаргалка прогулки</span><span class="rt">4 мин</span></a></li>
+    </ol>
+  </nav>
+
+  <figure>
+    <svg viewBox="0 0 460 300" role="img" aria-label="Схема маршрута по Де Валлен">
+      <rect x="0" y="0" width="460" height="300" fill="none"/>
+      <!-- два канала -->
+      <rect x="150" y="40" width="16" height="230" rx="6" fill="#5a9bc4" opacity="0.55"/>
+      <rect x="250" y="40" width="16" height="230" rx="6" fill="#5a9bc4" opacity="0.55"/>
+      <text x="158" y="30" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#3d7ea6">O.Z. Voorburgwal</text>
+      <text x="258" y="30" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#3d7ea6">O.Z. Achterburgwal</text>
+      <!-- маршрут -->
+      <path d="M40 60 L120 70 L200 90 L210 150 L300 150 L300 210 L210 230 L120 250" fill="none" stroke="#E8631A" stroke-width="2.5" stroke-dasharray="6 5"/>
+      <g font-family="DM Sans" font-size="11" font-weight="700" fill="currentColor">
+        <circle cx="40" cy="60" r="10" fill="#0D1B2A"/><text x="40" y="64" text-anchor="middle" fill="#fff">1</text><text x="40" y="84" text-anchor="middle">Centraal</text>
+        <circle cx="120" cy="70" r="10" fill="#E8631A"/><text x="120" y="74" text-anchor="middle" fill="#fff">2</text>
+        <circle cx="200" cy="90" r="10" fill="#E8631A"/><text x="200" y="94" text-anchor="middle" fill="#fff">3</text>
+        <circle cx="210" cy="150" r="11" fill="#0D1B2A"/><text x="210" y="154" text-anchor="middle" fill="#fff">4</text><text x="170" y="135" text-anchor="middle" font-size="10">Oude Kerk</text>
+        <circle cx="258" cy="150" r="10" fill="#E8631A"/><text x="258" y="154" text-anchor="middle" fill="#fff">6</text>
+        <circle cx="300" cy="210" r="10" fill="#E8631A"/><text x="300" y="214" text-anchor="middle" fill="#fff">7</text>
+        <circle cx="120" cy="250" r="11" fill="#0D1B2A"/><text x="120" y="254" text-anchor="middle" fill="#fff">9</text><text x="120" y="274" text-anchor="middle" font-size="10">Nieuwmarkt</text>
+      </g>
+      <text x="360" y="60" font-family="Playfair Display, serif" font-style="italic" font-size="13" fill="#E8631A">пунктир —</text>
+      <text x="360" y="78" font-family="Playfair Display, serif" font-style="italic" font-size="13" fill="#E8631A">ваш путь</text>
+      <text x="360" y="110" font-family="DM Sans" font-size="10" fill="currentColor">оранжевые точки —</text>
+      <text x="360" y="124" font-family="DM Sans" font-size="10" fill="currentColor">остановки гида</text>
+    </svg>
+    <figcaption>Грубая схема: от Centraal вдоль Зеедейка, между двумя каналами Валлен, к Старой церкви и вниз к Ньивмаркт. Идите как удобно — текст подождёт.</figcaption>
+  </figure>
+
+  <!-- ── 1 ── -->
+  <section class="ch" id="s1">
+    <div class="ch-head"><div class="ch-num">Остановка первая · перед входом</div><h2 class="ch-title">Прежде чем войти</h2></div>
+    <div class="ch-meta"><span class="badge day">старт: у Centraal</span><span class="badge time">⏱ 4 мин</span></div>
+
+    <p>Вы стоите на пороге места, у которого репутация бежит впереди него на три квартала. Прежде чем нырнуть в неон, договоримся о двух вещах: как это место называется на самом деле и как себя здесь вести, чтобы не быть тем самым туристом.</p>
+
+    <p>Имя. То, что путеводители зовут «кварталом красных фонарей», местные называют <strong>De Wallen</strong> («Де Валлен») или ласково <em>de Walletjes</em>. Слово <em>wallen</em> — это «валы», «насыпи»: средневековые земляные укрепления вдоль воды, с которых и начался Амстердам в XIII веке. То есть вы заходите не в «злачный район», а в <strong>исторический центр города, его старейшую часть</strong> — просто так вышло, что именно тут сошлись порт, моряки и всё, что моряки искали на берегу. Красные фонари — поздний слой на очень древнем камне.</p>
+
+    <div class="warn">
+      <div class="lbl">Правила, которые правда важны</div>
+      <p><strong>Не фотографируйте женщин в окнах</strong> — это не ханжество, а закон вежливости и приватности; телефоны, поднятые к витрине, тут реально отправляли в канал. На каждом окне есть перечёркнутая камера. Не стучите по стеклу, не толпитесь, не пяльтесь. С мая 2023-го на улицах Валлен, Ньивмаркт и Дам <strong>запрещено курить каннабис</strong> (штраф ~€100) — даже если вы только что вышли из кофешопа. И берегите карманы: это туристическая давка, а значит, и щипачи.</p>
+    </div>
+
+    <p>И главное настроение для этой прогулки. Мы не пришли глазеть на «грех». Мы пришли прочитать квартал как текст: про труд и право, про веру и лицемерие, про то, как город торгуется сам с собой за каждый метр брусчатки. Если в первой книге Нидерланды были страной, которую построили вопреки морю, то Де Валлен — это страна, которая спорит сама с собой вслух. Пойдём слушать.</p>
+
+    <blockquote>«Красные фонари» — это маркетинг и мораль чужими руками. Местные говорят «Валлен» — то есть просто «старый город у воды».</blockquote>
+  </section>
+
+  <!-- ── 2 ── -->
+  <section class="ch" id="s2">
+    <div class="ch-head"><div class="ch-num">Остановка вторая · Zeedijk</div><h2 class="ch-title">Зеедейк, храм лотоса и бар «Мандье»</h2></div>
+    <div class="ch-meta"><span class="badge day">улица Zeedijk</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Начнём не с окон, а с улицы, которая прошла путь от ада до открытки. <strong>Zeedijk</strong> — буквально «морская дамба»: это та самая средневековая насыпь, что держала воду. Кривая, узкая, она тянется от вокзала вглубь квартала. В 1970–80-е это был один из самых страшных адресов Европы — открытый героиновый рынок, где наркоторговля шла в открытую, а обычные люди обходили улицу стороной. Город отвоёвывал Зеедейк десятилетиями, и сегодня это бойкая, почти уютная улочка с барами и азиатскими ресторанами. Держите это в голове: всё, что вы тут видите чистеньким, когда-то было полем боя.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · неожиданная связь</div>
+      <p>На Зеедейк, 63 загляните (хотя бы снаружи) в кафе <strong>’t Mandje</strong> («Корзиночка»). Его открыла в <strong>1927 году</strong> Бет ван Берен — женщина на мотоцикле, в кожанке, открытая лесбиянка. Это был один из <strong>первых в мире баров, где можно было быть открыто гомосексуальным</strong> — за десятилетия до того, как это стало где-либо легально или безопасно. Здесь танцевали, целовались и прятались от полицейских облав ещё в эпоху, когда за это сажали. Голландская «терпимость» из первой книги — вот её живой, прокуренный, конкретный адрес. Бар закрылся после смерти Бет, простоял законсервированным десятилетия и снова открылся в 2008-м — почти как музей самому себе.</p>
+    </div>
+
+    <h3>Чайнатаун и храм лотоса</h3>
+    <p>Вы наверняка заметили иероглифы и азиатские вывески — это амстердамский <strong>Чайнатаун</strong>, один из старейших в Европе. Китайская община пришла сюда в начале XX века по той же причине, что и всё в этом квартале: через порт. Это были моряки и кочегары с торговых судов, осевшие у воды.</p>
+    <p>На Зеедейк стоит <strong>храм Хэ Хуа (He Hua / Fo Guang Shan)</strong> — крупнейший буддийский храм традиционной архитектуры в Европе, открытый в 2000 году (ленточку перерезала сама королева Беатрикс). «Хэ Хуа» значит «цветок лотоса» — и одновременно это игра слов, мягкий поклон Голландии. Вдумайтесь в географию одной точки: вы стоите там, где буддийский храм, исторический гей-бар, китайские лавки и витрины секс-работниц умещаются в радиусе двухсот метров. Это и есть Амстердам в его честнейшем виде — не «толерантность» из брошюры, а просто плотное соседство несочетаемого.</p>
+
+    <div class="route">
+      <span class="pin">📍</span>
+      <div>Сориентируйтесь: если идти по <b>Зеедейку</b> от вокзала, он сам выведет вас вглубь — к воде и к каналам Валлен. Не спешите нырять в переулки направо: сначала дойдите до конца, к старой башне у гавани (остановка 3), а уж потом возвращайтесь к церкви и окнам.</div>
+    </div>
+
+    <blockquote>В двухстах метрах: храм, гей-бар 1927 года, китайские лавки и красные окна. Никто не спрашивал, сочетается ли это. Оно просто рядом.</blockquote>
+  </section>
+
+  <!-- ── 3 ── -->
+  <section class="ch" id="s3">
+    <div class="ch-head"><div class="ch-num">Остановка третья · Schreierstoren</div><h2 class="ch-title">Башня плача: отсюда уплыли в Нью-Йорк</h2></div>
+    <div class="ch-meta"><span class="badge day">у гавани, конец Zeedijk</span><span class="badge time">⏱ 5 мин</span></div>
+
+    <p>У самой воды, там, где Зеедейк упирается в гавань, стоит приземистая средневековая башня — <strong>Schreierstoren</strong>, «Башня плача» (около 1480 года). Это остаток той самой городской стены, чьим именем назван весь квартал. Романтики переводят имя как место, где жёны плакали, провожая моряков в море. Историки ворчат, что <em>schreyen</em> тут, скорее, про «острый угол» стены — но, согласитесь, легенда про слёзы на причале слишком хороша, чтобы её отдавать.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · рифма с первой книгой</div>
+      <p>А теперь связь, от которой у вас, людей с биографией через границу, должно ёкнуть. В <strong>1609 году</strong> от этого места отчалил английский капитан <strong>Генри Гудзон</strong> на службе у голландской Ост-Индской компании (той самой VOC из первой книги). Он искал северный путь в Азию — а наткнулся на реку и остров, где вырастет <strong>Новый Амстердам</strong>, будущий Нью-Йорк. Помните Hotel New York в Роттердаме, причал эмиграции в Америку? Вот вам вторая, более древняя точка той же дуги: отсюда, от этой башни, ушёл корабль, с которого, по сути, начался Манхэттен. Город, который Амстердам потерял (англичане отобрали Новый Амстердам в 1664-м), и город, в который потом веками уплывала Европа, — связаны одной голландской мореходной жадностью.</p>
+    </div>
+
+    <p>Зачем мы вообще пришли к воде, прежде чем идти к окнам? Чтобы понять причинно-следственную связь квартала. <strong>Сначала был порт.</strong> Корабли, склады, биржа, деньги — и тысячи моряков, сходящих на берег после месяцев в море с жалованьем в кармане. Всё, что потом стало «кварталом красных фонарей», выросло вокруг этой простой экономики: где причал — там таверна, где таверна — там всё остальное. Валлен не «упали» в разврат. Они <em>выросли</em> из логистики. Запомните это, стоя у башни: вы смотрите на исток.</p>
+
+    <blockquote>Сначала был порт. Окна — это просто то, что вырастает там, где причаливают корабли с деньгами и без женщин.</blockquote>
+  </section>
+
+  <!-- ── 4 ── -->
+  <section class="ch" id="s4">
+    <div class="ch-head"><div class="ch-num">Остановка четвёртая · Oude Kerk</div><h2 class="ch-title">Старая церковь посреди красных окон</h2></div>
+    <div class="ch-meta"><span class="badge day">площадь Oudekerksplein</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Вот сердце прогулки — и её главный парадокс. Посреди витрин с подсветкой, секс-шопов и неона стоит <strong>Oude Kerk</strong>, «Старая церковь» — <em>старейшее здание Амстердама</em>. Деревянную капеллу тут поставили около 1213 года, каменную церковь освятили в 1306-м. Всё вокруг — моложе её на столетия. Окна с женщинами буквально подходят к стенам храма вплотную. Это не ошибка планировки и не современная провокация: церковь и «грех» соседствуют тут <strong>семьсот лет</strong>, и оба пережили друг друга.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · Рембрандт снова здесь</div>
+      <p>Зайдите внутрь, если открыто: пол Старой церкви — это сплошь <strong>надгробные плиты</strong>, под ними покоятся около десяти тысяч человек. Среди них — <strong>Саския ван Эйленбюрх</strong>, жена Рембрандта, похороненная здесь в 1642-м (в том самом году, когда он закончил «Ночной дозор»). Помните разорившегося гения из первой книги? Вот могила любви его жизни — в полу церкви, окружённой кварталом красных фонарей. Рембрандт, к слову, жил в десяти минутах отсюда и наверняка ходил этими переулками. История тут не «связана» с местом — она впечатана в пол под вашими ногами.</p>
+    </div>
+
+    <p>Сегодня Oude Kerk — действующая, но прежде всего это <strong>площадка современного искусства</strong>, и очень смелого. Прямо сейчас (до 27 сентября 2026) здесь идёт инсталляция <strong>Джесси Дарлинг</strong> — британского художника, лауреата Тёрнеровской премии, который работает с темами тела, хрупкости и власти. Древние своды как рама для остросоциального искусства — это, для людей из визуальной культуры, отдельный аттракцион: посмотрите, как пространство «спорит» с тем, что в нём выставляют.</p>
+
+    <h3>Две детали в брусчатке</h3>
+    <p>Перед церковью, на площади, ищите две вещи под ногами и рядом:</p>
+    <ul>
+      <li><strong>«Belle»</strong> — бронзовая статуя женщины, уверенно стоящей в дверном проёме (скульптор Элс Рейерсе, 2007). На постаменте — «Respect sex workers all over the world». Это, как считается, <em>первый в мире памятник секс-работницам</em>. Не «жертвам», не «падшим» — именно работницам, с достоинством.</li>
+      <li><strong>Золотой барельеф в мостовой</strong> — маленькая бронзовая ладонь, накрывающая женскую грудь, вделанная в камни у церкви. Автор анонимен, табличек нет. Кто-то считает это пошлостью, кто-то — нежным тайным салютом женщинам квартала. Найдёте — сами решите.</li>
+    </ul>
+
+    <blockquote>Семьсот лет святое и продажное стоят стена к стене и не падают. Возможно, это и есть самая честная архитектура в Европе.</blockquote>
+  </section>
+
+  <!-- ── 5 ── -->
+  <section class="ch" id="s5">
+    <div class="ch-head"><div class="ch-num">Остановка пятая · окна</div><h2 class="ch-title">Окна: работа, право и где тут риск</h2></div>
+    <div class="ch-meta"><span class="badge day">каналы Валлен, вокруг церкви</span><span class="badge time">⏱ 7 мин</span></div>
+
+    <p>Теперь о главном — спокойно и по-взрослому, как вы и любите. То, что вы видите, — <strong>raamprostitutie</strong>, «оконная проституция»: женщина (реже мужчина или трансперсона) арендует комнату с витриной и работает на себя. Это не «торговля людьми на витрине», как любят пугать, — это, в идеале модели, легальная самозанятость. Но «в идеале» здесь делает много работы, и об этом честно поговорим.</p>
+
+    <h3>Что именно легально</h3>
+    <p>Сама по себе проституция в Нидерландах не была вне закона никогда. Переломный момент — <strong>1 октября 2000 года</strong>: тогда сняли запрет на <em>бордели</em> и оконную аренду, легализовав всю индустрию. Логика — чистый голландский прагматизм из первой книги: это всё равно существует, так выведем на свет, дадим женщинам права, налоги, инспекции, профсоюз — и отрежем криминал. Работница должна быть совершеннолетней, иметь право работать в ЕС, платить налоги; у окон есть лицензии, тревожные кнопки, регламент.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · человек и институция</div>
+      <p>В переулке у церкви (Enge Kerksteeg) найдите <strong>Prostitution Information Center (PIC)</strong> — крошечный центр, основанный в 1994 году <strong>Мариской Майор</strong>, бывшей секс-работницей. Туда можно зайти, купить путеводитель, заглянуть в комнату-образец, задать вопрос без стыда и хихиканья. Рядом — невидимая, но важная история профсоюзной борьбы: старый профсоюз <em>De Rode Draad</em> («Красная нить», с 1985-го) обанкротился в 2012-м, ему на смену пришёл <strong>PROUD</strong> — союз самих секс-работниц. Это та часть, которую туристы не видят: за неоном идёт обычная, нудная, важная борьба за трудовые права — договоры аренды, налоги, безопасность, право не быть «спасёнными» против воли.</p>
+    </div>
+
+    <h3>Где трещина</h3>
+    <p>А теперь честно, без открыточной романтики. Легализация не отменила проблем — она их сделала <em>видимыми</em> и спорными:</p>
+    <ul>
+      <li><strong>Принуждение всё равно есть.</strong> Часть женщин за окнами — под контролем сутенёров или сетей трафикинга (печально известная схема «loverboy» — когда вербуют через фальшивую влюблённость). Легальная витрина может скрывать нелегальное принуждение, и снаружи вы это не отличите. Поэтому «всё под контролем» — лозунг, а не факт.</li>
+      <li><strong>Стигма не ушла.</strong> Многие работницы скрывают профессию от семьи; банки неохотно дают им счета и ипотеку. Право работать есть — а полного социального признания нет.</li>
+      <li><strong>Город давит сверху.</strong> Окон становится всё меньше не потому, что профессия исчезает, а потому что мэрия их выкупает и закрывает (об этом — остановка 8). Меньше легальных окон — больше риска, что работа уходит в тень, где защиты нет вообще. Это ровно тот спор, который кипит прямо сейчас.</li>
+    </ul>
+
+    <p>Вывод для прогулки: не смотрите на окна ни как на «карнавал разврата», ни как на «ад жертв». И то и другое — чужие сценарии, навязанные кварталу снаружи. Реальность взрослее: это регулируемый труд с реальными правами и реальными провалами защиты одновременно. Голландцы не решили проблему — они выбрали смотреть ей в лицо, а не прятать. Можно спорить, лучше ли это. Но это честнее.</p>
+
+    <blockquote>Легализация не сделала всё хорошим. Она сделала всё видимым. А видимое можно защищать, регулировать и оспаривать — в отличие от того, что загнали в тень.</blockquote>
+  </section>
+
+  <!-- ── 6 ── -->
+  <section class="ch" id="s6">
+    <div class="ch-head"><div class="ch-num">Остановка шестая · переулки</div><h2 class="ch-title">Самый узкий переулок и неон</h2></div>
+    <div class="ch-meta"><span class="badge day">Trompettersteeg + O.Z. Achterburgwal</span><span class="badge time">⏱ 5 мин</span></div>
+
+    <p>Дайте себе минуту на чистую сенсорику — этот квартал ведь ещё и аттракцион, и притворяться, что это не так, глупо. Найдите <strong>Trompettersteeg</strong> — самый узкий переулок Амстердама, местами около метра в ширину. Двоим не разойтись, по бокам — окна. Это физически дискомфортное, тесное, очень телесное пространство, и оно не случайно: средневековый город рос плотно, а «индустрия» забивалась в каждую щель. Пройдите (если нет клаустрофобии) — и поймёте про квартал больше, чем из любого текста.</p>
+
+    <p>Канал <strong>Oudezijds Achterburgwal</strong> — самая «громкая» ось Валлен: тут плотнее всего неон, секс-шопы, эротический театр <strong>Casa Rosso</strong> со слоном-логотипом, музей проституции <em>Red Light Secrets</em> (в бывшем борделе — можно зайти и постоять с той стороны окна), смартшопы с трюфелями (помните легальные трюфели против нелегальных грибов из первой книги — вот их прилавок) и кофешопы.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · визуальная культура</div>
+      <p>Для вас как для людей кадра тут есть отдельная тема: <strong>почему именно красный</strong>. Версий две, и обе работают. Прозаическая — красный свет «съедает» дефекты кожи и делает её ровной и тёплой, древний приём подсветки (его и в кино используют). Символическая — красный как сигнал страсти и опасности тянется чуть ли не к библейскому образу. Добавьте сюда, что многие окна подсвечены ещё и <strong>ультрафиолетом</strong>, отчего белое бельё светится, — и вы получите продуманную, столетиями отлаженную систему освещения тела. Это, если угодно, народная кинематография: квартал интуитивно знает про свет то, что операторы учат годами.</p>
+    </div>
+
+    <div class="route">
+      <span class="pin">🚶</span>
+      <div>Совет по навигации: не пытайтесь «обойти всё». Валлен — это сетка из двух каналов (<b>Voorburgwal</b> и <b>Achterburgwal</b>) и перемычек между ними. Идите вдоль одного канала вниз, вдоль другого — обратно, ныряя в поперечные переулки по настроению. Заблудиться невозможно: вода всегда выведет.</div>
+    </div>
+
+    <blockquote>Квартал интуитивно знает про красный и ультрафиолет то, чему операторов учат годами. Это народная светотехника тела.</blockquote>
+  </section>
+
+  <!-- ── 7 ── -->
+  <section class="ch" id="s7">
+    <div class="ch-head"><div class="ch-num">Остановка седьмая · Ons’ Lieve Heer op Solder</div><h2 class="ch-title">Бог на чердаке: тайная церковь</h2></div>
+    <div class="ch-meta"><span class="badge day">O.Z. Voorburgwal 38–40</span><span class="badge time">⏱ 5 мин</span></div>
+
+    <p>Сверните на тихий канал Voorburgwal и найдите обычный с виду купеческий дом. Внутри — то, ради чего стоит купить билет: <strong>«Ons’ Lieve Heer op Solder»</strong>, «Наш Господь на чердаке». Это целая <strong>католическая церковь, спрятанная на верхних этажах</strong> жилого дома: с алтарём, органом, балконами на два яруса — полноценный храм, невидимый с улицы.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · прямая связь с первой книгой</div>
+      <p>Помните <em>gedoogbeleid</em> — голландское «нельзя, но мы смотрим в сторону» — и скрытую церковь в Бегейнхоф? Вот её старший, роскошный брат. После Реформации (конец XVI века) католические мессы в протестантском Амстердаме <strong>запретили</strong>. Но запрет был «мягким»: если служить тихо и не напоказ — власти закрывали глаза. И католики построили этот тайный храм прямо в жилом доме в 1660-х. Снаружи — фасад как фасад, внутри — собор. <strong>Это и есть толерантность по-голландски в трёх измерениях: не «разрешаем», а «не замечаем, пока вы не мозолите глаза».</strong> Та же самая логика, по которой сегодня работают окна и кофешопы в двух шагах отсюда. Один и тот же приём — через четыреста лет, просто про другой «грех».</p>
+    </div>
+
+    <p>Музей открыт с 1888 года — он один из старейших в стране. Поднимаясь по крутым лестницам из жилых комнат к сияющему алтарю под крышей, вы буквально проходите весь сюжет: снаружи закон, внутри — то, что закон терпит. Где ещё так наглядно объяснят вам политическую философию целой нации — на скрипучей деревянной лестнице?</p>
+
+    <blockquote>Снаружи — дом, внутри — собор. Голландская терпимость всегда выглядела именно так: фасад приличия и целый мир, который решили не замечать.</blockquote>
+  </section>
+
+  <!-- ── 8 ── -->
+  <section class="ch" id="s8">
+    <div class="ch-head"><div class="ch-num">Остановка восьмая · политика на брусчатке</div><h2 class="ch-title">Кто и зачем сносит этот квартал (2026)</h2></div>
+    <div class="ch-meta"><span class="badge day">актуально: июнь 2026</span><span class="badge time">⏱ 7 мин</span></div>
+
+    <p>Вот глава ровно для вас — потому что прямо сейчас, пока вы тут гуляете, идёт настоящая политическая битва за судьбу этих улиц. И, что характерно для Нидерландов, это битва не «закрыть или оставить», а мучительный торг о том, <em>сколько, где и за чей счёт</em>. Свежие факты я сверил специально.</p>
+
+    <h3>Project 1012: как город начал скупать грех</h3>
+    <p>В конце 2000-х мэрия запустила <strong>Project 1012</strong> (по почтовому индексу квартала). Официальная цель — снизить преступность и «повысить качество» района. Метод — выкупать окна и кофешопы и заменять их «приличным» бизнесом: бутиками, дизайн-студиями, кафе. Результат: число легальных окон упало с почти <strong>500 в прежние годы до примерно 230 сегодня</strong>. Критики называют это тем, чем оно и является, — <strong>джентрификацией</strong>: под лозунгом борьбы с криминалом из центра выдавливают и работниц, и дешёвые лавки, освобождая дорогую землю.</p>
+
+    <figure>
+      <svg viewBox="0 0 460 210" role="img" aria-label="Сокращение числа окон">
+        <rect x="0" y="0" width="460" height="210" fill="none"/>
+        <line x1="60" y1="170" x2="440" y2="170" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+        <g font-family="DM Sans" font-size="12" fill="currentColor">
+          <rect x="90" y="50" width="60" height="120" fill="#E8631A"/><text x="120" y="42" text-anchor="middle" font-weight="700">~480</text><text x="120" y="188" text-anchor="middle">2000-е</text>
+          <rect x="220" y="113" width="60" height="57" fill="#E8631A" opacity="0.7"/><text x="250" y="105" text-anchor="middle" font-weight="700">~230</text><text x="250" y="188" text-anchor="middle">сегодня</text>
+          <rect x="350" y="138" width="60" height="32" fill="#E8631A" opacity="0.4"/><text x="380" y="130" text-anchor="middle" font-weight="700">~130?</text><text x="380" y="188" text-anchor="middle">план</text>
+        </g>
+        <text x="250" y="22" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="14" fill="#E8631A">Окна: было — стало — задумано</text>
+        <text x="380" y="205" text-anchor="middle" font-family="DM Sans" font-size="9" fill="currentColor" opacity="0.6">если перенести 100 окон в «эротический центр»</text>
+      </svg>
+      <figcaption>За четверть века легальных окон стало вдвое меньше. План мэрии — убрать из центра ещё около сотни. Это и есть предмет драки.</figcaption>
+    </figure>
+
+    <h3>«Эротический центр»: спор в самом разгаре</h3>
+    <p>Следующий шаг мэра <strong>Фемке Халсемы</strong> — вынести часть индустрии из исторического центра в новый <strong>«эротический центр»</strong>: одно большое здание на ~100 комнат где-то на окраине. Идея — разгрузить задыхающийся от секс-туризма центр. На роль площадки выбран <strong>Europa Boulevard</strong> рядом с деловым районом Zuidas. Звучит логично — но дальше начинается голландский клубок противоречий:</p>
+    <ul>
+      <li><strong>Сами секс-работницы — против.</strong> В марте 2026-го они вышли маршем к ратуше: перенос ~100 из 230 окон, по их словам, лишит их заработка и сделает работу <em>опаснее</em> (новое место — на отшибе, меньше людей вокруг, меньше безопасности «толпы»). Парадокс: «защита» женщин, против которой возражают сами женщины.</li>
+      <li><strong>Жители центра — за.</strong> Им осточертели пьяные толпы под окнами, шум и ощущение жизни в зоопарке.</li>
+      <li><strong>Политики разошлись.</strong> Прогрессивная D66 свою поддержку центра пока заморозила; левые GroenLinks и PvdA держат тему в программах, но с условием «существенно сократить число окон и улучшить жизнь в центре».</li>
+    </ul>
+
+    <div class="hook">
+      <div class="lbl">Крючок · кто теперь решает</div>
+      <p>И вот свежий поворот, прямо под вашу поездку. <strong>18 марта 2026 года</strong> в Амстердаме прошли муниципальные выборы. Победила <strong>GroenLinks</strong> (зелёные-левые, ~18%, 10 мест), второй стала D66, третьей — PvdA; левая коалиция удержала большинство, а <strong>Фемке Халсема остаётся мэром</strong>. Решение по «эротическому центру» специально отложили <em>до после выборов</em> — чтобы его принимал новый состав совета, ожидается в середине 2026-го. То есть буквально в эти недели, пока вы ходите по брусчатке, в ратуше в полукилометре отсюда решают, останутся ли эти окна здесь вообще. Вы гуляете по кварталу в момент, когда его будущее ещё не решено.</p>
+    </div>
+
+    <p>Профессиональный вопрос на вынос, ровно про ваши темы: что здесь на самом деле движет политикой — забота о женщинах, борьба с овертуризмом или цена земли в центре древнего города? Голландцы честно проговаривают все три мотива вслух и торгуются о них публично. Сравните с тем, как «реновация исторического центра» обычно подаётся там, где вам это профессионально знакомо, — одним благородным лозунгом, без торга. Здесь торг и есть демократия.</p>
+
+    <blockquote>«Защитить женщин», «разгрузить центр», «освоить дорогую землю» — три разных мотива под одной реформой. Голландцы спорят о всех трёх вслух. В этом весь фокус.</blockquote>
+  </section>
+
+  <!-- ── 9 ── -->
+  <section class="ch" id="s9">
+    <div class="ch-head"><div class="ch-num">Остановка девятая · Nieuwmarkt</div><h2 class="ch-title">Ньивмаркт: бунт 1975-го и урок анатомии</h2></div>
+    <div class="ch-meta"><span class="badge day">площадь Nieuwmarkt + de Waag</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Спуститесь к площади <strong>Nieuwmarkt</strong> — выдохнуть от неона и получить два сюжета сразу. В центре площади стоит <strong>de Waag</strong> («Весовая») — кряжистое здание с башенками, начинавшее в 1488 году как городские ворота (Святого Антония), а потом ставшее весовой палатой, где взвешивали товар. Сегодня внутри ресторан, и можно зайти.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · Рембрандт в третий раз</div>
+      <p>На верхнем этаже Весовой когда-то был <strong>анатомический театр</strong> гильдии хирургов — зал, где публично, при зрителях и за деньги, вскрывали трупы казнённых. Именно такую сцену Рембрандт написал в <strong>«Уроке анатомии доктора Тульпа» (1632)</strong> — одной из самых знаменитых картин голландского Золотого века (оригинал — в Гааге). Молодой Рембрандт сделал себе имя на групповом портрете врачей вокруг вскрытой руки. Так что в этом квартале он трижды: учился ремеслу рядом, похоронил жену в Старой церкви и обессмертил здешний анатомический театр. Город маленький, гений один, а связи всюду.</p>
+    </div>
+
+    <h3>Бунт, спасший район</h3>
+    <p>А теперь — прямое продолжение шестой главы первой книги, где город отвоёвывали у машин. В 1970-х власти собирались протащить через Ньивмаркт <strong>линию метро и автостраду</strong>, для чего сносили целые кварталы старого еврейского района (опустевшего после Холокоста — отдельная тяжёлая рана этого места). Жители и сквоттеры ответили сопротивлением. <strong>24 марта 1975 года</strong> начались <strong>Nieuwmarktrellen</strong> — «бунты на Ньивмаркт»: полиция шла на штурм забаррикадированных домов с водомётами и слезоточивым газом, люди дрались за свои улицы.</p>
+    <p>Итог — половинчатый, но важный: метро всё-таки построили, а вот <strong>автостраду через центр — отменили</strong>, и снос остановили. Это был тот же перелом, что и со «Stop de Kindermoord»: горожане доказали, что город — не чертёж в кабинете чиновника, а то, за что можно драться и что можно отстоять. Спуститесь в метро <strong>Nieuwmarkt</strong> — на станции до сих пор висят артефакты и фотографии тех боёв, вмонтированные в стены как памятник. Подземка, против которой бились, стала музеем этой битвы. Очень по-голландски.</p>
+
+    <blockquote>Метро всё-таки построили. Но автостраду через сердце старого города — остановили телами. Город — это то, за что дерутся, а не то, что чертят.</blockquote>
+  </section>
+
+  <!-- ── 10 ── -->
+  <section class="ch" id="s10">
+    <div class="ch-head"><div class="ch-num">Остановка десятая · Warmoesstraat</div><h2 class="ch-title">Вармусстраат и тихий выход</h2></div>
+    <div class="ch-meta"><span class="badge day">Warmoesstraat → к Дам</span><span class="badge time">⏱ 4 мин</span></div>
+
+    <p>Возвращаясь в сторону площади Дам и «нормального» города, пройдите по <strong>Warmoesstraat</strong> — одной из старейших улиц Амстердама, шедшей вдоль реки Амстел ещё до того, как появились каналы. Когда-то тут жили богатые купцы (по соседству с портом — деньги селились близко к товару), позже улица стала «изнанкой» квартала. Здесь, кстати, с 1987 года работает <strong>Condomerie</strong> — первый в мире специализированный магазин презервативов: появился он не как прикол, а как часть кампании безопасного секса в разгар эпидемии СПИДа. Даже витрина с презервативами тут — след общественного здоровья, а не пошлости.</p>
+
+    <p>И на этом — выдохните. За один короткий маршрут вы прошли сквозь семьсот лет, мимо древнейшей церкви и первого в мире памятника секс-работницам, через тайный храм на чердаке и площадь, отвоёванную в уличных боях, мимо могилы жены Рембрандта и причала, с которого начался Нью-Йорк. «Квартал красных фонарей» оказался не про похоть, а про то, как город уживается сам с собой — с верой и торговлей, законом и попустительством, памятью и деньгами.</p>
+
+    <div class="warn">
+      <div class="lbl">На прощание</div>
+      <p>Если вам было здесь интересно как людям, а не как зевакам, — лучший способ это выразить простой: <strong>уважение</strong>. Не фотографировать женщин, не шуметь, потратить деньги в маленьком местном баре, а не только поглазеть. Квартал устал от тех, кто приходит ржать. Он явно теплеет к тем, кто приходит понять.</p>
+    </div>
+
+    <blockquote>Это не квартал греха. Это квартал, где город перестаёт притворяться приличным — и именно поэтому говорит о себе правду.</blockquote>
+  </section>
+
+  <!-- ── ШПАРГАЛКА ── -->
+  <section class="cheat" id="cheat">
+    <h2>🧭 Шпаргалка прогулки</h2>
+    <p class="sub">Если сядет телефон — вот квартал в двух десятках строк.</p>
+
+    <h3>15 вещей, которые стоит унести</h3>
+    <ol class="twenty">
+      <li>Местное имя — <b>De Wallen</b> («валы»), не «квартал красных фонарей». Это старейшая часть Амстердама.</li>
+      <li>Квартал вырос <b>из порта</b>: причал → таверны → всё остальное. Сначала корабли, потом фонари.</li>
+      <li><b>Не фотографируйте женщин в окнах.</b> Не стучите, не толпитесь. Курить каннабис на улице нельзя (штраф ~€100).</li>
+      <li><b>Oude Kerk</b> — старейшее здание города (1213/1306), стоит прямо среди окон. Внутри — современное искусство (Джесси Дарлинг до 27.09.2026).</li>
+      <li>В полу Старой церкви похоронена <b>Саския</b>, жена Рембрандта (1642).</li>
+      <li><b>Belle</b> у церкви — первый в мире памятник секс-работницам: «Respect sex workers all over the world».</li>
+      <li>Проституция тут была законна всегда; <b>бордели и окна легализовали 1 октября 2000</b> — чтобы дать права и отрезать криминал.</li>
+      <li>Сейчас ~<b>230 лицензированных окон</b> (было ~480). Их методично сокращает мэрия.</li>
+      <li>Легализация сделала индустрию <b>видимой</b>, но не убрала принуждение и стигму. Снаружи свободу от неволи не отличить.</li>
+      <li><b>PIC</b> (с 1994, основан бывшей работницей Мариской Майор) и профсоюз <b>PROUD</b> — невидимая сторона: борьба за трудовые права.</li>
+      <li><b>Ons’ Lieve Heer op Solder</b> — тайная католическая церковь на чердаке (1660-е): живой пример <i>gedogen</i> — «нельзя, но не замечаем».</li>
+      <li><b>Project 1012</b> и план «эротического центра» на Europa Boulevard = джентрификация под лозунгом порядка. Решает новый совет в середине 2026.</li>
+      <li>На выборах <b>18.03.2026</b> в Амстердаме победила <b>GroenLinks</b>; <b>Халсема остаётся мэром</b>; сами работницы вышли на марш <i>против</i> переноса.</li>
+      <li><b>Zeedijk</b>: из героинового ада 1980-х — в улицу баров; кафе <b>’t Mandje</b> (1927) — один из первых открытых гей-баров мира.</li>
+      <li><b>de Waag</b> на Ньивмаркт: анатомический театр → «Урок анатомии доктора Тульпа» Рембрандта (1632). <b>Бунт 1975-го</b> остановил автостраду через центр.</li>
+    </ol>
+
+    <h3>10 слов и имён на ходу</h3>
+    <table class="words">
+      <tr><td class="nl">De Wallen</td><td class="pr">де ва́ллен</td><td>«валы» — местное имя квартала</td></tr>
+      <tr><td class="nl">Raam</td><td class="pr">рам</td><td>окно (отсюда «оконная» работа)</td></tr>
+      <tr><td class="nl">Oude Kerk</td><td class="pr">а́уде керк</td><td>Старая церковь</td></tr>
+      <tr><td class="nl">Zeedijk</td><td class="pr">зе́йдейк</td><td>«морская дамба» — улица</td></tr>
+      <tr><td class="nl">Gedogen</td><td class="pr">хедо́хен</td><td>«терпеть, не замечать» (ключ ко всему)</td></tr>
+      <tr><td class="nl">Steeg</td><td class="pr">стейх</td><td>переулок (Trompetter<b>steeg</b>)</td></tr>
+      <tr><td class="nl">Coffeeshop</td><td class="pr">ко́фишоп</td><td>где каннабис, НЕ кофе</td></tr>
+      <tr><td class="nl">Smartshop</td><td class="pr">сма́ртшоп</td><td>где легальные трюфели</td></tr>
+      <tr><td class="nl">Waag</td><td class="pr">вах</td><td>весовая палата на Ньивмаркт</td></tr>
+      <tr><td class="nl">Respect</td><td class="pr">риспе́кт</td><td>главное правило прогулки</td></tr>
+    </table>
+    <p class="sub" style="margin-top:22px;">Звук «g/ch» — горловое «х». «ij» ≈ «эй», «oe» ≈ «у». И помните: тут живут и работают люди — мы у них в гостях.</p>
+  </section>
+
+  <footer class="src">
+    <h3>Источники и сверка фактов</h3>
+    <p>Актуальная политика (июнь 2026): <a href="https://nltimes.nl/2026/03/19/groenlinks-easily-wins-2026-amsterdam-city-council-election-coalition-gained-one-seat">NL Times — победа GroenLinks на выборах 18.03.2026</a>, <a href="https://www.dutchnews.nl/2026/03/local-elections-left-led-coalition-to-hold-power-in-amsterdam/">DutchNews — левая коалиция удержала Амстердам</a>. «Эротический центр» и протест работниц: <a href="https://time.com/6295154/amsterdam-erotic-center-red-light-district/">TIME</a>, <a href="https://www.amsterdam.nl/en/leisure/new-erotic-centre/">City of Amsterdam — New Erotic Centre</a>, <a href="https://www.timeout.com/news/a-new-location-for-amsterdams-red-light-district-has-been-unveiled-121923">Time Out (Europa Boulevard)</a>. Правила и запрет на курение: <a href="https://www.toursinamsterdam.com/red-light-district-amsterdam/">Tours in Amsterdam (2026)</a>. Oude Kerk сейчас: <a href="https://www.oudekerk.nl/en">oudekerk.nl</a> (Jesse Darling, до 27.09.2026). Исторические факты (Oude Kerk, Ons’ Lieve Heer op Solder, de Waag, Nieuwmarktrellen 1975, ’t Mandje, He Hua, Schreierstoren/Гудзон, легализация 2000) — по совокупности энциклопедических источников.</p>
+    <p style="opacity:.7;margin-top:14px;">Часы музеев и детали меняются — проверяйте на месте. Гуляйте с уважением. 🌹</p>
+    <a class="back-top" href="#top">↑ Наверх, к маршруту</a>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var themeCb=document.getElementById('theme-cb'), navCb=document.getElementById('nav-cb');
+  try{
+    var saved=localStorage.getItem('nl-theme');
+    if(saved==='dark') themeCb.checked=true;
+    else if(saved==='light') themeCb.checked=false;
+    else if(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) themeCb.checked=true;
+  }catch(e){}
+  themeCb.addEventListener('change',function(){ try{ localStorage.setItem('nl-theme', themeCb.checked?'dark':'light'); }catch(e){} });
+
+  var menu=document.getElementById('menu');
+  menu.addEventListener('click',function(e){ if(e.target.closest('a')) navCb.checked=false; });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') navCb.checked=false; });
+
+  var bar=document.getElementById('progress'), pct=document.getElementById('pct'), here=document.getElementById('here');
+  var sections=Array.prototype.slice.call(document.querySelectorAll('section.ch, section.cheat'));
+  var links={};
+  Array.prototype.forEach.call(menu.querySelectorAll('a[href^="#"]'),function(a){ links[a.getAttribute('href').slice(1)]=a; });
+  function titleOf(sec){ var t=sec.querySelector('.ch-title')||sec.querySelector('h2'); return t?t.textContent.trim():''; }
+  function update(){
+    var h=document.documentElement, scrolled=h.scrollTop||document.body.scrollTop, height=(h.scrollHeight-h.clientHeight)||1;
+    var p=Math.min(100,Math.max(0,Math.round((scrolled/height)*100)));
+    bar.style.width=p+'%'; pct.textContent=p+'%';
+    var mid=scrolled+window.innerHeight*0.30, current=null;
+    for(var i=0;i<sections.length;i++){ if(sections[i].offsetTop<=mid) current=sections[i]; }
+    var id=current?current.id:null;
+    here.textContent=current?titleOf(current):'Де Валлен · прогулка';
+    for(var k in links){ links[k].classList.toggle('active', k===id); }
+  }
+  var ticking=false;
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(function(){ update(); ticking=false; }); } }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  update();
+})();
+</script>
+
+<script>
+/* Аудиогид: озвучка через Web Speech API (голос устройства, офлайн). */
+(function(){
+  if(!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance==='undefined') return;
+  var synth=window.speechSynthesis;
+  var voice=null, rate=1, items=[], idx=0, playing=false, paused=false, seq=0, hl=null;
+  function pickVoice(){
+    var vs=synth.getVoices()||[];
+    voice=vs.filter(function(v){return /ru[-_]?ru/i.test(v.lang);})[0] || vs.filter(function(v){return /^ru/i.test(v.lang);})[0] || null;
+  }
+  pickVoice();
+  if(synth.onvoiceschanged!==undefined) synth.onvoiceschanged=pickVoice;
+  function clean(s){ return (s||'').replace(/\s+/g,' ').trim(); }
+  function chunk(t){
+    if(t.length<=240) return [t];
+    var parts=t.match(/[^.!?…]+[.!?…]*/g)||[t], out=[], buf='';
+    parts.forEach(function(p){ if((buf+p).length>240){ if(buf) out.push(buf.trim()); buf=p; } else buf+=p; });
+    if(buf.trim()) out.push(buf.trim());
+    return out;
+  }
+  var player=document.createElement('div'); player.id='player';
+  player.innerHTML='<button class="p-pp" aria-label="Пауза или воспроизведение">⏸</button><button class="p-stop" aria-label="Остановить">⏹</button><span class="p-title"></span><span class="p-note"></span><button class="p-rate" aria-label="Скорость">1×</button>';
+  document.body.appendChild(player);
+  var ppBtn=player.querySelector('.p-pp'), stopBtn=player.querySelector('.p-stop'), titleEl=player.querySelector('.p-title'), noteEl=player.querySelector('.p-note'), rateBtn=player.querySelector('.p-rate');
+  function setNote(){ noteEl.textContent=items.length?('§ '+Math.min(idx+1,items.length)+'/'+items.length):''; }
+  function highlight(el){ if(el===hl) return; if(hl) hl.classList.remove('speaking'); hl=el; if(el){ el.classList.add('speaking'); el.scrollIntoView({behavior:'smooth',block:'center'}); } }
+  function clearHl(){ if(hl) hl.classList.remove('speaking'); hl=null; }
+  function build(section){
+    items=[];
+    var title=section.querySelector('.ch-title')||section.querySelector('h2');
+    if(title) chunk(clean(title.textContent)).forEach(function(c){ items.push({el:title,text:c}); });
+    section.querySelectorAll('p, h3, li, blockquote').forEach(function(n){
+      var t=clean(n.textContent); if(t) chunk(t).forEach(function(c){ items.push({el:n,text:c}); });
+    });
+  }
+  function speak(){
+    if(idx>=items.length){ stop(); return; }
+    var my=++seq, it=items[idx]; highlight(it.el); setNote();
+    var u=new SpeechSynthesisUtterance(it.text); u.lang='ru-RU'; if(voice) u.voice=voice; u.rate=rate; u.pitch=1;
+    u.onend=function(){ if(my===seq && playing && !paused){ idx++; speak(); } };
+    u.onerror=function(){ if(my===seq && playing && !paused){ idx++; speak(); } };
+    synth.speak(u);
+  }
+  function start(section,label){ synth.cancel(); build(section); idx=0; playing=true; paused=false; ppBtn.textContent='⏸'; titleEl.textContent=label; player.classList.add('show'); speak(); }
+  function stop(){ playing=false; paused=false; ++seq; synth.cancel(); clearHl(); player.classList.remove('show'); }
+  ppBtn.addEventListener('click',function(){ if(!playing) return; if(paused){ paused=false; synth.resume(); ppBtn.textContent='⏸'; } else { paused=true; synth.pause(); ppBtn.textContent='▶'; } });
+  stopBtn.addEventListener('click',stop);
+  rateBtn.addEventListener('click',function(){ var s=[1,1.2,1.5,0.8], i=s.indexOf(rate); rate=s[(i+1)%s.length]; rateBtn.textContent=rate+'×'; if(playing && !paused){ synth.cancel(); speak(); } });
+  setInterval(function(){ if(playing && !paused && synth.speaking){ synth.pause(); synth.resume(); } },9000);
+  function mkBtn(label){ var b=document.createElement('button'); b.className='listen-btn'; b.textContent='▶ '+label; return b; }
+  document.querySelectorAll('section.ch').forEach(function(sec){
+    var meta=sec.querySelector('.ch-meta'); if(!meta) return;
+    var t=sec.querySelector('.ch-title'), name=t?t.textContent.trim():'остановку';
+    var b=mkBtn('Слушать'); b.addEventListener('click',function(){ start(sec,name); }); meta.appendChild(b);
+  });
+  var cheat=document.querySelector('section.cheat');
+  if(cheat){ var cb=mkBtn('Слушать шпаргалку'); cb.className+=' cheat-listen'; cb.addEventListener('click',function(){ start(cheat,'Шпаргалка прогулки'); }); var sub=cheat.querySelector('.sub'); if(sub) sub.insertAdjacentElement('afterend',cb); else cheat.insertBefore(cb,cheat.firstChild); }
+  window.addEventListener('beforeunload',function(){ synth.cancel(); });
+})();
+</script>
+</body>
+</html>

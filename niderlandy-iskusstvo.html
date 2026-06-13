@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Музей в лесу — Ван Гог и искусство Нидерландов</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');
+
+  :root{
+    --cream:#F5F0E8; --navy:#0D1B2A; --orange:#E8631A;
+    --paper:#F5F0E8; --ink:#0D1B2A; --ink-soft:#3a4656;
+    --rule:#d8cfbf; --card:#efe7d8; --accent:#E8631A;
+    --accent-soft:#fbe5d6; --link:#b8480f;
+    --serif:'Playfair Display', Georgia, 'Times New Roman', serif;
+    --sans:'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --maxw:720px;
+  }
+  html[data-theme="dark"], html:has(#theme-cb:checked){
+    --paper:#0D1B2A; --ink:#F5F0E8; --ink-soft:#b9c2cf;
+    --rule:#27384a; --card:#13243a; --accent:#ff7a36;
+    --accent-soft:#1d3147; --link:#ff9a5e;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:19px;line-height:1.72;-webkit-text-size-adjust:100%;transition:background .3s ease,color .3s ease;}
+  @media (max-width:480px){ body{font-size:18px;} }
+  @media (max-width:560px){ .topbar .here{display:none;} }
+
+  #theme-cb,#nav-cb{position:absolute;width:1px;height:1px;opacity:0;margin:-1px;padding:0;border:0;clip:rect(0 0 0 0);overflow:hidden;}
+
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;align-items:center;gap:10px;height:46px;padding:0 12px;background:var(--paper);background:color-mix(in srgb, var(--paper) 88%, transparent);-webkit-backdrop-filter:saturate(160%) blur(10px);backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid var(--rule);}
+  .topbar .ctrl{font-family:var(--sans);font-size:13px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:20px;padding:6px 13px;cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+  .topbar .ctrl:hover{border-color:var(--accent);color:var(--accent);}
+  .topbar .spacer{flex:1;}
+  .topbar .here{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw;}
+  .l-dark{display:none;}
+  html:has(#theme-cb:checked) .l-dark{display:inline;}
+  html:has(#theme-cb:checked) .l-light{display:none;}
+
+  #progress{position:fixed;top:46px;left:0;height:3px;width:0%;background:var(--accent);z-index:91;transition:width .1s linear;}
+  body{padding-top:46px;}
+
+  .menu-backdrop{position:fixed;inset:0;z-index:95;background:rgba(5,12,20,.5);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;}
+  .menu-panel{position:fixed;top:0;left:0;bottom:0;z-index:96;width:min(86vw,360px);background:var(--paper);border-right:1px solid var(--rule);box-shadow:2px 0 28px rgba(0,0,0,.25);transform:translateX(-102%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 18px 40px;}
+  html:has(#nav-cb:checked) .menu-backdrop{opacity:1;visibility:visible;}
+  html:has(#nav-cb:checked) .menu-panel{transform:translateX(0);}
+  .menu-panel h2{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:12px;color:var(--accent);margin:4px 0 14px;font-weight:700;display:flex;justify-content:space-between;align-items:center;}
+  .menu-panel .close-x{font-size:22px;line-height:1;cursor:pointer;color:var(--ink-soft);padding:0 4px;}
+  .menu-panel ol{margin:0;padding:0;list-style:none;counter-reset:m;}
+  .menu-panel li{counter-increment:m;border-top:1px solid var(--rule);}
+  .menu-panel li:first-child{border-top:none;}
+  .menu-panel a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);padding:11px 4px;line-height:1.3;}
+  .menu-panel a:hover,.menu-panel a:focus{color:var(--accent);background:var(--card);}
+  .menu-panel a.active{color:var(--accent);font-weight:700;}
+  .menu-panel a::before{content:counter(m,decimal-leading-zero);font-family:var(--serif);font-weight:700;color:var(--accent);font-size:13px;min-width:22px;flex-shrink:0;}
+  .menu-panel .mt{flex:1;font-size:15px;}
+  .menu-panel .mr{font-size:11px;color:var(--ink-soft);white-space:nowrap;}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px 120px;}
+
+  header.cover{max-width:var(--maxw);margin:0 auto;padding:40px 22px 30px;text-align:left;}
+  .kicker{font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:.22em;font-size:12px;color:var(--accent);margin-bottom:18px;}
+  h1.title{font-family:var(--serif);font-weight:900;line-height:1.02;font-size:clamp(40px,12vw,76px);margin:0 0 18px;letter-spacing:-.01em;}
+  h1.title em{font-style:italic;color:var(--accent);}
+  .dek{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--ink-soft);line-height:1.45;margin:0 0 26px;max-width:600px;}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:14px;color:var(--ink-soft);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;}
+  .meta-row b{color:var(--ink);}
+
+  nav.toc{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:22px 22px 10px;margin:34px 0 10px;}
+  nav.toc h2{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:13px;color:var(--accent);margin:0 0 14px;font-weight:700;}
+  nav.toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;}
+  nav.toc li{counter-increment:toc;border-top:1px solid var(--rule);}
+  nav.toc li:first-of-type{border-top:none;}
+  nav.toc a{display:flex;align-items:baseline;gap:12px;text-decoration:none;color:var(--ink);padding:11px 0;}
+  nav.toc a:hover{color:var(--accent);}
+  nav.toc a::before{content:counter(toc,decimal-leading-zero);font-family:var(--serif);font-weight:700;color:var(--accent);font-size:15px;min-width:26px;}
+  nav.toc .t{flex:1;font-weight:500;}
+  nav.toc .rt{font-size:12px;color:var(--ink-soft);white-space:nowrap;}
+
+  section.ch{padding-top:54px;scroll-margin-top:64px;}
+  #top,#cheat{scroll-margin-top:64px;}
+  .ch-head{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:6px;}
+  .ch-num{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--accent);margin-bottom:6px;}
+  h2.ch-title{font-family:var(--serif);font-weight:800;line-height:1.06;font-size:clamp(28px,7vw,42px);margin:0;letter-spacing:-.01em;}
+  .ch-meta{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 26px;}
+  .badge{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:20px;}
+  .badge.day{background:var(--accent);color:#fff;}
+  html[data-theme="dark"] .badge.day,html:has(#theme-cb:checked) .badge.day{color:#0D1B2A;}
+  .badge.time{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);}
+
+  p{margin:0 0 20px;}
+  .ch p:first-of-type::first-letter{font-family:var(--serif);font-weight:900;float:left;font-size:64px;line-height:.78;padding:6px 10px 0 0;color:var(--accent);}
+  a.inl{color:var(--link);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;}
+  strong{font-weight:700;} em{font-style:italic;}
+  h3{font-family:var(--serif);font-weight:700;font-size:24px;margin:36px 0 12px;line-height:1.15;}
+
+  blockquote{margin:30px 0;padding:6px 0 6px 24px;border-left:4px solid var(--accent);font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.4;color:var(--ink);}
+  blockquote cite{display:block;font-family:var(--sans);font-style:normal;font-size:14px;color:var(--ink-soft);margin-top:12px;font-weight:500;}
+
+  .hook{background:var(--card);border-radius:12px;padding:20px 22px;margin:28px 0;border:1px solid var(--rule);}
+  .hook .lbl{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:10px;}
+  .hook p:last-child{margin-bottom:0;}
+
+  .route{display:flex;gap:13px;align-items:flex-start;background:var(--accent-soft);border-radius:12px;padding:16px 18px;margin:26px 0;font-size:16.5px;line-height:1.55;}
+  .route .pin{font-size:22px;line-height:1.3;flex-shrink:0;}
+  .route b{color:var(--link);}
+  html[data-theme="dark"] .route b,html:has(#theme-cb:checked) .route b{color:var(--accent);}
+
+  .warn{border:1px dashed var(--accent);border-radius:12px;padding:16px 18px;margin:26px 0;font-size:16px;}
+  .warn .lbl{font-family:var(--sans);text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:8px;}
+
+  figure{margin:32px 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;border-radius:10px;background:var(--card);border:1px solid var(--rule);padding:10px;}
+  figcaption{font-size:14px;color:var(--ink-soft);margin-top:10px;font-style:italic;font-family:var(--serif);}
+
+  hr.soft{border:none;border-top:1px solid var(--rule);margin:34px 0;}
+
+  .listen-btn{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em;color:#fff;background:var(--accent);border:none;border-radius:20px;padding:6px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+  html:has(#theme-cb:checked) .listen-btn{color:#0D1B2A;}
+  .listen-btn:hover{filter:brightness(1.07);}
+  .listen-btn.cheat-listen{margin:4px 0 22px;}
+  .speaking{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--accent);border-radius:5px;transition:background .2s ease;}
+  #player{position:fixed;left:50%;bottom:14px;z-index:97;width:min(94vw,560px);transform:translateX(-50%) translateY(160%);display:flex;align-items:center;gap:8px;background:var(--navy);color:var(--cream);border-radius:30px;padding:9px 12px;box-shadow:0 8px 30px rgba(0,0,0,.4);transition:transform .3s cubic-bezier(.4,0,.2,1);}
+  html:has(#theme-cb:checked) #player{border:1px solid var(--rule);background:#08121d;}
+  #player.show{transform:translateX(-50%) translateY(0);}
+  #player button{background:none;border:none;color:var(--cream);font-size:19px;cursor:pointer;width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  #player button:hover{background:rgba(255,255,255,.13);}
+  #player .p-title{flex:1;font-family:var(--serif);font-style:italic;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e7ddcd;min-width:0;}
+  #player .p-note{font-size:11px;color:#9fb0c2;white-space:nowrap;}
+  #player .p-rate{background:rgba(255,255,255,.13);color:#fff;border-radius:15px;font-family:var(--sans);font-size:12px;font-weight:700;width:auto;padding:0 11px;}
+
+  section.cheat{margin-top:64px;background:var(--navy);color:var(--cream);border-radius:16px;padding:34px 26px;}
+  html[data-theme="dark"] section.cheat,html:has(#theme-cb:checked) section.cheat{border:1px solid var(--rule);background:#08121d;}
+  section.cheat h2{font-family:var(--serif);font-weight:800;font-size:30px;margin:0 0 6px;color:var(--cream);}
+  section.cheat .sub{color:#9fb0c2;font-size:14px;margin-bottom:24px;font-family:var(--sans);}
+  section.cheat h3{color:var(--orange);font-size:18px;margin:26px 0 12px;font-family:var(--sans);text-transform:uppercase;letter-spacing:.1em;font-weight:700;}
+  ol.twenty{margin:0;padding-left:22px;} ol.twenty li{margin-bottom:9px;line-height:1.5;color:#e7ddcd;} ol.twenty li b{color:#fff;}
+  table.words{width:100%;border-collapse:collapse;font-size:15px;}
+  table.words td{padding:8px 6px;border-bottom:1px solid #243748;vertical-align:top;color:#e7ddcd;}
+  table.words td.nl{font-family:var(--serif);font-weight:700;color:#fff;white-space:nowrap;}
+  table.words td.pr{color:var(--orange);font-style:italic;white-space:nowrap;}
+
+  footer.src{margin-top:44px;font-size:13px;color:var(--ink-soft);line-height:1.6;}
+  footer.src h3{font-family:var(--sans);text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--accent);}
+  footer.src a{color:var(--link);}
+  .back-top{display:inline-block;margin-top:18px;font-size:14px;color:var(--accent);text-decoration:none;font-weight:700;}
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="theme-cb" aria-hidden="true" tabindex="-1">
+<input type="checkbox" id="nav-cb" aria-hidden="true" tabindex="-1">
+
+<div class="topbar">
+  <label class="ctrl" for="nav-cb" role="button" aria-label="Открыть оглавление">☰&nbsp;Главы</label>
+  <span class="here" id="here">Музей в лесу</span>
+  <span class="spacer"></span>
+  <span class="ctrl" id="pct">0%</span>
+  <label class="ctrl" for="theme-cb" role="button" aria-label="Переключить тему">
+    <span class="l-light">🌙&nbsp;Тёмная</span><span class="l-dark">☀️&nbsp;Светлая</span>
+  </label>
+</div>
+<div id="progress"></div>
+
+<label class="menu-backdrop" for="nav-cb" aria-hidden="true"></label>
+<aside class="menu-panel" id="menu" aria-label="Главы">
+  <h2>Оглавление <label class="close-x" for="nav-cb" role="button" aria-label="Закрыть">✕</label></h2>
+  <ol>
+    <li><a href="#c1"><span class="mt">Куда вы едете: музей в лесу</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#c2"><span class="mt">Хелена против всех</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#c3"><span class="mt">Ван Гог: жизнь за десять лет</span><span class="mr">8 мин</span></a></li>
+    <li><a href="#c4"><span class="mt">Что смотреть в Крёллере</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#c5"><span class="mt">Миф против фактов: ухо и безумие</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#c6"><span class="mt">Йо Бонгер: как делается слава</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#c7"><span class="mt">Откуда голландское искусство</span><span class="mr">8 мин</span></a></li>
+    <li><a href="#c8"><span class="mt">От Гааги до Мондриана</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#c9"><span class="mt">Психоделики и искусство</span><span class="mr">8 мин</span></a></li>
+    <li><a href="#c10"><span class="mt">Как они относятся к искусству сейчас</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#cheat"><span class="mt">🎨 Шпаргалка</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#top"><span class="mt">↑ В начало</span><span class="mr"></span></a></li>
+  </ol>
+</aside>
+
+<header class="cover" id="top">
+  <div class="kicker">Книга четвёртая · к воскресенью · спутник «Погружения в Нидерланды»</div>
+  <h1 class="title">Музей<br>в <em>лесу</em></h1>
+  <p class="dek">Почему вторая в мире коллекция Ван Гога спрятана среди сосен и оленей, как голландцы вообще изобрели рынок искусства, кто на самом деле сделал Ван Гога знаменитым — и правда ли, что великое искусство ходит под руку с дурманом. Взрослый разговор о краске, безумии и репутации.</p>
+  <div class="meta-row">
+    <span>⏱ <b>~70 минут</b> суммарно</span>
+    <span>📖 <b>10 глав</b> по 6–8 мин</span>
+    <span>🔊 <b>Аудиогид</b> у каждой</span>
+    <span>📶 <b>Работает офлайн</b></span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="toc">
+    <h2>О чём эта книга</h2>
+    <ol>
+      <li><a href="#c1"><span class="t">Куда вы едете: музей в лесу и парк Велюве</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#c2"><span class="t">Хелена против всех: женщина, собравшая Ван Гога</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#c3"><span class="t">Ван Гог: целая жизнь за десять лет</span><span class="rt">8 мин</span></a></li>
+      <li><a href="#c4"><span class="t">Что смотреть в Крёллер-Мюллере</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#c5"><span class="t">Миф против фактов: ухо, продажи, безумие</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#c6"><span class="t">Йо ван Гог-Бонгер: как делается слава</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#c7"><span class="t">Откуда вообще голландское искусство</span><span class="rt">8 мин</span></a></li>
+      <li><a href="#c8"><span class="t">От Гаагской школы до Мондриана и Стейл</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#c9"><span class="t">Психоделики и искусство: миф против дозы</span><span class="rt">8 мин</span></a></li>
+      <li><a href="#c10"><span class="t">Как Нидерланды относятся к искусству сейчас</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#cheat"><span class="t">🎨 Шпаргалка: всё самое важное</span><span class="rt">5 мин</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section class="ch" id="c1">
+    <div class="ch-head"><div class="ch-num">Глава первая</div><h2 class="ch-title">Куда вы едете: музей в лесу</h2></div>
+    <div class="ch-meta"><span class="badge day">воскресенье · Хоге-Велюве</span><span class="badge time">⏱ 7 мин</span></div>
+
+    <p>Вы сейчас едете примерно час с небольшим на восток от Амстердама, в место, которое нарушает все правила музейной логики. Большие коллекции мирового уровня стоят в столицах, в центре, у вокзалов — там, где толпы. А вы едете в <strong>лес</strong>. Музей Крёллер-Мюллер спрятан в глубине национального парка <strong>Де-Хоге-Велюве</strong> — посреди песчаных пустошей, сосновых боров и вересковых полей, где бродят олени и дикие кабаны. Чтобы дойти до второй по величине в мире коллекции Ван Гога, надо сначала проехать через настоящую дикую природу. Это не недоразумение. Это — высказывание, и сейчас мы разберём, чьё.</p>
+
+    <h3>Парк, который тоже коллекция</h3>
+    <p>Сам парк Хоге-Велюве — это бывшее частное охотничье поместье, около 55 квадратных километров, которые супруги Крёллер-Мюллер скупили в начале XX века. Они хотели всё сразу: и природу, и искусство, и архитектуру — единое произведение, где одно перетекает в другое. Поэтому здесь по дорожкам разбросаны бесплатные <strong>белые велосипеды</strong>: бери любой, кати по лесу к музею, оставляй у входа. Узнаёте? Это поздняя, мирная реинкарнация того самого «Белого велосипедного плана» амстердамских провокаторов 1960-х, о котором была речь в первой книге, — только здесь идея «общего бесплатного велосипеда» наконец-то прижилась и работает десятилетиями.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · здание как манифест</div>
+      <p>Главное здание музея построил бельгийский архитектор <strong>Анри ван де Велде</strong> — один из отцов европейского модерна и функционализма. Он сделал нечто противоположное дворцу: длинные низкие галереи, скромные материалы, огромные окна, через которые в залы втекает <em>тот самый лес</em>. Картина Ван Гога у ван де Велде висит не в золочёном зале, а в светлой комнате, за окном которой — сосны и небо. Это сознательный спор с идеей музея как храма-сокровищницы: здесь искусство не отгорожено от мира бархатом и позолотой, а помещено в природу и свет. Для людей, думающих про визуальное, это отдельный урок кураторства: <strong>рама вокруг картины — это и есть стены, окна и лес</strong>, и Крёллер-Мюллер выстроен так, чтобы вы это почувствовали.</p>
+    </div>
+
+    <p>Не пропустите и <strong>сад скульптур</strong> — один из крупнейших в Европе, прямо вокруг музея, под открытым небом, среди деревьев: Роден, Мур, Серра и десятки других, которые можно обходить, трогать взглядом со всех сторон, ловить в разном свете. И ещё одно здание в глубине парка — <strong>охотничий дом Сент-Хюбертюс</strong> (1920) великого <strong>Х. П. Берлаге</strong>, «дедушки» современной голландской архитектуры (помните Роттердам из первой книги — вся его дерзкая школа выросла из Берлаге). Так что один воскресный день у вас сшивает воедино природу, живопись, скульптуру и архитектуру — ровно как и задумывала хозяйка.</p>
+
+    <div class="route">
+      <span class="pin">🎟</span>
+      <div>Практичное: вход в парк и вход в музей — это, как правило, <b>два отдельных билета</b> (хотя часто продаются вместе) — уточните на кассе. Музей по понедельникам обычно закрыт, но вы едете в воскресенье — удачно. И заложите время на сам парк: ехать сюда ради одного зала, не покрутив педали по лесу, — значит не понять half замысла. А ещё: на 15 сентября 2026-го музей готовит грандиозную выставку «All Van Goghs» — впервые с 1984 года соберёт <em>всю</em> свою коллекцию Ван Гога вместе. Вы её на пару месяцев не застаёте — но знайте, что повод вернуться уже назначен.</div>
+    </div>
+
+    <blockquote>Чтобы дойти до Ван Гога, вам придётся проехать через лес. Это не неудобство — это первая фраза всего высказывания.</blockquote>
+  </section>
+
+  <!-- 2 -->
+  <section class="ch" id="c2">
+    <div class="ch-head"><div class="ch-num">Глава вторая</div><h2 class="ch-title">Хелена против всех</h2></div>
+    <div class="ch-meta"><span class="badge day">основательница · 1869–1939</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Вся эта чудесная несуразность — мировой Ван Гог в лесу — придумана одним человеком, и человек этот незаслуженно почти забыт. Её звали <strong>Хелена Крёллер-Мюллер</strong> (1869–1939), немка по рождению, жена Антона Крёллера — главы крупной торгово-судоходной компании. Деньги в семье были огромные. А у Хелены была страсть, которая по меркам её среды и эпохи выглядела почти неприлично сильной: она хотела <em>понимать и собирать искусство</em> — и не как украшение гостиной, а всерьёз, как миссию.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · ученица, ставшая хищником рынка</div>
+      <p>Около сорока лет, уже замужней дамой, Хелена пошла учиться на курсы искусствоведения к харизматичному педагогу и теоретику <strong>Х. П. Бреммеру</strong> — и это перевернуло её жизнь. Бреммер научил её «видеть», и Хелена принялась скупать живопись с энергией и чутьём, которым позавидовал бы любой делец. За пару десятилетий она собрала около <strong>11 500 произведений</strong> — одну из крупнейших частных коллекций своего времени. И главное: она одной из первых в мире разглядела величину тогда ещё полупризнанного <strong>Ван Гога</strong> и методично скупала его — собрав почти <strong>90 картин и около 180 рисунков</strong>. Это и сегодня <em>вторая коллекция Ван Гога на планете</em> — больше неё только семейный музей в Амстердаме. Женщина, которую не воспринимали всерьёз, обогнала музеи и государства в гонке за художником, которого они ещё не понимали.</p>
+    </div>
+
+    <p>Но Хелена не хотела просто <em>владеть</em>. С самого начала она мыслила коллекцию как дар — будущий публичный музей, «дом искусства», открытый всем. Она даже заказала проект роскошного здания. А потом грянули Первая мировая, кризисы, и семейный бизнес зашатался; денег на дворец-мечту не осталось. И тогда Хелена сделала жест, на который способны единицы: в <strong>1935 году она передала всю коллекцию и землю государству</strong> — в обмен на обещание построить музей и сохранить собрание целым. Музей открылся в <strong>1938 году</strong>, за год до её смерти; первым директором стала она сама.</p>
+
+    <p>Запомните эту мысль на весь день — мы к ней ещё вернёмся в шестой главе: <strong>Ван Гога миру подарили в основном две женщины</strong>, а не музеи и не критики. Одна (Хелена) собрала и сохранила его холсты против вкуса своего времени. Вторая, как мы увидим, сделала его имя великим. Гений писал картины — но кто-то ведь должен был поверить в них раньше всех и не дать им разойтись по чердакам. Этот «кто-то» почти всегда оставался в тени самого художника. Сегодня вы — гость в доме, который построила именно такая тень.</p>
+
+    <blockquote>Художник пишет холст. Но кто-то должен поверить в него раньше всех и не дать холстам пропасть. Ван Гога спасли две женщины — а помним мы только его.</blockquote>
+  </section>
+
+  <!-- 3 -->
+  <section class="ch" id="c3">
+    <div class="ch-head"><div class="ch-num">Глава третья</div><h2 class="ch-title">Ван Гог: целая жизнь за десять лет</h2></div>
+    <div class="ch-meta"><span class="badge day">1853–1890</span><span class="badge time">⏱ 8 мин</span></div>
+
+    <p>Прежде чем встать перед его холстами, держите в голове главную, отрезвляющую цифру: <strong>Винсент Ван Гог стал художником примерно в 27 лет и умер в 37</strong>. Всё, что вы сегодня увидите, и всё, что висит в Амстердаме, Париже, Нью-Йорке, — создано за <em>десять лет</em>. Около 2000 работ за десятилетие — живопись, рисунки, акварели. Это не «долгий путь мастера». Это вспышка.</p>
+
+    <h3>Голландское начало: тёмные годы</h3>
+    <p>Винсент родился в 1853-м в Брабанте, на юге Нидерландов, в семье протестантского пастора. До живописи он успел побыть торговцем картинами, учителем, книготорговцем и — с горящими глазами — проповедником среди шахтёров в бельгийском Боринаже, где раздавал бедным своё имущество, пока его не уволили за избыточное рвение. Только потерпев крах во всём, около 1880 года он взялся за карандаш. Ранний Ван Гог — это <strong>тёмная, землистая, голландская</strong> живопись: крестьяне, ткачи, бурая палитра. Его манифест той поры — <strong>«Едоки картофеля» (1885)</strong>: пять измождённых крестьян при свете лампы едят картошку руками, которыми её и выкопали. Никакой красоты — честность и сострадание. Здесь он ещё ученик голландской традиции (привет Гаагской школе из восьмой главы).</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · Париж включает цвет</div>
+      <p>Всё меняется в <strong>1886 году</strong>, когда Винсент перебирается в Париж к брату Тео. Там он впервые видит импрессионистов, пуантилистов и — внезапно — <strong>японские гравюры</strong>, которые тогда наводнили Европу. И в его палитре будто включают свет: бурая глина уступает место чистому, открытому, звенящему цвету. За два парижских года он буквально переизобретает себя. А потом, в феврале 1888-го, едет на юг, в Арль, гоняясь за солнцем и красками Прованса, — и там, за полтора года, пишет почти всё, что сделало его бессмертным: подсолнухи, жёлтый домик, звёздные ночи, кафе, поля. Темп нечеловеческий: иногда холст в день.</p>
+    </div>
+
+    <h3>Арль, ухо, лечебница</h3>
+    <p>В Арле Винсент мечтал о «мастерской юга» — колонии художников. К нему приехал <strong>Поль Гоген</strong>, но два гения в одном жёлтом домике — это взрыв: они ссорились всё яростнее, и в декабре 1888-го, в приступе, Винсент <strong>отрезал себе часть левого уха</strong> (об этом эпизоде и его мифах — подробно в пятой главе). После этого он, осознавая свою болезнь, <em>сам</em> лёг в психиатрическую лечебницу в Сен-Реми. И — поразительно — именно там, между приступами, в самые тёмные месяцы, написал часть величайших своих вещей, включая знаменитую «Звёздную ночь». Болезнь не «давала» ему искусство (это вредный миф), но и не могла его остановить.</p>
+
+    <p>Последняя глава — городок Овер-сюр-Уаз под Парижем, под присмотром доктора Гаше. Невероятная продуктивность: десятки холстов за считанные недели. И <strong>27 июля 1890 года</strong> Винсент получает огнестрельное ранение в поле; через два дня он умирает, 37 лет от роду. Рядом — брат Тео, его единственная опора. Тео, надломленный, переживёт Винсента лишь на полгода. Эти два брата — настоящий двойной портрет: один писал, второй верил и кормил. Без Тео не было бы ни одного из холстов, перед которыми вы сегодня постоите.</p>
+
+    <figure>
+      <svg viewBox="0 0 460 200" role="img" aria-label="Десять лет Ван Гога">
+        <rect x="0" y="0" width="460" height="200" fill="none"/>
+        <line x1="40" y1="120" x2="430" y2="120" stroke="var(--accent)" stroke-width="2"/>
+        <g font-family="DM Sans" font-size="11" fill="currentColor" text-anchor="middle">
+          <circle cx="60" cy="120" r="5" fill="#6b5a3a"/><text x="60" y="110">1880</text><text x="60" y="145" opacity="0.7">взялся</text><text x="60" y="158" opacity="0.7">за кисть</text>
+          <circle cx="150" cy="120" r="5" fill="#6b5a3a"/><text x="150" y="110">1885</text><text x="150" y="145" opacity="0.7">«Едоки</text><text x="150" y="158" opacity="0.7">картофеля»</text>
+          <circle cx="240" cy="120" r="6" fill="#E8631A"/><text x="240" y="108">1886–88</text><text x="240" y="145" opacity="0.7">Париж:</text><text x="240" y="158" opacity="0.7">цвет!</text>
+          <circle cx="330" cy="120" r="6" fill="#E8631A"/><text x="330" y="108">1888–89</text><text x="330" y="145" opacity="0.7">Арль,</text><text x="330" y="158" opacity="0.7">ухо, Сен-Реми</text>
+          <circle cx="410" cy="120" r="5" fill="#0D1B2A"/><text x="410" y="110">1890</text><text x="410" y="145" opacity="0.7">Овер,</text><text x="410" y="158" opacity="0.7">смерть</text>
+        </g>
+        <text x="235" y="30" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="15" fill="#E8631A">Около 2000 работ за десять лет</text>
+        <text x="150" y="80" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#6b5a3a">тёмная палитра</text>
+        <text x="335" y="80" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#E8631A">взрыв цвета</text>
+      </svg>
+      <figcaption>Вся карьера Ван Гога умещается в одно десятилетие. То, что вы примете за «наследие мастера», — спринт длиной в десять лет.</figcaption>
+    </figure>
+
+    <blockquote>Он начал в 27 и умер в 37. Всё, что вы знаете о Ван Гоге, — это десять лет одного человека, который очень спешил.</blockquote>
+  </section>
+
+  <!-- 4 -->
+  <section class="ch" id="c4">
+    <div class="ch-head"><div class="ch-num">Глава четвёртая</div><h2 class="ch-title">Что смотреть в Крёллере</h2></div>
+    <div class="ch-meta"><span class="badge day">в залах · воскресенье</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Не пытайтесь «осмотреть всё» — это вернейший способ ничего не запомнить. Музей большой, и кроме Ван Гога тут уйма прекрасного. Но раз вы едете прежде всего за ним — вот несколько вещей, ради которых стоит притормозить и постоять молча.</p>
+
+    <h3>Главная жемчужина — но проверьте, на месте ли она</h3>
+    <div class="warn">
+      <div class="lbl">Важно на июнь 2026</div>
+      <p>Самый знаменитый холст коллекции — <strong>«Терраса кафе ночью» (1888, Арль)</strong> — <strong>с 1 сентября 2025 года и примерно до сентября 2026-го уехал на гастроли в Японию</strong> (Кобе → Фукусима → Токио). В дни вашей поездки оригинала в музее, скорее всего, <em>нет</em> — не делайте всю дорогу «ради одной этой картины». Когда она на месте, искать её надо в <strong>Van Gogh Gallery</strong> — галерее-коридоре вокруг маленького внутреннего дворика в самом сердце здания; там же висят и остальные его работы. Уточните на входе: на время отъезда «Террасы» музей делает вокруг её отсутствия отдельную программу.</p>
+    </div>
+    <p>Когда «Терраса» на месте, ради неё и правда стоит притормозить надолго. Ночное кафе под жёлтым газовым фонарём, синее звёздное небо, тёплая охра террасы. И вот в чём фокус, который виден только вблизи: <strong>здесь нет чёрного</strong>. Ван Гог писал ночь не темнотой, а цветом — глубокими синими, фиолетовыми, зелёными. Это маленькая революция: тьма у него <em>светится</em>. Подойдите близко, разглядите мазки, потом отойдите — и ночь соберётся в единое сияние. Это и есть его главное открытие в действии. А пока картина в отъезде — тот же приём примените к его другим ночным и звёздным пейзажам, что остаются в зале.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · как смотреть, чтобы увидеть</div>
+      <p>Один практический приём, который меняет всё. С холстами Ван Гога нужно <strong>двигаться</strong>: подойдите вплотную — почти неприлично близко — и рассмотрите фактуру. Краска у него лежит толстыми пастозными гребнями (техника <em>импасто</em>), местами выдавлена прямо из тюбика, борозды от кисти видны как вспаханное поле. Это живопись, у которой есть <em>рельеф</em>, почти скульптура. А потом отступите на пять-шесть шагов — и хаос мазков вдруг схлопнется в свет, движение, ветер. Ван Гог писал для этих двух дистанций сразу. Туристы делают селфи с трёх метров и не видят ни той, ни другой. Вы — подойдите и отойдите. Это бесплатно и работает лучше любого аудиогида.</p>
+    </div>
+
+    <h3>Ещё несколько остановок</h3>
+    <ul>
+      <li><strong>«Дорога с кипарисами и звездой» / ночные пейзажи Прованса</strong> — кипарисы как тёмные языки пламени, небо в спиралях. Его поздняя «нервная» линия во всей силе.</li>
+      <li><strong>Ранние тёмные вещи и рисунки</strong> (включая горький рисунок «Скорбь» и крестьянские сцены) — поставьте их мысленно рядом с южными холстами и увидите весь путь из третьей главы: от бурой глины к взрыву солнца.</li>
+      <li><strong>Автопортреты и натюрморты с подсолнухами/цветами</strong> — вглядитесь, как меняется его лицо и рука год от года.</li>
+      <li><strong>Соседи по коллекции:</strong> Хелена любила не только Ван Гога. Рядом — <strong>Сёра, Синьяк</strong> и другие пуантилисты (живопись из точек чистого цвета), а ещё ранний Мондриан и Пикассо. Посмотрите пуантилистов сразу после Ван Гога: одна эпоха, два разных ответа на вопрос «что делать с цветом и мазком».</li>
+    </ul>
+
+    <p>И обязательно выйдите в <strong>сад скульптур</strong> — после плотности красок в залах объём, воздух и зелень работают как глоток воды. Смена медиума и масштаба посреди дня — лучшее, что можно сделать с уставшими глазами.</p>
+
+    <blockquote>Подойдите вплотную — увидите вспаханную краску. Отойдите на пять шагов — увидите ветер. Ван Гог писал для обеих дистанций. Не стойте посередине.</blockquote>
+  </section>
+
+  <!-- 5 -->
+  <section class="ch" id="c5">
+    <div class="ch-head"><div class="ch-num">Глава пятая</div><h2 class="ch-title">Миф против фактов: ухо, продажи, безумие</h2></div>
+    <div class="ch-meta"><span class="badge day">разбор легенд</span><span class="badge time">⏱ 7 мин</span></div>
+
+    <p>Вокруг Ван Гога наросло столько романтических мифов, что человек под ними почти исчез. А вы люди, которые профессионально отличают факт от красивой легенды, — так разберём три главных мифа честно.</p>
+
+    <h3>Миф 1: «продал за жизнь всего одну картину»</h3>
+    <p>Любимая фраза экскурсоводов — и она <strong>преувеличение</strong>. Да, при жизни Винсент был коммерчески непризнан, и громко задокументирована одна крупная продажа — холст <em>«Красные виноградники в Арле»</em> (его купила художница Анна Бок незадолго до смерти Винсента). Но «всего одна за всю жизнь» — это упрощение: он продавал и выменивал ещё какие-то работы и рисунки, получал материалы и заказы. Главное же — его на плаву держал <strong>брат Тео, торговец картинами</strong>, который ежемесячно слал ему деньги и краски. Так что Винсент не был «совсем не продаваемым чудаком» — он был художником на содержании у поверившего в него брата. Это менее эффектно, но честнее — и важнее: его искусство выжило не вопреки всем, а благодаря одному конкретному человеку.</p>
+
+    <h3>Миф 2: ухо</h3>
+    <p>«Отрезал себе ухо и подарил возлюбленной» — почти всё в этой фразе неточно. Он отрезал, скорее всего, <strong>часть</strong> уха (мочку и часть раковины), а не всё ухо. Отдал он его не «возлюбленной», а женщине при публичном доме; традиционно её звали Рашель, но недавнее исследование (Бернадетт Мёрфи) указывает, что это могла быть молодая служанка по имени Габриэль. И сделал он это не из романтической экзальтации, а в тяжёлом психическом приступе, вероятно, на фоне ссоры с Гогеном. Реальность тут не «безумный жест влюблённого гения», а <strong>симптом болезни</strong> — и это важно, потому что подводит к третьему мифу.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · и да, про абсент тоже миф</div>
+      <p>Раз уж вы спрашивали про дурман рядом с искусством — вот предельно конкретный разбор на примере Ван Гога, и он показательный. Долго ходила версия, будто его «жёлтое зрение» и любовь к жёлтому вызваны <strong>абсентом</strong> (модным у парижской богемы) или лекарством <strong>дигиталисом</strong> (наперстянкой), от которого бывает «ксантопсия» — видение мира в жёлтом. Звучит красиво. Но наука это в основном <strong>опровергла</strong>: подсчитали, что для «жёлтого эффекта» от абсента надо было бы выпить около <em>182 литров</em> зараз; нет подтверждений, что Винсент вообще принимал дигиталис в дозах, способных дать ксантопсию; а главное — <strong>он любил жёлтый и активно им писал ещё до Парижа</strong>, до всякого абсента и лекарств. Иными словами: его стиль — это его <em>выбор и гений</em>, а не побочный эффект отравы. Запомните это к девятой главе — там мы расширим вывод на всю историю «искусство и вещества».</p>
+    </div>
+
+    <h3>Миф 3: «безумный гений»</h3>
+    <p>Самый живучий и самый вредный. Что именно было с Винсентом, спорят до сих пор: называют эпилепсию (височную), биполярное расстройство, последствия сифилиса, отравление свинцом из красок, обострения от алкоголя и истощения — единого диагноза нет и быть не может, врача рядом с нами нет. Но важны два честных тезиса. Первый: <strong>болезнь ему мешала, а не помогала</strong> — он писал не «благодаря» приступам, а в <em>промежутках</em> между ними, ясной головой, по строгому расчёту цвета (почитайте его письма — это тексты очень трезвого ума). Второй: даже его смерть не так однозначна — есть исследователи (Найфе и Смит), которые доказывают, что рана могла быть результатом несчастного случая с подростками и чужим оружием, а не самоубийства. Доказать уже ничего нельзя. Но романтический штамп «безумец застрелился от тоски» — это сценарий, а не факт.</p>
+
+    <blockquote>«Безумный гений отрезал ухо и застрелился» — это четыре утверждения, и почти каждое неточно. Человек под мифом был куда трезвее, чем удобно думать.</blockquote>
+  </section>
+
+  <!-- 6 -->
+  <section class="ch" id="c6">
+    <div class="ch-head"><div class="ch-num">Глава шестая</div><h2 class="ch-title">Йо ван Гог-Бонгер: как делается слава</h2></div>
+    <div class="ch-meta"><span class="badge day">для медиа и кампаний</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Вот глава ровно по вашей профессии — про то, как репутация <em>делается</em>, а не возникает сама. Потому что у простого и неудобного вопроса «если Ван Гога никто не покупал при жизни, как он стал самым знаменитым художником планеты?» есть конкретный ответ, и это имя редко звучит рядом с его именем. <strong>Йоханна (Йо) ван Гог-Бонгер</strong>.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · вдова, у которой не было выбора, кроме гениального</div>
+      <p>Йо была женой Тео, брата художника. В 1890-м умирает Винсент, через полгода — и сам Тео. И двадцативосьмилетняя вдова остаётся одна, с младенцем на руках и с <strong>наследством, которое все считали обузой</strong>: сотни никому не нужных, не продающихся холстов «сумасшедшего деверя» и сундук его писем. Здравый совет эпохи был — избавиться. Йо поступила наоборот. Не будучи ни искусствоведом, ни торговкой, она посвятила <em>остаток жизни</em> одной задаче: заставить мир увидеть то, что видела она. И провернула, по сути, блестящую долгую кампанию.</p>
+    </div>
+
+    <p>Что именно она сделала — звучит как учебник стратегических коммуникаций столетней давности:</p>
+    <ul>
+      <li><strong>Не распродала всё разом.</strong> Понимала, что ценность создаётся редкостью и присутствием: давала картины на выставки по всей Европе, выстраивала репутацию, продавала <em>дозированно</em>, в «правильные» собрания и музеи, а не первому покупателю.</li>
+      <li><strong>Опубликовала письма.</strong> Это был её главный ход. Йо годами собирала и редактировала переписку Винсента и Тео и издала её. Письма дали миру <em>нарратив</em>: образ страстного, мыслящего, страдающего художника, преданного искусству. Люди влюблялись сначала в историю — а потом уже «правильно» смотрели на холсты. По сути, Йо создала тот самый миф из пятой главы — и сделала это сознательно, как рассказчик.</li>
+      <li><strong>Играла вдолгую.</strong> Она не дожила до триумфа в полной силе (умерла в 1925-м), но передала эстафету сыну — Винсенту Виллему, названному в честь дяди. Именно его усилиями коллекция семьи позже легла в основу амстердамского <strong>Музея Ван Гога</strong> (открыт в 1973-м).</li>
+    </ul>
+
+    <p>Сложите две книги вместе — и получите урок, который вам близок профессионально. Гениальные холсты сами по себе могли пролежать на чердаке и сгинуть. Их превратили в <em>явление</em> два очень разных, но схожих по сути человека: <strong>Хелена</strong>, которая поверила деньгами и собрала, и <strong>Йо</strong>, которая поверила трудом и рассказала. Художник дал искусство. Слава — рукотворна, и сделали её женщины, чьих имён почти никто не помнит. Стоя сегодня перед «Террасой кафе», помните: вы видите её здесь не потому, что «гений пробьётся сам». Гений почти не пробивается сам. Кто-то всегда строит ему дорогу.</p>
+
+    <blockquote>«Гений пробьётся сам» — самая утешительная ложь в истории искусства. Ван Гога пробили две женщины: одна купила холсты, другая рассказала историю.</blockquote>
+  </section>
+
+  <!-- 7 -->
+  <section class="ch" id="c7">
+    <div class="ch-head"><div class="ch-num">Глава седьмая</div><h2 class="ch-title">Откуда вообще голландское искусство</h2></div>
+    <div class="ch-meta"><span class="badge day">контекст · XVII век</span><span class="badge time">⏱ 8 мин</span></div>
+
+    <p>Ван Гог не свалился с неба — за ним стоит традиция, какой больше нет ни у кого. Чтобы понять голландское искусство, надо вернуться в Золотой век (про экономику его мы говорили в первой и третьей книгах; теперь — про то, почему оно <em>выглядит</em> именно так). И главный ключ парадоксален: <strong>голландскую живопись сформировало отсутствие двух главных заказчиков Европы — церкви и короля</strong>.</p>
+
+    <h3>Рынок вместо алтаря</h3>
+    <p>Везде в Европе искусство веками заказывали двое: католическая церковь (алтари, святые, мадонны) и аристократия с монархами (парадные портреты, мифология, дворцы). А протестантская республика без короля (помните шестую главу третьей книги?) обоих этих заказчиков лишилась. Кальвинистские церкви были подчёркнуто голыми — никаких икон и роскоши. Двора, диктующего вкус, не было. И тогда случилось то, чего история ещё не знала: <strong>искусство стало товаром массового рынка</strong>. Картины покупали обычные горожане — купцы, врачи, лавочники, даже зажиточные ремесленники — чтобы повесить дома. По оценкам, за столетие в стране написали <em>миллионы</em> полотен.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · почему у них нет богов, зато есть коровы</div>
+      <p>Рынок переписал само содержание искусства. Раз покупатель — бюргер, который хочет повесить картину в гостиной, то и сюжеты — про <em>его</em> мир: уютные домашние сцены, натюрморты с сыром и устрицами, морские виды с торговыми кораблями, пейзажи с мельницами и коровами, портреты гильдий, зимние катки, даже карты на стенах. Возникли узкие <strong>жанры «на любой кошелёк»</strong> и художники-специалисты: один всю жизнь писал только корабли, другой — только церковные интерьеры, третий — цветы. Вместо святых и героев — повседневность, увиденная с нежностью и невероятным мастерством. Это была первая в истории <strong>светская, буржуазная, рыночная живопись</strong> — и в этом смысле Голландия XVII века ближе к нашему миру визуального контента, чем к Ватикану. Ван Гог с его крестьянами и башмаками — поздний наследник ровно этой традиции «святости обычного».</p>
+    </div>
+
+    <h3>Три имени и «голландский свет»</h3>
+    <p>Гигантов этой эпохи вы знаете: <strong>Рембрандт</strong> (драма света и тьмы, бездонные портреты, человеческая душа крупным планом — он уже был героем второй книги), <strong>Вермеер</strong> (всего около 35 сохранившихся картин, тихие комнаты, женщина у окна, свет как главный персонаж — «Девушка с жемчужной серёжкой»), <strong>Франс Халс</strong> (живые, будто схваченные на лету лица). А над всеми ними — миф о <strong>«голландском свете»</strong>: особом, мягком, ясном освещении этих низких земель, отражённом от воды и огромного влажного неба, которое будто бы и научило голландцев так писать. Честности ради: <em>существование</em> этого особого света учёные оспаривают — кто-то считает его реальным оптическим эффектом плоской мокрой страны, кто-то — красивым культурным мифом, придуманным позже. Но огромные небеса на голландских пейзажах (часто две трети холста) — это точно не выдумка.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · искусство как карта, а не рассказ</div>
+      <p>И тонкая мысль для вас как для людей визуальной культуры. Искусствовед Светлана Альперс в знаменитой книге предложила различать два подхода. Итальянское искусство — <em>повествовательное</em>: картина рассказывает историю, как сцена в театре (распятие, миф, подвиг). А голландское — <em>описательное</em>: картина <strong>описывает видимый мир</strong>, как карта, зеркало или подробный отчёт. Не «что произошло», а «как всё устроено и выглядит». Голландцы были одержимы поверхностями, отражениями, текстурами, оптикой — недаром тут же изобрели микроскоп и телескоп и делали лучшие в мире карты и атласы. Их живопись — это, по сути, <strong>культура высокого разрешения</strong>: мир, рассмотренный в мельчайших деталях ради самого удовольствия видеть. Если угодно, голландцы за 400 лет до вас занимались документальным «контентом» о реальности — и довели его до гениальности.</p>
+    </div>
+
+    <blockquote>Без короля и без церкви искусство стало товаром — и потому начало рассказывать не про богов, а про сыр, корабли и свет. Первая в мире рыночная, светская живопись родилась здесь.</blockquote>
+  </section>
+
+  <!-- 8 -->
+  <section class="ch" id="c8">
+    <div class="ch-head"><div class="ch-num">Глава восьмая</div><h2 class="ch-title">От Гаагской школы до Мондриана и Стейл</h2></div>
+    <div class="ch-meta"><span class="badge day">мост к воскресному вечеру в Утрехте</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Между Золотым веком и сегодняшним днём лежат ещё два важных голландских всплеска — и оба прямо касаются вашего маршрута. Один объясняет самого Ван Гога, второй ждёт вас вечером в Утрехте.</p>
+
+    <h3>Гаагская школа: мост к Ван Гогу</h3>
+    <p>В XIX веке голландская живопись пережила тихое возрождение — <strong>Гаагская школа</strong>: художники писали серое небо, дюны, рыбаков, крестьян, влажные пейзажи родины в приглушённых тонах. Это были прямые наследники Золотого века, обновившие его реализм. И вот живая связь: одним из мастеров Гаагской школы был <strong>Антон Мауве</strong> — родственник Ван Гога по жене, — который в начале 1880-х <em>учил Винсента</em> писать маслом и акварелью. То есть Ван Гог буквально вырос из этой школы: его тёмные «Едоки картофеля» — плоть от плоти гаагского реализма, и только потом Париж «включил ему цвет». Когда смотрите ранние холсты в Крёллере — вы смотрите на гаагские корни.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · страна, расчерченная как Мондриан</div>
+      <p>А в начале XX века голландцы совершили обратный кульбит — от подробного описания мира к радикальной <strong>абстракции</strong>. Движение <strong>«Де Стейл»</strong> (De Stijl, «Стиль», с 1917 года) во главе с <strong>Питом Мондрианом</strong> и Тео ван Дусбургом свело живопись к чистейшему минимуму: прямые чёрные линии, прямоугольники, только красный, жёлтый, синий, белый. Никаких коров и небес — голая геометрия и равновесие. И тут трудно не улыбнуться неожиданной связи: страна <strong>плоская, расчерченная дамбами и каналами на идеальные прямоугольники польдеров</strong> (вспомните Бемстер из третьей книги — осушённое озеро, разлинованное как сетка), вдруг рождает искусство из прямых линий и прямоугольников. Голландский ландшафт — это, по сути, и есть Мондриан, увиденный с высоты. Геометрия осушения проросла в геометрию живописи.</p>
+    </div>
+
+    <div class="route">
+      <span class="pin">🏠</span>
+      <div>И вот прямая привязка к вашему вечеру. Из «Де Стейл» вырос архитектор и дизайнер <b>Геррит Ритвелд</b> — автор знаменитого красно-синего стула и <b>дома Ритвелда-Шрёдер в Утрехте</b> (1924), манифеста всего движения в трёх измерениях и объекта ЮНЕСКО. Если в воскресенье вечером в Утрехте будет минута — вы можете оказаться у того самого дома, где живопись Мондриана стала зданием, в котором живут люди. Идеальный финал «художественного» дня: от Ван Гога в лесу утром — к чистой геометрии «Де Стейл» вечером. (Заодно Утрехт — родина и Дика Бруны с кроликом Мифи, так что визуальная культура там на каждом углу.)</div>
+    </div>
+
+    <p>Добавьте сюда ещё одного голландца — <strong>М. К. Эшера</strong> с его невозможными лестницами и оптическими парадоксами, — и вырисовывается сквозная национальная черта: голландцев веками тянет к <em>порядку, структуре, оптике и игре с тем, как мы видим</em>. От картографов Золотого века через Мондриана к Эшеру — это всё одна линия любви к устройству видимого. Народ, который расчертил саму свою землю, и в искусстве тяготеет к чертежу.</p>
+
+    <blockquote>Страну осушили и расчертили на прямоугольники польдеров — а потом она родила искусство из прямоугольников. Мондриан — это Голландия, увиденная сверху.</blockquote>
+  </section>
+
+  <!-- 9 -->
+  <section class="ch" id="c9">
+    <div class="ch-head"><div class="ch-num">Глава девятая</div><h2 class="ch-title">Психоделики и искусство: миф против дозы</h2></div>
+    <div class="ch-meta"><span class="badge day">ваш вопрос · честный разбор</span><span class="badge time">⏱ 8 мин</span></div>
+
+    <p>Вы спросили прямо: всегда ли рядом с искусством были психоделики и прочий дурман? Отличный взрослый вопрос — и ответ честный получается двойным: <strong>да, вещества сопровождали художников всю историю — и нет, они почти никогда не были источником гениальности</strong>. Разведём миф и факты так же спокойно, как делали это с ухом Ван Гога.</p>
+
+    <h3>Краткая история искусства «под чем-то»</h3>
+    <p>Связка реальна и древняя:</p>
+    <ul>
+      <li><strong>Вино и Дионис.</strong> Ещё античность связала творческий экстаз с опьянением: театр, поэзия, дионисийские мистерии. Опьянение как «выход за пределы себя» — древнейшая метафора вдохновения.</li>
+      <li><strong>Опиум и романтики.</strong> На рубеже XVIII–XIX веков опиумная настойка (лауданум) была легальным аптечным товаром. Поэт Кольридж уверял, что увидел поэму «Кубла-хан» в опиумном сне; Томас де Квинси прославился «Исповедью англичанина, употреблявшего опиум». Романтики сделали наркотик частью мифа о поэте-визионере.</li>
+      <li><strong>Абсент и парижская богема.</strong> Во времена Ван Гога Париж был помешан на абсенте — «зелёной фее». Его пили Тулуз-Лотрек, Дега (его картина «Абсент» — целый портрет эпохи), Мане, Верлен, Рембо. Абсенту приписывали галлюцинации и безумие — но, как мы видели в пятой главе, это в основном миф: «зелёную фею» губил не загадочный туйон, а банальные 70% алкоголя.</li>
+      <li><strong>ХХ век: мескалин и ЛСД.</strong> В 1954-м писатель Олдос Хаксли описал опыт с мескалином в книге «Двери восприятия» — и дал языку поколения само слово (от него потом и название группы The Doors). В 1960-е психоделики породили целый <em>визуальный стиль</em>: кислотные афиши, текучие буквы, узоры рок-плакатов, обложки альбомов. Тут связь самая прямая: психоделическая эстетика — это действительно отдельное художественное явление.</li>
+    </ul>
+
+    <div class="hook">
+      <div class="lbl">Крючок · главный трезвый вывод</div>
+      <p>А теперь то, ради чего вся глава. Соблазнительно решить, что вещества <em>дают</em> искусство. Но если присмотреться, картина обратная. Ван Гог писал свой жёлтый <em>до</em> абсента и вопреки болезни, а не из-за них (глава 5). Кольридж так и не дописал «Кубла-хан». Большинство великих под опиумом и абсентом творили <em>не в моменты опьянения, а вопреки ему</em> — а многих зависимость попросту убила раньше срока. <strong>Романтический миф «гений творит под дурманом» — это чаще всего ретроспективная красивая обёртка</strong>: мы любим истории про мучеников и визионеров, и задним числом приписываем веществу то, что было трудом, дисциплиной и талантом. Вещество не пишет картину. Картину пишет тот, кто умеет писать, — иногда несмотря на вещество.</p>
+    </div>
+
+    <h3>А что говорит наука сегодня</h3>
+    <p>Раз уж мы во взрослом разговоре — вот честное состояние вопроса. Современная наука переживает «психоделический ренессанс»: всерьёз исследуют псилоцибин и подобные вещества как <strong>лекарство</strong> — при тяжёлой депрессии, ПТСР, зависимостях, в строго клинических условиях. Это перспективное медицинское направление. А вот насчёт «повышают ли они творчество» — данные куда скромнее: строгие исследования (включая модный «микродозинг») в основном показывают, что заметная часть эффекта — это <em>ожидание и плацебо</em>; устойчивого, доказанного прироста креативности не находят. Ощущение «я гениален» под веществом и реальная ценность сделанного —, как известно любому, кто наутро перечитывал ночные «гениальные» идеи, две очень разные вещи.</p>
+
+    <div class="warn">
+      <div class="lbl">Голландский контекст — и трезвая нота</div>
+      <p>Вы в стране, где, как мы помним из первой книги, легальны псилоцибиновые <strong>трюфели</strong> (в отличие от грибов), работают смартшопы, а психоделическая терапия и «ретриты» — заметная индустрия. Это уникальная возможность <em>спокойно поговорить</em> об этой теме без истерики — что и есть очень по-голландски. Но честный гид обязан сказать и трезвое: вещества — это про риск (психическое состояние, дозировка, контекст), а не про волшебную кнопку «творчество». Самые мощно изменённые состояния сознания художники тысячелетиями получали и без всякой химии — постом, бессонницей, медитацией, ритмом труда, влюблённостью и горем. Лучшее, что даёт эта тема, — не рецепт, а вопрос: <strong>что вообще такое «изменённый взгляд», и почему мы так хотим верить, что его можно купить в смартшопе?</strong></p>
+    </div>
+
+    <blockquote>Вещества сопровождали искусство всегда — и почти никогда его не создавали. Краску кладёт не «зелёная фея». Её кладёт тот, кто умеет, — порой вопреки фее.</blockquote>
+  </section>
+
+  <!-- 10 -->
+  <section class="ch" id="c10">
+    <div class="ch-head"><div class="ch-num">Глава десятая</div><h2 class="ch-title">Как они относятся к искусству сейчас</h2></div>
+    <div class="ch-meta"><span class="badge day">сегодня · и итог</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Закроем круг — от Золотого века к сегодняшнему дню. Современные Нидерланды относятся к искусству ровно так, как завещала их история: <strong>одновременно как к национальному сокровищу и как к бизнесу</strong>. Эти две вещи тут не противоречат друг другу — они и есть голландская традиция, начатая ещё рыночной живописью XVII века.</p>
+
+    <h3>Две коллекции, один культ</h3>
+    <p>С Ван Гогом у страны вышла красивая «двойная звезда»: <strong>Музей Ван Гога</strong> в Амстердаме (выросший из семейного наследия Йо и её сына, крупнейшая коллекция в мире) и ваш сегодняшний <strong>Крёллер-Мюллер</strong> в лесу (вторая в мире, наследие Хелены). Две женщины, две коллекции, один художник, поднятый из безвестности на вершину мирового культа. Голландцы сделали Ван Гога чем-то вроде светского святого — и да, мощной статьёй экономики.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · ирония на миллиард</div>
+      <p>Вот ирония, от которой не уйти, и вы как люди медиа её оцените. Человек, который при жизни едва продал свои работы и жил на содержании брата, посмертно породил <strong>индустрию на миллиарды</strong>: его холсты — среди самых дорогих на аукционах, его подсолнухи на кружках и зонтах, по всему миру колесят коммерческие <em>«иммерсивные шоу Ван Гога»</em> — залы, где его мазки гигантски проецируют на стены под музыку. Самый «непродаваемый» художник истории стал самым продаваемым брендом в искусстве. Спросите себя по дороге: что бы сказал Винсент, проповедник-аскет, раздававший имущество шахтёрам, увидев очередь за билетом на проекцию своих звёзд по €25? Это и трогательно, и немного жутко — и очень в духе страны, которая первой превратила картины в рыночный товар.</p>
+    </div>
+
+    <h3>Серьёзная сторона</h3>
+    <p>Но было бы несправедливо свести всё к сувенирам. Современный голландский подход к искусству — ещё и про <strong>взрослую работу с трудными вопросами</strong>, и вы это уже видели в других книгах:</p>
+    <ul>
+      <li><strong>Пересмотр прошлого:</strong> большая выставка «Рабство» в Рейксмузеуме (2021), переписывание музейных табличек, разговор о колониальных корнях богатства (первая книга).</li>
+      <li><strong>Реституция:</strong> Нидерланды одними из первых в Европе всерьёз занялись возвратом произведений, награбленных у еврейских владельцев в годы нацизма, и предметов, вывезенных из колоний.</li>
+      <li><strong>Живое современное искусство в старых стенах:</strong> остросоциальные инсталляции в древней Аудекерк прямо посреди квартала красных фонарей (вторая книга), зеркальный «горшок» хранилища Депо Бойманса в Роттердаме (первая книга), где запасники сделали публичными.</li>
+    </ul>
+
+    <p>Вот и весь сквозной сюжет четырёх книг, сошедшийся в одной точке — в лесу, перед «Террасой кафе». Народ, который произвёл свою землю как актив (книга 3), сделал торговлю религией (книга 1) и изобрёл рынок искусства (эта книга), относится к красоте без придыхания и без цинизма одновременно: как к величайшей ценности <em>и</em> как к части жизни, которую можно купить, продать, оспорить и переосмыслить. Картина у них — не икона за бархатным канатом, а часть общего разговора. Поэтому и стоит их главный Ван Гог не в золотом дворце, а в светлом доме посреди соснового леса, куда вы приехали на белом велосипеде. Это и есть голландский ответ на вопрос «что такое искусство»: <strong>сокровище, которое не нужно прятать от жизни</strong>.</p>
+
+    <blockquote>Самый непродаваемый художник истории стал самым продаваемым брендом. Это и трогательно, и жутко — и совершенно по-голландски: красота здесь всегда была и святыней, и товаром сразу.</blockquote>
+  </section>
+
+  <!-- ── ШПАРГАЛКА ── -->
+  <section class="cheat" id="cheat">
+    <h2>🎨 Шпаргалка</h2>
+    <p class="sub">Вся книга — в двух десятках строк, на случай очереди в кассу.</p>
+
+    <h3>18 вещей, которые стоит унести</h3>
+    <ol class="twenty">
+      <li><b>Крёллер-Мюллер</b> — 2-я коллекция Ван Гога в мире (после амстердамской), стоит в лесу в парке <b>Хоге-Велюве</b>.</li>
+      <li>Музей в лесу — это замысел: искусство + природа + архитектура как единое целое. Здание — <b>Анри ван де Велде</b>.</li>
+      <li>По парку — бесплатные <b>белые велосипеды</b> (поздняя версия идеи Provo из книги 1). Есть и сад скульптур, и охотничий дом <b>Берлаге</b> (1920).</li>
+      <li><b>Хелена Крёллер-Мюллер</b> собрала ~11 500 работ, в т.ч. ~90 картин Ван Гога, и подарила всё государству (1935).</li>
+      <li>Ван Гог стал художником в <b>27</b>, умер в <b>37</b>: всё его наследие — это <b>10 лет</b> и ~2000 работ.</li>
+      <li>Путь: тёмная голландская палитра («Едоки картофеля», 1885) → Париж включает <b>цвет</b> (1886) → Арль, взрыв (1888).</li>
+      <li>Главный холст — <b>«Терраса кафе ночью» (1888)</b> (ночь написана <b>без чёрного</b>, цветом), но <b>в июне 2026 он на гастролях в Японии</b> — оригинала на месте нет до ~сентября 2026.</li>
+      <li>Как смотреть: <b>подойти вплотную</b> (рельеф краски, импасто) и <b>отойти на 5 шагов</b> (всё собирается в свет).</li>
+      <li><b>Миф «продал одну картину»</b> — преувеличение: его содержал брат <b>Тео</b>, торговец картинами.</li>
+      <li><b>Ухо:</b> отрезал часть, в приступе болезни, отдал женщине при борделе — не «возлюбленной».</li>
+      <li><b>Абсент/дигиталис как причина стиля — миф</b> (для эффекта нужно ~182 л абсента; жёлтый он любил и раньше).</li>
+      <li><b>«Безумный гений» — штамп:</b> писал не в приступах, а между ними, трезвым расчётом; даже версия самоубийства спорна.</li>
+      <li><b>Йо ван Гог-Бонгер</b> (вдова Тео) сделала Ван Гога знаменитым: издала письма, дозировала продажи, играла вдолгую.</li>
+      <li>Вывод: <b>славу делают люди</b>, а не «гений сам пробьётся». Ван Гога подняли две женщины — Хелена и Йо.</li>
+      <li>Голландское искусство уникально, потому что <b>не было церкви и короля</b> как заказчиков → первый <b>рынок искусства</b>, бытовые сюжеты.</li>
+      <li>Золотой век: <b>Рембрандт, Вермеер, Халс</b>; «голландский свет» (спорный) и огромные небеса; искусство как <b>описание мира</b> (Альперс), а не рассказ.</li>
+      <li>XIX в. <b>Гаагская школа</b> (Мауве учил Ван Гога) → XX в. <b>«Де Стейл», Мондриан, Ритвелд</b> (дом в Утрехте!) и Эшер: тяга к структуре и оптике.</li>
+      <li><b>Психоделики и искусство:</b> сопровождали всегда (вино, опиум, абсент, ЛСД-эстетика), но <b>почти никогда не были источником</b> гениального; наука: эффект на креативность в основном плацебо.</li>
+    </ol>
+
+    <h3>10 слов и имён</h3>
+    <table class="words">
+      <tr><td class="nl">Kröller-Müller</td><td class="pr">крёллер-мюллер</td><td>музей в лесу, 2-я коллекция Ван Гога</td></tr>
+      <tr><td class="nl">Hoge Veluwe</td><td class="pr">хо́хе вел́юве</td><td>нацпарк, где стоит музей</td></tr>
+      <tr><td class="nl">Helene</td><td class="pr">хеле́не</td><td>собрала и подарила коллекцию</td></tr>
+      <tr><td class="nl">Theo</td><td class="pr">те́о</td><td>брат, содержавший Винсента</td></tr>
+      <tr><td class="nl">Jo Bonger</td><td class="pr">йо бо́нгер</td><td>вдова, сделавшая ему славу</td></tr>
+      <tr><td class="nl">Impasto</td><td class="pr">импа́сто</td><td>густая рельефная краска</td></tr>
+      <tr><td class="nl">Gouden Eeuw</td><td class="pr">ха́уден эйв</td><td>Золотой век живописи</td></tr>
+      <tr><td class="nl">De Stijl</td><td class="pr">де стейл</td><td>«Стиль» — абстракция Мондриана</td></tr>
+      <tr><td class="nl">Mauve</td><td class="pr">мо́ве</td><td>учитель Ван Гога, Гаагская школа</td></tr>
+      <tr><td class="nl">Schilderij</td><td class="pr">схилдере́й</td><td>картина (живопись)</td></tr>
+    </table>
+    <p class="sub" style="margin-top:22px;">«g/ch» — горловое «х»; «ij» ≈ «эй»; «ui» ≈ среднее «ау/ой». А лучшее «приложение» в музее — собственные ноги: подойти и отойти.</p>
+  </section>
+
+  <footer class="src">
+    <h3>Источники и сверка фактов</h3>
+    <p>Музей и коллекция: <a href="https://krollermuller.nl/en/van-gogh-collection">Kröller-Müller — Van Gogh Collection</a>, <a href="https://www.theartnewspaper.com/2026/01/09/van-gogh-shows-in-2026-america-japan-and-the-netherlands">The Art Newspaper — выставка «All Van Goghs» (15.09.2026–03.01.2027)</a>. «Терраса кафе ночью» на гастролях в Японии (1.09.2025 — ~09.2026, Кобе/Фукусима/Токио): <a href="https://krollermuller.nl/en/unique-van-gogh-experience-at-the-kroller-muller-museum-while-terrace-of-a-cafe-at-night-is-in-japan">Kröller-Müller — Terrace of a Café at Night in Japan</a>. «Жёлтое зрение», абсент и дигиталис (опровержение): <a href="https://bjgp.org/content/63/612/370">British Journal of General Practice — Van Gogh’s yellow vision</a>, <a href="https://en.wikipedia.org/wiki/Xanthopsia">Xanthopsia — Wikipedia</a>. Биография, «продал одну картину», эпизод с ухом, роль Йо ван Гог-Бонгер, Хелена Крёллер-Мюллер, Гаагская школа, «Де Стейл»/Мондриан/Ритвелд, история веществ в искусстве и современные исследования психоделиков — по совокупности энциклопедических и музейных источников.</p>
+    <p style="opacity:.7;margin-top:14px;">Где факт спорен (диагноз Ван Гога, версия его смерти, «голландский свет», личность женщины с ухом) — это отмечено в тексте. Часы и билеты музея уточняйте на krollermuller.nl. Хорошего смотрения. 🌻</p>
+    <a class="back-top" href="#top">↑ Наверх, к оглавлению</a>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var themeCb=document.getElementById('theme-cb'), navCb=document.getElementById('nav-cb');
+  try{
+    var saved=localStorage.getItem('nl-theme');
+    if(saved==='dark') themeCb.checked=true;
+    else if(saved==='light') themeCb.checked=false;
+    else if(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) themeCb.checked=true;
+  }catch(e){}
+  themeCb.addEventListener('change',function(){ try{ localStorage.setItem('nl-theme', themeCb.checked?'dark':'light'); }catch(e){} });
+
+  var menu=document.getElementById('menu');
+  menu.addEventListener('click',function(e){ if(e.target.closest('a')) navCb.checked=false; });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') navCb.checked=false; });
+
+  var bar=document.getElementById('progress'), pct=document.getElementById('pct'), here=document.getElementById('here');
+  var sections=Array.prototype.slice.call(document.querySelectorAll('section.ch, section.cheat'));
+  var links={};
+  Array.prototype.forEach.call(menu.querySelectorAll('a[href^="#"]'),function(a){ links[a.getAttribute('href').slice(1)]=a; });
+  function titleOf(sec){ var t=sec.querySelector('.ch-title')||sec.querySelector('h2'); return t?t.textContent.trim():''; }
+  function update(){
+    var h=document.documentElement, scrolled=h.scrollTop||document.body.scrollTop, height=(h.scrollHeight-h.clientHeight)||1;
+    var p=Math.min(100,Math.max(0,Math.round((scrolled/height)*100)));
+    bar.style.width=p+'%'; pct.textContent=p+'%';
+    var mid=scrolled+window.innerHeight*0.30, current=null;
+    for(var i=0;i<sections.length;i++){ if(sections[i].offsetTop<=mid) current=sections[i]; }
+    var id=current?current.id:null;
+    here.textContent=current?titleOf(current):'Музей в лесу';
+    for(var k in links){ links[k].classList.toggle('active', k===id); }
+  }
+  var ticking=false;
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(function(){ update(); ticking=false; }); } }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  update();
+})();
+</script>
+
+<script>
+/* Аудиогид: озвучка через Web Speech API (голос устройства, офлайн). */
+(function(){
+  if(!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance==='undefined') return;
+  var synth=window.speechSynthesis;
+  var voice=null, rate=1, items=[], idx=0, playing=false, paused=false, seq=0, hl=null;
+  function pickVoice(){
+    var vs=synth.getVoices()||[];
+    voice=vs.filter(function(v){return /ru[-_]?ru/i.test(v.lang);})[0] || vs.filter(function(v){return /^ru/i.test(v.lang);})[0] || null;
+  }
+  pickVoice();
+  if(synth.onvoiceschanged!==undefined) synth.onvoiceschanged=pickVoice;
+  function clean(s){ return (s||'').replace(/\s+/g,' ').trim(); }
+  function chunk(t){
+    if(t.length<=240) return [t];
+    var parts=t.match(/[^.!?…]+[.!?…]*/g)||[t], out=[], buf='';
+    parts.forEach(function(p){ if((buf+p).length>240){ if(buf) out.push(buf.trim()); buf=p; } else buf+=p; });
+    if(buf.trim()) out.push(buf.trim());
+    return out;
+  }
+  var player=document.createElement('div'); player.id='player';
+  player.innerHTML='<button class="p-pp" aria-label="Пауза или воспроизведение">⏸</button><button class="p-stop" aria-label="Остановить">⏹</button><span class="p-title"></span><span class="p-note"></span><button class="p-rate" aria-label="Скорость">1×</button>';
+  document.body.appendChild(player);
+  var ppBtn=player.querySelector('.p-pp'), stopBtn=player.querySelector('.p-stop'), titleEl=player.querySelector('.p-title'), noteEl=player.querySelector('.p-note'), rateBtn=player.querySelector('.p-rate');
+  function setNote(){ noteEl.textContent=items.length?('§ '+Math.min(idx+1,items.length)+'/'+items.length):''; }
+  function highlight(el){ if(el===hl) return; if(hl) hl.classList.remove('speaking'); hl=el; if(el){ el.classList.add('speaking'); el.scrollIntoView({behavior:'smooth',block:'center'}); } }
+  function clearHl(){ if(hl) hl.classList.remove('speaking'); hl=null; }
+  function build(section){
+    items=[];
+    var title=section.querySelector('.ch-title')||section.querySelector('h2');
+    if(title) chunk(clean(title.textContent)).forEach(function(c){ items.push({el:title,text:c}); });
+    section.querySelectorAll('p, h3, li, blockquote').forEach(function(n){
+      var t=clean(n.textContent); if(t) chunk(t).forEach(function(c){ items.push({el:n,text:c}); });
+    });
+  }
+  function speak(){
+    if(idx>=items.length){ stop(); return; }
+    var my=++seq, it=items[idx]; highlight(it.el); setNote();
+    var u=new SpeechSynthesisUtterance(it.text); u.lang='ru-RU'; if(voice) u.voice=voice; u.rate=rate; u.pitch=1;
+    u.onend=function(){ if(my===seq && playing && !paused){ idx++; speak(); } };
+    u.onerror=function(){ if(my===seq && playing && !paused){ idx++; speak(); } };
+    synth.speak(u);
+  }
+  function start(section,label){ synth.cancel(); build(section); idx=0; playing=true; paused=false; ppBtn.textContent='⏸'; titleEl.textContent=label; player.classList.add('show'); speak(); }
+  function stop(){ playing=false; paused=false; ++seq; synth.cancel(); clearHl(); player.classList.remove('show'); }
+  ppBtn.addEventListener('click',function(){ if(!playing) return; if(paused){ paused=false; synth.resume(); ppBtn.textContent='⏸'; } else { paused=true; synth.pause(); ppBtn.textContent='▶'; } });
+  stopBtn.addEventListener('click',stop);
+  rateBtn.addEventListener('click',function(){ var s=[1,1.2,1.5,0.8], i=s.indexOf(rate); rate=s[(i+1)%s.length]; rateBtn.textContent=rate+'×'; if(playing && !paused){ synth.cancel(); speak(); } });
+  setInterval(function(){ if(playing && !paused && synth.speaking){ synth.pause(); synth.resume(); } },9000);
+  function mkBtn(label){ var b=document.createElement('button'); b.className='listen-btn'; b.textContent='▶ '+label; return b; }
+  document.querySelectorAll('section.ch').forEach(function(sec){
+    var meta=sec.querySelector('.ch-meta'); if(!meta) return;
+    var t=sec.querySelector('.ch-title'), name=t?t.textContent.trim():'главу';
+    var b=mkBtn('Слушать'); b.addEventListener('click',function(){ start(sec,name); }); meta.appendChild(b);
+  });
+  var cheat=document.querySelector('section.cheat');
+  if(cheat){ var cb=mkBtn('Слушать шпаргалку'); cb.className+=' cheat-listen'; cb.addEventListener('click',function(){ start(cheat,'Шпаргалка'); }); var sub=cheat.querySelector('.sub'); if(sub) sub.insertAdjacentElement('afterend',cb); else cheat.insertBefore(cb,cheat.firstChild); }
+  window.addEventListener('beforeunload',function(){ synth.cancel(); });
+})();
+</script>
+</body>
+</html>
