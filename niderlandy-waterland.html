@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Велодень в Ватерланде — дно бывшего моря</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');
+
+  :root{
+    --cream:#F5F0E8; --navy:#0D1B2A; --orange:#E8631A;
+    --paper:#F5F0E8; --ink:#0D1B2A; --ink-soft:#3a4656;
+    --rule:#d8cfbf; --card:#efe7d8; --accent:#E8631A;
+    --accent-soft:#fbe5d6; --link:#b8480f;
+    --serif:'Playfair Display', Georgia, 'Times New Roman', serif;
+    --sans:'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --maxw:720px;
+  }
+  html[data-theme="dark"], html:has(#theme-cb:checked){
+    --paper:#0D1B2A; --ink:#F5F0E8; --ink-soft:#b9c2cf;
+    --rule:#27384a; --card:#13243a; --accent:#ff7a36;
+    --accent-soft:#1d3147; --link:#ff9a5e;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:19px;line-height:1.72;-webkit-text-size-adjust:100%;transition:background .3s ease,color .3s ease;}
+  @media (max-width:480px){ body{font-size:18px;} }
+  @media (max-width:560px){ .topbar .here{display:none;} }
+
+  #theme-cb,#nav-cb{position:absolute;width:1px;height:1px;opacity:0;margin:-1px;padding:0;border:0;clip:rect(0 0 0 0);overflow:hidden;}
+
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;align-items:center;gap:10px;height:46px;padding:0 12px;background:var(--paper);background:color-mix(in srgb, var(--paper) 88%, transparent);-webkit-backdrop-filter:saturate(160%) blur(10px);backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid var(--rule);}
+  .topbar .ctrl{font-family:var(--sans);font-size:13px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:20px;padding:6px 13px;cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+  .topbar .ctrl:hover{border-color:var(--accent);color:var(--accent);}
+  .topbar .spacer{flex:1;}
+  .topbar .here{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw;}
+  .l-dark{display:none;}
+  html:has(#theme-cb:checked) .l-dark{display:inline;}
+  html:has(#theme-cb:checked) .l-light{display:none;}
+
+  #progress{position:fixed;top:46px;left:0;height:3px;width:0%;background:var(--accent);z-index:91;transition:width .1s linear;}
+  body{padding-top:46px;}
+
+  .menu-backdrop{position:fixed;inset:0;z-index:95;background:rgba(5,12,20,.5);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;}
+  .menu-panel{position:fixed;top:0;left:0;bottom:0;z-index:96;width:min(86vw,360px);background:var(--paper);border-right:1px solid var(--rule);box-shadow:2px 0 28px rgba(0,0,0,.25);transform:translateX(-102%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 18px 40px;}
+  html:has(#nav-cb:checked) .menu-backdrop{opacity:1;visibility:visible;}
+  html:has(#nav-cb:checked) .menu-panel{transform:translateX(0);}
+  .menu-panel h2{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:12px;color:var(--accent);margin:4px 0 14px;font-weight:700;display:flex;justify-content:space-between;align-items:center;}
+  .menu-panel .close-x{font-size:22px;line-height:1;cursor:pointer;color:var(--ink-soft);padding:0 4px;}
+  .menu-panel ol{margin:0;padding:0;list-style:none;counter-reset:m;}
+  .menu-panel li{counter-increment:m;border-top:1px solid var(--rule);}
+  .menu-panel li:first-child{border-top:none;}
+  .menu-panel a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);padding:11px 4px;line-height:1.3;}
+  .menu-panel a:hover,.menu-panel a:focus{color:var(--accent);background:var(--card);}
+  .menu-panel a.active{color:var(--accent);font-weight:700;}
+  .menu-panel a::before{content:counter(m,decimal-leading-zero);font-family:var(--serif);font-weight:700;color:var(--accent);font-size:13px;min-width:22px;flex-shrink:0;}
+  .menu-panel .mt{flex:1;font-size:15px;}
+  .menu-panel .mr{font-size:11px;color:var(--ink-soft);white-space:nowrap;}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px 120px;}
+
+  header.cover{max-width:var(--maxw);margin:0 auto;padding:40px 22px 30px;text-align:left;}
+  .kicker{font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:.22em;font-size:12px;color:var(--accent);margin-bottom:18px;}
+  h1.title{font-family:var(--serif);font-weight:900;line-height:1.02;font-size:clamp(38px,11vw,72px);margin:0 0 18px;letter-spacing:-.01em;}
+  h1.title em{font-style:italic;color:var(--accent);}
+  .dek{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--ink-soft);line-height:1.45;margin:0 0 26px;max-width:600px;}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:14px;color:var(--ink-soft);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;}
+  .meta-row b{color:var(--ink);}
+
+  nav.toc{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:22px 22px 10px;margin:34px 0 10px;}
+  nav.toc h2{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:13px;color:var(--accent);margin:0 0 14px;font-weight:700;}
+  nav.toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;}
+  nav.toc li{counter-increment:toc;border-top:1px solid var(--rule);}
+  nav.toc li:first-of-type{border-top:none;}
+  nav.toc a{display:flex;align-items:baseline;gap:12px;text-decoration:none;color:var(--ink);padding:11px 0;}
+  nav.toc a:hover{color:var(--accent);}
+  nav.toc a::before{content:counter(toc,decimal-leading-zero);font-family:var(--serif);font-weight:700;color:var(--accent);font-size:15px;min-width:26px;}
+  nav.toc .t{flex:1;font-weight:500;}
+  nav.toc .rt{font-size:12px;color:var(--ink-soft);white-space:nowrap;}
+
+  section.ch{padding-top:54px;scroll-margin-top:64px;}
+  #top,#cheat{scroll-margin-top:64px;}
+  .ch-head{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:6px;}
+  .ch-num{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--accent);margin-bottom:6px;}
+  h2.ch-title{font-family:var(--serif);font-weight:800;line-height:1.06;font-size:clamp(27px,7vw,40px);margin:0;letter-spacing:-.01em;}
+  .ch-meta{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 26px;}
+  .badge{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:20px;}
+  .badge.day{background:var(--accent);color:#fff;}
+  html[data-theme="dark"] .badge.day,html:has(#theme-cb:checked) .badge.day{color:#0D1B2A;}
+  .badge.time{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);}
+
+  p{margin:0 0 20px;}
+  .ch p:first-of-type::first-letter{font-family:var(--serif);font-weight:900;float:left;font-size:64px;line-height:.78;padding:6px 10px 0 0;color:var(--accent);}
+  a.inl{color:var(--link);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;}
+  strong{font-weight:700;} em{font-style:italic;}
+  h3{font-family:var(--serif);font-weight:700;font-size:24px;margin:36px 0 12px;line-height:1.15;}
+
+  blockquote{margin:30px 0;padding:6px 0 6px 24px;border-left:4px solid var(--accent);font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.4;color:var(--ink);}
+  blockquote cite{display:block;font-family:var(--sans);font-style:normal;font-size:14px;color:var(--ink-soft);margin-top:12px;font-weight:500;}
+
+  .hook{background:var(--card);border-radius:12px;padding:20px 22px;margin:28px 0;border:1px solid var(--rule);}
+  .hook .lbl{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:10px;}
+  .hook p:last-child{margin-bottom:0;}
+
+  .route{display:flex;gap:13px;align-items:flex-start;background:var(--accent-soft);border-radius:12px;padding:16px 18px;margin:26px 0;font-size:16.5px;line-height:1.55;}
+  .route .pin{font-size:22px;line-height:1.3;flex-shrink:0;}
+  .route b{color:var(--link);}
+  html[data-theme="dark"] .route b,html:has(#theme-cb:checked) .route b{color:var(--accent);}
+
+  .warn{border:1px dashed var(--accent);border-radius:12px;padding:16px 18px;margin:26px 0;font-size:16px;}
+  .warn .lbl{font-family:var(--sans);text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:8px;}
+
+  figure{margin:32px 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;border-radius:10px;background:var(--card);border:1px solid var(--rule);padding:10px;}
+  figcaption{font-size:14px;color:var(--ink-soft);margin-top:10px;font-style:italic;font-family:var(--serif);}
+
+  hr.soft{border:none;border-top:1px solid var(--rule);margin:34px 0;}
+
+  /* таймлайн дня */
+  .timeline{list-style:none;margin:24px 0;padding:0;}
+  .timeline li{display:flex;gap:14px;padding:12px 0;border-top:1px solid var(--rule);}
+  .timeline li:first-child{border-top:none;}
+  .timeline .tm{font-family:var(--serif);font-weight:700;color:var(--accent);min-width:62px;font-size:15px;}
+  .timeline .ds b{display:block;}
+  .timeline .ds span{font-size:14px;color:var(--ink-soft);}
+
+  .listen-btn{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em;color:#fff;background:var(--accent);border:none;border-radius:20px;padding:6px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+  html:has(#theme-cb:checked) .listen-btn{color:#0D1B2A;}
+  .listen-btn:hover{filter:brightness(1.07);}
+  .listen-btn.cheat-listen{margin:4px 0 22px;}
+  .speaking{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--accent);border-radius:5px;transition:background .2s ease;}
+  #player{position:fixed;left:50%;bottom:14px;z-index:97;width:min(94vw,560px);transform:translateX(-50%) translateY(160%);display:flex;align-items:center;gap:8px;background:var(--navy);color:var(--cream);border-radius:30px;padding:9px 12px;box-shadow:0 8px 30px rgba(0,0,0,.4);transition:transform .3s cubic-bezier(.4,0,.2,1);}
+  html:has(#theme-cb:checked) #player{border:1px solid var(--rule);background:#08121d;}
+  #player.show{transform:translateX(-50%) translateY(0);}
+  #player button{background:none;border:none;color:var(--cream);font-size:19px;cursor:pointer;width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  #player button:hover{background:rgba(255,255,255,.13);}
+  #player .p-title{flex:1;font-family:var(--serif);font-style:italic;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e7ddcd;min-width:0;}
+  #player .p-note{font-size:11px;color:#9fb0c2;white-space:nowrap;}
+  #player .p-rate{background:rgba(255,255,255,.13);color:#fff;border-radius:15px;font-family:var(--sans);font-size:12px;font-weight:700;width:auto;padding:0 11px;}
+
+  section.cheat{margin-top:64px;background:var(--navy);color:var(--cream);border-radius:16px;padding:34px 26px;}
+  html[data-theme="dark"] section.cheat,html:has(#theme-cb:checked) section.cheat{border:1px solid var(--rule);background:#08121d;}
+  section.cheat h2{font-family:var(--serif);font-weight:800;font-size:30px;margin:0 0 6px;color:var(--cream);}
+  section.cheat .sub{color:#9fb0c2;font-size:14px;margin-bottom:24px;font-family:var(--sans);}
+  section.cheat h3{color:var(--orange);font-size:18px;margin:26px 0 12px;font-family:var(--sans);text-transform:uppercase;letter-spacing:.1em;font-weight:700;}
+  ol.twenty{margin:0;padding-left:22px;} ol.twenty li{margin-bottom:9px;line-height:1.5;color:#e7ddcd;} ol.twenty li b{color:#fff;}
+  /* таймлайн в шпаргалке */
+  .ctl{list-style:none;margin:0;padding:0;}
+  .ctl li{display:flex;gap:12px;padding:9px 0;border-top:1px solid #243748;}
+  .ctl li:first-child{border-top:none;}
+  .ctl .ct{font-family:var(--serif);font-weight:700;color:var(--orange);min-width:58px;}
+  .ctl .cd{color:#e7ddcd;font-size:15px;}
+  .ctl .cd b{color:#fff;}
+  table.words{width:100%;border-collapse:collapse;font-size:15px;}
+  table.words td{padding:8px 6px;border-bottom:1px solid #243748;vertical-align:top;color:#e7ddcd;}
+  table.words td.nl{font-family:var(--serif);font-weight:700;color:#fff;white-space:nowrap;}
+  table.words td.pr{color:var(--orange);font-style:italic;white-space:nowrap;}
+
+  footer.src{margin-top:44px;font-size:13px;color:var(--ink-soft);line-height:1.6;}
+  footer.src h3{font-family:var(--sans);text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--accent);}
+  footer.src a{color:var(--link);}
+  .back-top{display:inline-block;margin-top:18px;font-size:14px;color:var(--accent);text-decoration:none;font-weight:700;}
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="theme-cb" aria-hidden="true" tabindex="-1">
+<input type="checkbox" id="nav-cb" aria-hidden="true" tabindex="-1">
+
+<div class="topbar">
+  <label class="ctrl" for="nav-cb" role="button" aria-label="Открыть маршрут">☰&nbsp;Остановки</label>
+  <span class="here" id="here">Велодень в Ватерланде</span>
+  <span class="spacer"></span>
+  <span class="ctrl" id="pct">0%</span>
+  <label class="ctrl" for="theme-cb" role="button" aria-label="Переключить тему">
+    <span class="l-light">🌙&nbsp;Тёмная</span><span class="l-dark">☀️&nbsp;Светлая</span>
+  </label>
+</div>
+<div id="progress"></div>
+
+<label class="menu-backdrop" for="nav-cb" aria-hidden="true"></label>
+<aside class="menu-panel" id="menu" aria-label="Остановки">
+  <h2>Маршрут дня <label class="close-x" for="nav-cb" role="button" aria-label="Закрыть">✕</label></h2>
+  <ol>
+    <li><a href="#s1"><span class="mt">Паром и философия дня</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#s2"><span class="mt">Дюргердам + форт-остров</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#s3"><span class="mt">Дамба до Уйтдама</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#s4"><span class="mt">Моннендам: куранты и угорь</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#s5"><span class="mt">Сырная развилка: Катвауде</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#s6"><span class="mt">Волендам: рыбаки и поп-музыка</span><span class="mr">7 мин</span></a></li>
+    <li><a href="#s7"><span class="mt">Брук-ин-Ватерланд</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#s8"><span class="mt">Финиш, ветер в спину, круиз</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#cheat"><span class="mt">🚲 Таймлайн и шпаргалка</span><span class="mr">4 мин</span></a></li>
+    <li><a href="#top"><span class="mt">↑ В начало</span><span class="mr"></span></a></li>
+  </ol>
+</aside>
+
+<header class="cover" id="top">
+  <div class="kicker">Книга пятая · читать в сёдле · спутник «Погружения в Нидерланды»</div>
+  <h1 class="title">Велодень<br>в <em>Ватерланде</em></h1>
+  <p class="dek">Петля по дамбам и рыбацким деревням, которая на самом деле едет по дну бывшего моря. Поздний старт, ветер в лицо туда и в спину домой, закат в десять вечера. Не гонка — медленное чтение ландшафта с настоящими остановками.</p>
+  <div class="meta-row">
+    <span>🚲 <b>~45–50 км</b> петля</span>
+    <span>🕐 <b>старт ~13:00</b>, закат ~22:00</span>
+    <span>📍 <b>7 остановок</b> с питстопами</span>
+    <span>🔊 <b>Аудиогид</b> · 📶 офлайн</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <figure>
+    <svg viewBox="0 0 460 320" role="img" aria-label="Схема велопетли по Ватерланду">
+      <rect x="0" y="0" width="460" height="320" fill="none"/>
+      <!-- вода справа -->
+      <path d="M300 0 L460 0 L460 320 L320 320 Q 360 200 300 0 Z" fill="#5a9bc4" opacity="0.4"/>
+      <text x="400" y="170" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="13" fill="#3d7ea6">Markermeer</text>
+      <text x="400" y="188" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#3d7ea6">(бывшее море)</text>
+      <!-- петля -->
+      <path d="M70 285 L120 250 L175 210 L235 150 L270 95 L235 70 L160 120 L110 180 L70 285" fill="none" stroke="#E8631A" stroke-width="2.5" stroke-dasharray="6 5"/>
+      <g font-family="DM Sans" font-size="11" font-weight="700" fill="currentColor">
+        <circle cx="70" cy="285" r="10" fill="#0D1B2A"/><text x="70" y="289" text-anchor="middle" fill="#fff">1</text><text x="70" y="308" text-anchor="middle" font-size="10">паром / Amsterdam</text>
+        <circle cx="120" cy="250" r="9" fill="#E8631A"/><text x="120" y="254" text-anchor="middle" fill="#fff">2</text><text x="150" y="250" font-size="10">Durgerdam · 7 км</text>
+        <circle cx="175" cy="210" r="9" fill="#E8631A"/><text x="175" y="214" text-anchor="middle" fill="#fff">3</text><text x="200" y="208" font-size="10">Uitdam</text>
+        <circle cx="235" cy="150" r="10" fill="#0D1B2A"/><text x="235" y="154" text-anchor="middle" fill="#fff">4</text><text x="248" y="150" font-size="10">Monnickendam</text>
+        <circle cx="270" cy="95" r="9" fill="#E8631A"/><text x="270" y="99" text-anchor="middle" fill="#fff">6</text><text x="225" y="88" font-size="10">Volendam</text>
+        <circle cx="160" cy="120" r="9" fill="#E8631A"/><text x="160" y="124" text-anchor="middle" fill="#fff">7</text><text x="60" y="120" font-size="10">Broek in Waterland</text>
+      </g>
+      <text x="120" y="160" font-family="Playfair Display, serif" font-style="italic" font-size="12" fill="#E8631A">против ветра →</text>
+      <text x="120" y="178" font-family="Playfair Display, serif" font-style="italic" font-size="12" fill="#E8631A">← ветер в спину домой</text>
+    </svg>
+    <figcaption>Петля по часовой: вдоль воды на север против ветра, обратно через поля — ветер в спину. Тёмные точки — большие паузы, оранжевые — питстопы.</figcaption>
+  </figure>
+
+  <nav class="toc">
+    <h2>Маршрут и таймлайн</h2>
+    <ol>
+      <li><a href="#s1"><span class="t">Перед стартом: паром и философия дня</span><span class="rt">5 мин</span></a></li>
+      <li><a href="#s2"><span class="t">Дюргердам и форт-остров (7 км, ~13:40)</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#s3"><span class="t">Длинная дамба до Уйтдама (самый ветреный кусок)</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#s4"><span class="t">Моннендам: куранты, ботеры, копчёный угорь (~14:30)</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#s5"><span class="t">Сырная развилка: Катвауде и Эдам</span><span class="rt">5 мин</span></a></li>
+      <li><a href="#s6"><span class="t">Волендам: как рыбаки стали поп-звёздами (~15:30)</span><span class="rt">7 мин</span></a></li>
+      <li><a href="#s7"><span class="t">Брук-ин-Ватерланд: деревня-чистюля (~17:00)</span><span class="rt">5 мин</span></a></li>
+      <li><a href="#s8"><span class="t">Финиш, ветер в спину и вечерний круиз</span><span class="rt">5 мин</span></a></li>
+      <li><a href="#cheat"><span class="t">🚲 Чистый таймлайн + шпаргалка</span><span class="rt">4 мин</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section class="ch" id="s1">
+    <div class="ch-head"><div class="ch-num">Остановка первая · старт</div><h2 class="ch-title">Паром и философия дня</h2></div>
+    <div class="ch-meta"><span class="badge day">~13:00 · за Centraal</span><span class="badge time">⏱ 5 мин</span></div>
+
+    <p>Сначала про настройку, потому что от неё зависит весь день. Вы стартуете поздно — около часа дня, после завтрака, — и это не баг, а фича: закат в этих широтах в середине июня около <strong>десяти вечера</strong>, так что светового времени у вас вагон. Значит, главный совет на сегодня простой и противоречащий инстинкту: <strong>не гнать</strong>. Вы на туринг-байках, а не на гонке; лучше меньше километров и больше настоящих остановок, чем галоп по точкам с галочками. Эта книга поэтому построена не как «успеть всё», а как «где притормозить и что там увидеть».</p>
+
+    <p>Начало — <strong>бесплатный паром через залив IJ</strong> за Центральным вокзалом. Закатывайте велосипед прямо на палубу, пять минут — и вы в Амстердам-Норде, на «той стороне», откуда и начинается зелёный Ватерланд. Уже на пароме обратите внимание на простую вещь: вы пересекаете воду, которая режет город пополам, — и дальше вся ваша петля будет про воду в разных её обличьях.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · вы едете по дну моря</div>
+      <p>Держите в голове одну рамку на весь день, она превращает «приятную покатушку» в путешествие во времени. Почти всё, по чему вы сегодня поедете, ещё сто лет назад было <strong>морским дном или морем</strong>. Вода справа от дамбы — Маркермеер — была солёным заливом Зёйдерзе, открытым в Северное море, пока в 1932 году его не отрезали гигантской Замыкающей дамбой (об этом подробно в третьей книге). А поля слева, ниже уровня воды, — осушённые польдеры, землю которых выкачали мельницами. Так что весь сегодняшний маршрут — это поездка по <em>искусственному</em> ландшафту, отвоёванному у моря. Вы крутите педали там, где должна быть вода. Каждый раз, когда дорога идёт по гребню дамбы, а поля проваливаются вниз, — вспоминайте: это не «природа», это инженерное сооружение размером с пейзаж.</p>
+    </div>
+
+    <h3>Про ветер — честно</h3>
+    <p>Логика петли заложена правильная: туда, на север вдоль воды, вы едете <strong>против ветра</strong>, а обратно через поля — ветер в спину. Это разумно: тяжёлый кусок проходите на свежих ногах, а уставшими катите налегке домой. Но знайте заранее: <strong>самый ветреный и монотонный отрезок — длинная открытая дамба от Дюргердама до Моннендама</strong> (остановка 3). Там негде укрыться, и встречный ветер с большой воды будет реальным. Это не повод его бояться — это повод не выезжать «на все деньги» сразу и приберечь силы. Ветер тут — полноправный участник маршрута, как горы для альпиниста.</p>
+
+    <blockquote>Закат в десять. Спешить некуда. Сегодня вы не накручиваете километры — вы медленно читаете ландшафт, который люди сделали руками.</blockquote>
+  </section>
+
+  <!-- 2 -->
+  <section class="ch" id="s2">
+    <div class="ch-head"><div class="ch-num">Остановка вторая · Durgerdam</div><h2 class="ch-title">Дюргердам и форт-остров</h2></div>
+    <div class="ch-meta"><span class="badge day">7 км · ~13:40</span><span class="badge time">⏱ пауза 10 мин</span></div>
+
+    <p>Первая деревня — и сразу образцовая. <strong>Дюргердам</strong> вытянут в одну ниточку вдоль дамбы: ряд деревянных домиков, прижавшихся к воде, лодки, мачты, тишина. Это бывшая рыбацкая деревня, и выглядит она почти как театральная декорация «голландского уюта» — только настоящая. Идеальное место, чтобы впервые слезть с седла, выдохнуть и понять, что вы уже не в городе.</p>
+
+    <div class="route">
+      <span class="pin">☕</span>
+      <div>Где притормозить: у воды есть <b>Café-Restaurant Oude Taveerne</b> и террасы с видом на залив — кофе, туалет, передышка. Но не засиживайтесь: настоящая цель тут — не кофе, а вид сразу <b>за деревней, с дамбы</b>. 10 минут, фото, вода — и дальше.</div>
+    </div>
+
+    <div class="hook">
+      <div class="lbl">Крючок · остров, который оборонялись водой</div>
+      <p>С дамбы за Дюргердамом видно в заливе маленький островок с маяком — <strong>Vuurtoreneiland</strong>, «Остров-маяк». Маяк тут горит с 1700 года. Но интереснее другое: в 1883 году остров стал частью <strong>«Линии обороны Амстердама» (Stelling van Amsterdam)</strong> — кольца фортов вокруг города, внесённого в список ЮНЕСКО. И вот гениально-голландская деталь, прямая рифма с третьей книгой: главным оружием этой линии была <strong>не пушка, а вода</strong>. План обороны был такой — при нападении открыть шлюзы и <em>намеренно затопить</em> кольцо польдеров вокруг Амстердама на глубину, слишком мелкую для лодок и слишком глубокую для пехоты и артиллерии. Враг просто увязал бы в искусственном болоте. Голландцы, которые тысячу лет воевали <em>с</em> водой, научились воевать водой <em>против людей</em>. Тот же приём они применяли ещё в «год катастроф» 1672-го. Маленький маяк на горизонте — это краешек целой философии: здесь даже армия — это, по сути, водопроводчики.</p>
+    </div>
+
+    <p>(Высадиться на сам остров нельзя — туда возят редкими рейсами по особым дням. Так что любуйтесь с дамбы: вам и нужен-то силуэт маяка на фоне большой воды — отличный первый кадр дня.)</p>
+
+    <blockquote>Их главный военный секрет был не порох, а задвижка шлюза. Народ, отвоевавший землю у воды, в обороне просто возвращал воду обратно — на головы врагу.</blockquote>
+  </section>
+
+  <!-- 3 -->
+  <section class="ch" id="s3">
+    <div class="ch-head"><div class="ch-num">Остановка третья · дамба и Uitdam</div><h2 class="ch-title">Длинная дамба до Уйтдама</h2></div>
+    <div class="ch-meta"><span class="badge day">~13 км · самый ветреный кусок</span><span class="badge time">⏱ ~40 мин + пауза</span></div>
+
+    <p>Вот он — главный физический вызов дня и одновременно самый красивый его отрезок. От Дюргердама до Моннендама дорога идёт по <strong>гребню морской дамбы</strong> вдоль открытой воды Маркермеера. Это километров тринадцать почти без укрытия, и здесь будет ветер. Настройтесь, поймайте ритм, переключитесь на передачу полегче и не геройствуйте — это не спринт, это медленный маршевый кусок, который надо просто прожить, оглядываясь по сторонам.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · вся страна в одном кадре</div>
+      <p>А оглядываться стоит, потому что именно здесь — <strong>лучший вид всего региона и лучшая иллюстрация ко всем пяти книгам сразу</strong>. Остановитесь на гребне и посмотрите по обе стороны. <strong>Справа</strong> — Маркермеер, большая вода, бывшее море, и её уровень <em>выше</em>, чем земля по другую сторону. <strong>Слева</strong> — зелёные польдеры с пасущимися коровами, и они лежат заметно <em>ниже</em> воды справа. Вы стоите на тонкой полоске земли ровно между двумя уровнями: чуть выше — большая вода, чуть ниже — отвоёванная суша. Сдвиньте дамбу под собой — и поля справа уйдут под воду за день. Это и есть вся голландская драма в одном кадре: страна держится на этой узкой насыпи под вашими колёсами. Лучшего места для одного-единственного видеопроезда камеры поперёк дамбы во всём Ватерланде нет.</p>
+    </div>
+
+    <div class="route">
+      <span class="pin">⚓</span>
+      <div>Питстоп строго посередине, иначе перегон сольётся в монотонную борьбу с ветром: крошечная деревушка <b>Уйтдам</b> (Uitdam). Тут есть маленькая гавань — слезьте, разомните ноги, посмотрите на яхты, попейте воды. Это не «достопримечательность», а правильно поставленная запятая в длинном предложении. Если будет солнце и настроение — спуститесь к воде Маркермеера и опустите ноги: смена картинки и температура воды мгновенно перезагружают голову.</div>
+    </div>
+
+    <p>И маленькая техническая правда туринг-байкера: именно на таких длинных продуваемых дамбах решает не мощность, а <strong>равномерность</strong>. Не рвите против порывов — держите спокойный каданс, спрячьтесь корпусом пониже, и ветер из врага превратится в фон. А через сорок минут вы вкатитесь в самую недооценённую остановку дня.</p>
+
+    <blockquote>Справа — море выше вас. Слева — земля ниже воды. Вы — на ниточке между ними. Это не пейзаж, это чертёж выживания целой страны.</blockquote>
+  </section>
+
+  <!-- 4 -->
+  <section class="ch" id="s4">
+    <div class="ch-head"><div class="ch-num">Остановка четвёртая · Monnickendam</div><h2 class="ch-title">Моннендам: куранты, ботеры, угорь</h2></div>
+    <div class="ch-meta"><span class="badge day">~14:30 · лучшая средняя точка</span><span class="badge time">⏱ пауза 30–40 мин</span></div>
+
+    <p>Вот это — не «кофе на ходу», а полноценная остановка, и, на мой взгляд, лучшая «средняя» точка всего дня. <strong>Моннендам</strong> туристы вечно проскакивают ради распиаренного Волендама — и зря. Здесь настоящая старая гавань с деревянными парусниками, узкие улочки, никакой ярмарочной толпы. Заложите сюда полчаса-сорок минут и пообедайте или хотя бы плотно перекусите именно тут — заодно разгрузите более людный Волендам впереди.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · подгадайте к ровному часу</div>
+      <p>Главная жемчужина — стройная башня <strong>Speeltoren</strong> (XV век), бывшая ратуша, а ныне маленький музей Ватерланда. Внутри неё — один из <strong>старейших действующих карильонов в мире</strong>: набор из пятнадцати колоколов, большинство отлиты ещё в 1590-х. И у него есть механический театр: каждые четверть часа играет мелодия, а на <strong>ровный час из башенки выезжают заводные всадники</strong> и парадом объезжают круг, пока фигурка трубит время. Это работает уже четыре столетия. Так что трюк дня: <em>подгадайте свою паузу к началу часа</em> — поймать выезд механических рыцарей, которым 400 лет, куда круче любого сувенира. Сверьтесь со временем заранее и подстройте темп на дамбе.</p>
+    </div>
+
+    <h3>Ботеры и копчёный угорь</h3>
+    <p>В гавани приглядитесь к лодкам — это <strong>ботеры</strong> (botters), традиционные плоскодонные рыбацкие парусники Зёйдерзе с характерным пузатым корпусом и выдвижными боковыми килями (швертами). Плоское дно — не случайность, а необходимость: на мелком заливе и в гаванях иначе нельзя. Каждая такая лодка — памятник эпохе, когда тут жили рыбой, а не туристами.</p>
+
+    <div class="route">
+      <span class="pin">🐟</span>
+      <div>Гастрономический must: <b>копчёный угорь (gerookte paling)</b> — фирменная вещь этих мест. У гавани есть коптильня; берите кусок прямо там, с хлебом. Угорь жирный, дымный, плотный — на любителя, но это <em>тот самый</em> вкус Зёйдерзе, та самая рыба, на которой деревня стояла веками. Попробовать стоит именно здесь, а не в туристическом ларьке. Не любите рыбу — впереди (остановка 5) ждёт сырная альтернатива.</div>
+    </div>
+
+    <p>И держите в уме грустную ноту, которая объяснит весь характер этих деревень (и взорвётся в следующей рыбной главе): когда в 1932-м залив отрезали дамбой и солёное море стало пресным озером, <strong>морская рыба ушла — и вместе с ней ушёл весь уклад</strong>. Ботеры в гавани Моннендама — это, по сути, флот без работы, ставший экспонатом. Красивая гавань, которую вы фотографируете, — это памятник исчезнувшей профессии.</p>
+
+    <blockquote>Поймайте ровный час — и 400-летние заводные всадники выедут вам навстречу. Это лучше любого магнита на холодильник.</blockquote>
+  </section>
+
+  <!-- 5 -->
+  <section class="ch" id="s5">
+    <div class="ch-head"><div class="ch-num">Остановка пятая · Katwoude</div><h2 class="ch-title">Сырная развилка: Катвауде и Эдам</h2></div>
+    <div class="ch-meta"><span class="badge day">по пути к Волендаму</span><span class="badge time">⏱ пауза 15 мин</span></div>
+
+    <p>Между Моннендамом и Волендамом маршрут даёт вам приятный <strong>не-рыбный</strong> питстоп — и он важен не только для желудка, но и для ритма дня (об этом ниже). На развилке в местечке <strong>Катвауде</strong> стоит сырная ферма <strong>Henri Willig</strong> с бесплатной дегустацией и мельницей рядом. Пятнадцати минут хватит: попробовать с десяток сортов, понять разницу между молодым и выдержанным, размяться среди запахов, не связанных с рыбой и ветром.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · почему тут именно сыр</div>
+      <p>Это не случайное «туристическое» развлечение, а сама суть здешней земли. Вы же помните из третьей книги: польдеры — это осушённое дно, и почва на них чаще всего <strong>не пашенная, а луговая</strong>: сырая, торфянистая, идеальная под траву и пастбища, но не под зерно. Что делать с бесконечными мокрыми лугами? Пасти коров. А что делать с морем молока, которое не довезёшь свежим? Превращать в то, что хранится, — в <strong>сыр</strong>. Так геология осушённой страны напрямую родила голландскую молочно-сырную цивилизацию. И две главные звезды — <strong>Гауда и Эдам</strong> — названы по городкам буквально по соседству: настоящий <strong>Эдам</strong> с его круглыми сырами в красной парафиновой корке — вот он, в паре километров отсюда. Вы катите по родине сыра, который знают во всём мире. Кусок гауды на дамбе — это не перекус, это дегустация ландшафта.</p>
+    </div>
+
+    <p>И про ритм. Я честно предупреждал: маршрут «деревня — дамба — деревня» при всей красоте к третьей деревне рискует слиться в одно — все они симпатично-голландские в похожем ключе. Поэтому такой акцент, как ферма (запах, вкус, животные, другой масштаб), <strong>сознательно разбивает монотонность</strong>. Даже если вы не фанаты сыра — заехать стоит ровно ради смены картинки. Чередование «вода — еда — деревня — поле» держит день живым; однообразие убивает даже самый красивый пейзаж.</p>
+
+    <blockquote>Мокрые луга нельзя пахать — но на них пасут коров. Молоко не довезёшь — но из него делают сыр. Гауда и Эдам — это просто логичный ответ осушённой земли на вопрос «что тут вообще растёт».</blockquote>
+  </section>
+
+  <!-- 6 -->
+  <section class="ch" id="s6">
+    <div class="ch-head"><div class="ch-num">Остановка шестая · Volendam</div><h2 class="ch-title">Волендам: как рыбаки стали поп-звёздами</h2></div>
+    <div class="ch-meta"><span class="badge day">~15:30 · обед</span><span class="badge time">⏱ пауза 45–60 мин</span></div>
+
+    <p>А вот и главная «открытка» дня — и одновременно главная ловушка. <strong>Волендам</strong> — самая известная, самая туристическая и самая раскрученная из деревень: набережная с сувенирами, люди в традиционных костюмах, очереди за рыбой, фото «оденься рыбаком». Тут стоит пообедать (выбор большой), но если вы увидите <em>только</em> набережную — вы не увидите Волендам.</p>
+
+    <div class="route">
+      <span class="pin">🚶</span>
+      <div>Обязательно нырните <b>за дамбу, в Doolhof</b> — «Лабиринт»: путаницу узких переулков и каналов, где живут местные, в двух шагах от толпы. Там настоящие домики, бельё на верёвках, тишина и масштаб человека, а не автобуса. Правило простое: чем дальше от воды и сувениров вглубь — тем настоящее. Десять минут в Doolhof спасают всё впечатление от Волендама.</div>
+    </div>
+
+    <div class="hook">
+      <div class="lbl">Крючок · «угревый звук» — для вас как для медийщиков</div>
+      <p>Вот совершенно неожиданная вещь, особенно вкусная людям из музыки и продакшена. Этот рыбацкий посёлок — <strong>главная фабрика поп-музыки в истории Нидерландов</strong>. Когда после 1932 года рыба ушла (залив отрезали дамбой, солёное море стало пресным — помните Моннендам?), Волендам остался без своей профессии — и, среди прочего, запел. Отсюда вышло столько эстрадных звёзд, что для их фирменного гладкого, сентиментального, многоголосого стиля придумали отдельное имя — <strong>«Palingsound»</strong>, «угревый звук» (в честь местного промысла угря!). Группы The Cats и BZN, певцы вроде Яна Смита — всё это маленький Волендам, который по плотности поп-звёзд на душу населения, наверное, обгоняет любой город Европы. В посёлке даже есть музей этого феномена. Вдумайтесь в дугу: <strong>сначала море кормило рыбой, потом дамба отняла рыбу — и деревня переключилась сперва на туристов, а потом на хиты.</strong> Экономическая катастрофа 1932 года обернулась культурным экспортом. Очень голландский сюжет про адаптацию: отняли рыбу — будем продавать ностальгию и песни.</p>
+    </div>
+
+    <p>И ещё одна деталь, объясняющая характер: Волендам — исторически <strong>католический</strong> анклав в протестантском окружении (потому тут так держатся за костюмы, обряды и общинность). Это та самая мозаика «несочетаемого по соседству», что вы уже видели в Амстердаме. Так что под слоем сувениров тут — настоящая, сплочённая, поющая община, пережившая смерть собственного промысла. Туристический китч на набережной — это не вся правда о Волендаме, а только его витрина.</p>
+
+    <blockquote>Сначала их кормило море. Потом дамба убила рыбу. И тогда рыбацкая деревня запела — да так, что подарила стране половину её поп-звёзд. «Угревый звук» — это музыка выживания.</blockquote>
+  </section>
+
+  <!-- 7 -->
+  <section class="ch" id="s7">
+    <div class="ch-head"><div class="ch-num">Остановка седьмая · Broek in Waterland</div><h2 class="ch-title">Брук-ин-Ватерланд: деревня-чистюля</h2></div>
+    <div class="ch-meta"><span class="badge day">~17:00 · последний отдых</span><span class="badge time">⏱ пауза 30 мин</span></div>
+
+    <p>Финальная деревня перед домом — и идеальная точка, чтобы сбавить обороты. <strong>Брук-ин-Ватерланд</strong> стоит вокруг живописного пруда <strong>Havenrak</strong> и славится тем, что это, возможно, самая <em>нарядная</em> деревня страны: пастельные деревянные домики — серо-зелёные, голубоватые, кремовые, — отражающиеся в воде. После ветра, рыбы и туристического Волендама это место работает как глоток тишины.</p>
+
+    <div class="route">
+      <span class="pin">☕</span>
+      <div>Тут есть культовое <b>кафе у воды</b> на берегу Havenrak — последняя большая пауза перед финишным рывком домой. Сядьте лицом к пруду, закажите что-нибудь медленное. До Амстердама отсюда уже рукой подать и в основном по ветру, так что спешить опять-таки незачем. Это правильное место, чтобы «выдохнуть день».</div>
+    </div>
+
+    <div class="hook">
+      <div class="lbl">Крючок · деревня, которая была богаче города</div>
+      <p>За кукольной чистотой — занятная история. В XVII–XVIII веках Брук был <strong>непропорционально богат</strong>: тут селились зажиточные капитаны и торговцы Ост-Индской компании, и деревня прославилась почти маниакальной чистотой и ухоженностью. Ходила молва (полулегенда, полуправда), что улицы тут моют, а гостей чуть ли не просят разуваться; говорят, даже Наполеон, заехавший сюда в начале XIX века, подивился этой опрятности. Перед вами — редкий случай <strong>сельского богатства</strong>, не городского: деньги Золотого века, осевшие не в Амстердаме, а в крошечной деревне у пруда. Пастельные домики — это не «мило для туристов», это застывший достаток купеческой республики, спрятавшийся в Ватерланде. Контраст с рыбацкой бедностью Волендама в восьми километрах позади — разителен, и он тоже часть портрета страны.</p>
+    </div>
+
+    <blockquote>В восьми километрах позади — деревня, которую разорила ушедшая рыба. Здесь — деревня, разбогатевшая на колониальной торговле. Одна петля Ватерланда, два разных лица голландских денег.</blockquote>
+  </section>
+
+  <!-- 8 -->
+  <section class="ch" id="s8">
+    <div class="ch-head"><div class="ch-num">Остановка восьмая · финиш</div><h2 class="ch-title">Финиш, ветер в спину и вечерний круиз</h2></div>
+    <div class="ch-meta"><span class="badge day">домой · и канал-круиз</span><span class="badge time">⏱ 5 мин</span></div>
+
+    <p>От Брука до Амстердама — последний отрезок, и вот теперь вся утренняя стратегия окупается: <strong>ветер дует вам в спину</strong>, ноги катят сами, поля проносятся мимо, и вы влетаете обратно в город почти без усилий. Это лучшая часть для того, чтобы просто молчать и смотреть, как зелёный Ватерланд снова сменяется кирпичом Амстердама. Если выехали в час и не гнали — вы возвращаетесь засветло, с огромным запасом до десятичасового заката.</p>
+
+    <div class="route">
+      <span class="pin">⛵</span>
+      <div>Вечерний аккорд: <b>канал-круиз по Амстердаму</b>. И это идеальная рифма ко всему дню. Утром и днём вы смотрели на воду как на <em>стихию и инженерию</em> — дамбы, заливы, польдеры, угроза и борьба. А вечером с палубы лодки вы увидите воду как <em>уют и роскошь</em> — подсвеченные каналы, узкие дома, мосты, отражения. Один и тот же элемент, два полюса: днём вода — это враг, которого приручили; вечером — декорация для самого красивого города на ней. Лучшего способа закрыть «водный» день не придумать.</div>
+    </div>
+
+    <p>И короткий итог всей петли, чтобы увезти его с собой. За один день на велосипеде вы проехали <strong>по дну бывшего моря</strong>, по ниточке дамбы между большой водой и землёй ниже её уровня; мимо острова, который оборонялись наводнением; через деревню, где 400 лет бьют механические рыцари; мимо родины мирового сыра; через посёлок, который дамба лишила рыбы, а он в ответ запел; и через деревню, разбогатевшую на колониях. Всё, о чём были первые книги, — вода, инженерия, торговля, адаптация, неожиданные связи — сегодня прошло у вас прямо под колёсами. Это и есть лучший способ понять эту страну: не прочитать про неё, а <strong>проехать её ногами по гребню дамбы</strong>, чувствуя, как ветер с бывшего моря дует в лицо.</p>
+
+    <blockquote>Днём вода — стихия, которую приручили. Вечером — декорация, которой любуются. Вы за один день увидели оба её лица и проехали между ними на велосипеде.</blockquote>
+  </section>
+
+  <!-- ── ШПАРГАЛКА ── -->
+  <section class="cheat" id="cheat">
+    <h2>🚲 Таймлайн и шпаргалка</h2>
+    <p class="sub">Чистый план дня с километражем и паузами + самое важное в строках.</p>
+
+    <h3>Таймлайн дня (поздний старт)</h3>
+    <ul class="ctl">
+      <li><span class="ct">~13:00</span><span class="cd"><b>Старт.</b> Паром через IJ за Centraal → Амстердам-Норд.</span></li>
+      <li><span class="ct">~13:40</span><span class="cd"><b>Durgerdam</b> (7 км). Пауза <b>10 мин</b>: вид на форт-остров Vuurtoreneiland, кофе у воды.</span></li>
+      <li><span class="ct">13:50–14:30</span><span class="cd"><b>Дамба</b> до Моннендама (~13 км) против ветра. Питстоп посередине — гавань <b>Uitdam</b>, размять ноги.</span></li>
+      <li><span class="ct">~14:30</span><span class="cd"><b>Monnickendam.</b> Пауза <b>30–40 мин</b>: куранты Speeltoren (всадники — на ровный час!), ботеры, копчёный угорь. Обед.</span></li>
+      <li><span class="ct">~15:10</span><span class="cd"><b>Katwoude</b> — сырная ферма Henri Willig, <b>15 мин</b>: дегустация, мельница. Рядом — Эдам.</span></li>
+      <li><span class="ct">~15:30</span><span class="cd"><b>Volendam.</b> Пауза <b>45–60 мин</b>: обед + обязательно переулки <b>Doolhof</b> за дамбой.</span></li>
+      <li><span class="ct">~17:00</span><span class="cd"><b>Broek in Waterland.</b> Пауза <b>30 мин</b>: пруд Havenrak, кафе у воды — последний отдых.</span></li>
+      <li><span class="ct">~18:00+</span><span class="cd"><b>Домой</b> (~10 км) — ветер в спину, легко. Вечером — канал-круиз. Закат ~22:00.</span></li>
+    </ul>
+
+    <h3>12 заметок на полях</h3>
+    <ol class="twenty">
+      <li><b>Не гнать.</b> Закат в ~22:00 — времени море. Лучше меньше км и больше настоящих пауз.</li>
+      <li><b>Против ветра — туда, в спину — домой.</b> Тяжёлый кусок на свежих ногах.</li>
+      <li>Весь маршрут — <b>по дну бывшего моря</b>: вода справа (Маркермеер) была морем, поля слева — осушены.</li>
+      <li>Самый ветреный отрезок — <b>дамба Durgerdam → Monnickendam</b>. Держите ровный каданс, не рвите.</li>
+      <li>Лучший вид региона — <b>на гребне дамбы у Uitdam</b>: справа вода выше, слева земля ниже. Вся страна в одном кадре.</li>
+      <li><b>Vuurtoreneiland</b> — форт линии обороны Амстердама, где оружие — затопление польдеров.</li>
+      <li><b>Monnickendam</b> недооценён — лучшая средняя пауза. Куранты: всадники выезжают на <b>ровный час</b>.</li>
+      <li><b>Копчёный угорь</b> в Моннендаме — тот самый вкус Зёйдерзе. Не любите рыбу → сыр в Катвауде.</li>
+      <li>В <b>Волендаме</b> уходите с набережной в переулки <b>Doolhof</b> — иначе не увидите настоящего.</li>
+      <li><b>«Palingsound»:</b> Волендам — фабрика голландской поп-музыки (The Cats, BZN). Рыбу убила дамба — деревня запела.</li>
+      <li><b>Broek in Waterland</b> — деревня-чистюля, разбогатевшая на колониальной торговле; пастельные дома у пруда.</li>
+      <li>Вечерний <b>круиз</b> закрывает день: днём вода — стихия, вечером — декорация.</li>
+    </ol>
+
+    <h3>10 слов в седле</h3>
+    <table class="words">
+      <tr><td class="nl">Dijk</td><td class="pr">дейк</td><td>дамба (вы едете по ней)</td></tr>
+      <tr><td class="nl">Pont / Veer</td><td class="pr">понт / вейр</td><td>паром (через IJ — бесплатный)</td></tr>
+      <tr><td class="nl">Fietspad</td><td class="pr">фитспат</td><td>велодорожка</td></tr>
+      <tr><td class="nl">Tegenwind</td><td class="pr">те́хенвинт</td><td>встречный ветер (ваш сегодняшний враг)</td></tr>
+      <tr><td class="nl">Haven</td><td class="pr">ха́вен</td><td>гавань</td></tr>
+      <tr><td class="nl">Botter</td><td class="pr">бо́ттер</td><td>плоскодонный парусник Зёйдерзе</td></tr>
+      <tr><td class="nl">Paling</td><td class="pr">па́линг</td><td>угорь (копчёный — местный деликатес)</td></tr>
+      <tr><td class="nl">Kaas</td><td class="pr">кас</td><td>сыр (Гауда, Эдам — рядом)</td></tr>
+      <tr><td class="nl">Speeltoren</td><td class="pr">спе́йлторен</td><td>башня с курантами в Моннендаме</td></tr>
+      <tr><td class="nl">Fijne rit!</td><td class="pr">фе́йне рит</td><td>«хорошей поездки!»</td></tr>
+    </table>
+    <p class="sub" style="margin-top:22px;">«g/ch» — горловое «х»; «ij» ≈ «эй»; «ui» ≈ среднее «ау/ой». Пейте воду, мажьтесь от солнца, ловите ровный час в Моннендаме. Fijne rit!</p>
+  </section>
+
+  <footer class="src">
+    <h3>Источники и сверка фактов</h3>
+    <p>Vuurtoreneiland и линия обороны Амстердама: <a href="https://www.stellingvanamsterdam.nl/en/vuurtoreneiland-kustbatterij-bij-durgerdam">Stelling van Amsterdam</a>, <a href="https://en.wikipedia.org/wiki/Vuurtoreneiland">Wikipedia</a>. Карильон Speeltoren в Моннендаме (всадники, колокола 1590-х): <a href="https://www.despeeltoren.nl/te-zien/carillon/">Museum de Speeltoren</a>. Волендам, «Palingsound» и слом рыбной экономики после Afsluitdijk (1932): <a href="https://en.wikipedia.org/wiki/Palingsound">Palingsound — Wikipedia</a>, <a href="https://en.wikipedia.org/wiki/Zuiderzee">Zuiderzee</a>. Деревни (Durgerdam, Uitdam, Monnickendam, Broek in Waterland), ботеры, сыр Эдам/Гауда — по совокупности краеведческих источников.</p>
+    <p style="opacity:.7;margin-top:14px;">Километраж и время — ориентировочные, под поздний старт и неспешный темп; питстопы и часы (карильон, ферма, кафе) уточняйте на месте. Лёгкого ветра в спину. 🚲💨</p>
+    <a class="back-top" href="#top">↑ Наверх, к маршруту</a>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var themeCb=document.getElementById('theme-cb'), navCb=document.getElementById('nav-cb');
+  try{
+    var saved=localStorage.getItem('nl-theme');
+    if(saved==='dark') themeCb.checked=true;
+    else if(saved==='light') themeCb.checked=false;
+    else if(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) themeCb.checked=true;
+  }catch(e){}
+  themeCb.addEventListener('change',function(){ try{ localStorage.setItem('nl-theme', themeCb.checked?'dark':'light'); }catch(e){} });
+
+  var menu=document.getElementById('menu');
+  menu.addEventListener('click',function(e){ if(e.target.closest('a')) navCb.checked=false; });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') navCb.checked=false; });
+
+  var bar=document.getElementById('progress'), pct=document.getElementById('pct'), here=document.getElementById('here');
+  var sections=Array.prototype.slice.call(document.querySelectorAll('section.ch, section.cheat'));
+  var links={};
+  Array.prototype.forEach.call(menu.querySelectorAll('a[href^="#"]'),function(a){ links[a.getAttribute('href').slice(1)]=a; });
+  function titleOf(sec){ var t=sec.querySelector('.ch-title')||sec.querySelector('h2'); return t?t.textContent.trim():''; }
+  function update(){
+    var h=document.documentElement, scrolled=h.scrollTop||document.body.scrollTop, height=(h.scrollHeight-h.clientHeight)||1;
+    var p=Math.min(100,Math.max(0,Math.round((scrolled/height)*100)));
+    bar.style.width=p+'%'; pct.textContent=p+'%';
+    var mid=scrolled+window.innerHeight*0.30, current=null;
+    for(var i=0;i<sections.length;i++){ if(sections[i].offsetTop<=mid) current=sections[i]; }
+    var id=current?current.id:null;
+    here.textContent=current?titleOf(current):'Велодень в Ватерланде';
+    for(var k in links){ links[k].classList.toggle('active', k===id); }
+  }
+  var ticking=false;
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(function(){ update(); ticking=false; }); } }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  update();
+})();
+</script>
+
+<script>
+/* Аудиогид: озвучка через Web Speech API (голос устройства, офлайн). */
+(function(){
+  if(!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance==='undefined') return;
+  var synth=window.speechSynthesis;
+  var voice=null, rate=1, items=[], idx=0, playing=false, paused=false, seq=0, hl=null;
+  function pickVoice(){
+    var vs=synth.getVoices()||[];
+    voice=vs.filter(function(v){return /ru[-_]?ru/i.test(v.lang);})[0] || vs.filter(function(v){return /^ru/i.test(v.lang);})[0] || null;
+  }
+  pickVoice();
+  if(synth.onvoiceschanged!==undefined) synth.onvoiceschanged=pickVoice;
+  function clean(s){ return (s||'').replace(/\s+/g,' ').trim(); }
+  function chunk(t){
+    if(t.length<=240) return [t];
+    var parts=t.match(/[^.!?…]+[.!?…]*/g)||[t], out=[], buf='';
+    parts.forEach(function(p){ if((buf+p).length>240){ if(buf) out.push(buf.trim()); buf=p; } else buf+=p; });
+    if(buf.trim()) out.push(buf.trim());
+    return out;
+  }
+  var player=document.createElement('div'); player.id='player';
+  player.innerHTML='<button class="p-pp" aria-label="Пауза или воспроизведение">⏸</button><button class="p-stop" aria-label="Остановить">⏹</button><span class="p-title"></span><span class="p-note"></span><button class="p-rate" aria-label="Скорость">1×</button>';
+  document.body.appendChild(player);
+  var ppBtn=player.querySelector('.p-pp'), stopBtn=player.querySelector('.p-stop'), titleEl=player.querySelector('.p-title'), noteEl=player.querySelector('.p-note'), rateBtn=player.querySelector('.p-rate');
+  function setNote(){ noteEl.textContent=items.length?('§ '+Math.min(idx+1,items.length)+'/'+items.length):''; }
+  function highlight(el){ if(el===hl) return; if(hl) hl.classList.remove('speaking'); hl=el; if(el){ el.classList.add('speaking'); el.scrollIntoView({behavior:'smooth',block:'center'}); } }
+  function clearHl(){ if(hl) hl.classList.remove('speaking'); hl=null; }
+  function build(section){
+    items=[];
+    var title=section.querySelector('.ch-title')||section.querySelector('h2');
+    if(title) chunk(clean(title.textContent)).forEach(function(c){ items.push({el:title,text:c}); });
+    section.querySelectorAll('p, h3, li, blockquote').forEach(function(n){
+      var t=clean(n.textContent); if(t) chunk(t).forEach(function(c){ items.push({el:n,text:c}); });
+    });
+  }
+  function speak(){
+    if(idx>=items.length){ stop(); return; }
+    var my=++seq, it=items[idx]; highlight(it.el); setNote();
+    var u=new SpeechSynthesisUtterance(it.text); u.lang='ru-RU'; if(voice) u.voice=voice; u.rate=rate; u.pitch=1;
+    u.onend=function(){ if(my===seq && playing && !paused){ idx++; speak(); } };
+    u.onerror=function(){ if(my===seq && playing && !paused){ idx++; speak(); } };
+    synth.speak(u);
+  }
+  function start(section,label){ synth.cancel(); build(section); idx=0; playing=true; paused=false; ppBtn.textContent='⏸'; titleEl.textContent=label; player.classList.add('show'); speak(); }
+  function stop(){ playing=false; paused=false; ++seq; synth.cancel(); clearHl(); player.classList.remove('show'); }
+  ppBtn.addEventListener('click',function(){ if(!playing) return; if(paused){ paused=false; synth.resume(); ppBtn.textContent='⏸'; } else { paused=true; synth.pause(); ppBtn.textContent='▶'; } });
+  stopBtn.addEventListener('click',stop);
+  rateBtn.addEventListener('click',function(){ var s=[1,1.2,1.5,0.8], i=s.indexOf(rate); rate=s[(i+1)%s.length]; rateBtn.textContent=rate+'×'; if(playing && !paused){ synth.cancel(); speak(); } });
+  setInterval(function(){ if(playing && !paused && synth.speaking){ synth.pause(); synth.resume(); } },9000);
+  function mkBtn(label){ var b=document.createElement('button'); b.className='listen-btn'; b.textContent='▶ '+label; return b; }
+  document.querySelectorAll('section.ch').forEach(function(sec){
+    var meta=sec.querySelector('.ch-meta'); if(!meta) return;
+    var t=sec.querySelector('.ch-title'), name=t?t.textContent.trim():'остановку';
+    var b=mkBtn('Слушать'); b.addEventListener('click',function(){ start(sec,name); }); meta.appendChild(b);
+  });
+  var cheat=document.querySelector('section.cheat');
+  if(cheat){ var cb=mkBtn('Слушать шпаргалку'); cb.className+=' cheat-listen'; cb.addEventListener('click',function(){ start(cheat,'Таймлайн и шпаргалка'); }); var sub=cheat.querySelector('.sub'); if(sub) sub.insertAdjacentElement('afterend',cb); else cheat.insertBefore(cb,cheat.firstChild); }
+  window.addEventListener('beforeunload',function(){ synth.cancel(); });
+})();
+</script>
+</body>
+</html>
