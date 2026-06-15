@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Роттердам — город наоборот</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');
+
+  :root{
+    --cream:#F5F0E8; --navy:#0D1B2A; --orange:#E8631A;
+    --paper:#F5F0E8; --ink:#0D1B2A; --ink-soft:#3a4656;
+    --rule:#d8cfbf; --card:#efe7d8; --accent:#E8631A;
+    --accent-soft:#fbe5d6; --link:#b8480f;
+    --serif:'Playfair Display', Georgia, 'Times New Roman', serif;
+    --sans:'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --maxw:720px;
+  }
+  html[data-theme="dark"], html:has(#theme-cb:checked){
+    --paper:#0D1B2A; --ink:#F5F0E8; --ink-soft:#b9c2cf;
+    --rule:#27384a; --card:#13243a; --accent:#ff7a36;
+    --accent-soft:#1d3147; --link:#ff9a5e;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:19px;line-height:1.72;-webkit-text-size-adjust:100%;transition:background .3s ease,color .3s ease;}
+  @media (max-width:480px){ body{font-size:18px;} }
+  @media (max-width:560px){ .topbar .here{display:none;} }
+
+  #theme-cb,#nav-cb{position:absolute;width:1px;height:1px;opacity:0;margin:-1px;padding:0;border:0;clip:rect(0 0 0 0);overflow:hidden;}
+
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;align-items:center;gap:10px;height:46px;padding:0 12px;background:var(--paper);background:color-mix(in srgb, var(--paper) 88%, transparent);-webkit-backdrop-filter:saturate(160%) blur(10px);backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid var(--rule);}
+  .topbar .ctrl{font-family:var(--sans);font-size:13px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:20px;padding:6px 13px;cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+  .topbar .ctrl:hover{border-color:var(--accent);color:var(--accent);}
+  .topbar .spacer{flex:1;}
+  .topbar .here{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw;}
+  .l-dark{display:none;}
+  html:has(#theme-cb:checked) .l-dark{display:inline;}
+  html:has(#theme-cb:checked) .l-light{display:none;}
+
+  #progress{position:fixed;top:46px;left:0;height:3px;width:0%;background:var(--accent);z-index:91;transition:width .1s linear;}
+  body{padding-top:46px;}
+
+  .menu-backdrop{position:fixed;inset:0;z-index:95;background:rgba(5,12,20,.5);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;}
+  .menu-panel{position:fixed;top:0;left:0;bottom:0;z-index:96;width:min(86vw,360px);background:var(--paper);border-right:1px solid var(--rule);box-shadow:2px 0 28px rgba(0,0,0,.25);transform:translateX(-102%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 18px 40px;}
+  html:has(#nav-cb:checked) .menu-backdrop{opacity:1;visibility:visible;}
+  html:has(#nav-cb:checked) .menu-panel{transform:translateX(0);}
+  .menu-panel h2{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:12px;color:var(--accent);margin:4px 0 14px;font-weight:700;display:flex;justify-content:space-between;align-items:center;}
+  .menu-panel .close-x{font-size:22px;line-height:1;cursor:pointer;color:var(--ink-soft);padding:0 4px;}
+  .menu-panel ol{margin:0;padding:0;list-style:none;counter-reset:m;}
+  .menu-panel li{counter-increment:m;border-top:1px solid var(--rule);}
+  .menu-panel li:first-child{border-top:none;}
+  .menu-panel a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);padding:11px 4px;line-height:1.3;}
+  .menu-panel a:hover,.menu-panel a:focus{color:var(--accent);background:var(--card);}
+  .menu-panel a.active{color:var(--accent);font-weight:700;}
+  .menu-panel a::before{content:counter(m,decimal-leading-zero);font-family:var(--serif);font-weight:700;color:var(--accent);font-size:13px;min-width:22px;flex-shrink:0;}
+  .menu-panel .mt{flex:1;font-size:15px;}
+  .menu-panel .mr{font-size:11px;color:var(--ink-soft);white-space:nowrap;}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px 120px;}
+
+  header.cover{max-width:var(--maxw);margin:0 auto;padding:40px 22px 30px;text-align:left;}
+  .kicker{font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:.22em;font-size:12px;color:var(--accent);margin-bottom:18px;}
+  h1.title{font-family:var(--serif);font-weight:900;line-height:1.02;font-size:clamp(38px,11vw,72px);margin:0 0 18px;letter-spacing:-.01em;}
+  h1.title em{font-style:italic;color:var(--accent);}
+  .dek{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--ink-soft);line-height:1.45;margin:0 0 26px;max-width:600px;}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:14px;color:var(--ink-soft);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;}
+  .meta-row b{color:var(--ink);}
+
+  nav.toc{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:22px 22px 10px;margin:34px 0 10px;}
+  nav.toc h2{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:13px;color:var(--accent);margin:0 0 14px;font-weight:700;}
+  nav.toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;}
+  nav.toc li{counter-increment:toc;border-top:1px solid var(--rule);}
+  nav.toc li:first-of-type{border-top:none;}
+  nav.toc a{display:flex;align-items:baseline;gap:12px;text-decoration:none;color:var(--ink);padding:11px 0;}
+  nav.toc a:hover{color:var(--accent);}
+  nav.toc a::before{content:counter(toc,decimal-leading-zero);font-family:var(--serif);font-weight:700;color:var(--accent);font-size:15px;min-width:26px;}
+  nav.toc .t{flex:1;font-weight:500;}
+  nav.toc .rt{font-size:12px;color:var(--ink-soft);white-space:nowrap;}
+
+  section.ch{padding-top:54px;scroll-margin-top:64px;}
+  #top,#cheat{scroll-margin-top:64px;}
+  .ch-head{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:6px;}
+  .ch-num{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--accent);margin-bottom:6px;}
+  h2.ch-title{font-family:var(--serif);font-weight:800;line-height:1.06;font-size:clamp(27px,7vw,40px);margin:0;letter-spacing:-.01em;}
+  .ch-meta{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 26px;}
+  .badge{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:20px;}
+  .badge.day{background:var(--accent);color:#fff;}
+  html[data-theme="dark"] .badge.day,html:has(#theme-cb:checked) .badge.day{color:#0D1B2A;}
+  .badge.time{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);}
+
+  p{margin:0 0 20px;}
+  .ch p:first-of-type::first-letter{font-family:var(--serif);font-weight:900;float:left;font-size:64px;line-height:.78;padding:6px 10px 0 0;color:var(--accent);}
+  a.inl{color:var(--link);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;}
+  strong{font-weight:700;} em{font-style:italic;}
+  h3{font-family:var(--serif);font-weight:700;font-size:24px;margin:36px 0 12px;line-height:1.15;}
+
+  blockquote{margin:30px 0;padding:6px 0 6px 24px;border-left:4px solid var(--accent);font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.4;color:var(--ink);}
+  blockquote cite{display:block;font-family:var(--sans);font-style:normal;font-size:14px;color:var(--ink-soft);margin-top:12px;font-weight:500;}
+
+  .hook{background:var(--card);border-radius:12px;padding:20px 22px;margin:28px 0;border:1px solid var(--rule);}
+  .hook .lbl{font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:10px;}
+  .hook p:last-child{margin-bottom:0;}
+
+  .route{display:flex;gap:13px;align-items:flex-start;background:var(--accent-soft);border-radius:12px;padding:16px 18px;margin:26px 0;font-size:16.5px;line-height:1.55;}
+  .route .pin{font-size:22px;line-height:1.3;flex-shrink:0;}
+  .route b{color:var(--link);}
+  html[data-theme="dark"] .route b,html:has(#theme-cb:checked) .route b{color:var(--accent);}
+
+  .warn{border:1px dashed var(--accent);border-radius:12px;padding:16px 18px;margin:26px 0;font-size:16px;}
+  .warn .lbl{font-family:var(--sans);text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:8px;}
+
+  figure{margin:32px 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;border-radius:10px;background:var(--card);border:1px solid var(--rule);padding:10px;}
+  figcaption{font-size:14px;color:var(--ink-soft);margin-top:10px;font-style:italic;font-family:var(--serif);}
+
+  hr.soft{border:none;border-top:1px solid var(--rule);margin:34px 0;}
+
+  .listen-btn{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.04em;color:#fff;background:var(--accent);border:none;border-radius:20px;padding:6px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+  html:has(#theme-cb:checked) .listen-btn{color:#0D1B2A;}
+  .listen-btn:hover{filter:brightness(1.07);}
+  .listen-btn.cheat-listen{margin:4px 0 22px;}
+  .speaking{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--accent);border-radius:5px;transition:background .2s ease;}
+  #player{position:fixed;left:50%;bottom:14px;z-index:97;width:min(94vw,560px);transform:translateX(-50%) translateY(160%);display:flex;align-items:center;gap:8px;background:var(--navy);color:var(--cream);border-radius:30px;padding:9px 12px;box-shadow:0 8px 30px rgba(0,0,0,.4);transition:transform .3s cubic-bezier(.4,0,.2,1);}
+  html:has(#theme-cb:checked) #player{border:1px solid var(--rule);background:#08121d;}
+  #player.show{transform:translateX(-50%) translateY(0);}
+  #player button{background:none;border:none;color:var(--cream);font-size:19px;cursor:pointer;width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  #player button:hover{background:rgba(255,255,255,.13);}
+  #player .p-title{flex:1;font-family:var(--serif);font-style:italic;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e7ddcd;min-width:0;}
+  #player .p-note{font-size:11px;color:#9fb0c2;white-space:nowrap;}
+  #player .p-rate{background:rgba(255,255,255,.13);color:#fff;border-radius:15px;font-family:var(--sans);font-size:12px;font-weight:700;width:auto;padding:0 11px;}
+
+  section.cheat{margin-top:64px;background:var(--navy);color:var(--cream);border-radius:16px;padding:34px 26px;}
+  html[data-theme="dark"] section.cheat,html:has(#theme-cb:checked) section.cheat{border:1px solid var(--rule);background:#08121d;}
+  section.cheat h2{font-family:var(--serif);font-weight:800;font-size:30px;margin:0 0 6px;color:var(--cream);}
+  section.cheat .sub{color:#9fb0c2;font-size:14px;margin-bottom:24px;font-family:var(--sans);}
+  section.cheat h3{color:var(--orange);font-size:18px;margin:26px 0 12px;font-family:var(--sans);text-transform:uppercase;letter-spacing:.1em;font-weight:700;}
+  ol.twenty{margin:0;padding-left:22px;} ol.twenty li{margin-bottom:9px;line-height:1.5;color:#e7ddcd;} ol.twenty li b{color:#fff;}
+  .ctl{list-style:none;margin:0;padding:0;}
+  .ctl li{display:flex;gap:12px;padding:9px 0;border-top:1px solid #243748;}
+  .ctl li:first-child{border-top:none;}
+  .ctl .ct{font-family:var(--serif);font-weight:700;color:var(--orange);min-width:30px;}
+  .ctl .cd{color:#e7ddcd;font-size:15px;}
+  .ctl .cd b{color:#fff;}
+  table.words{width:100%;border-collapse:collapse;font-size:15px;}
+  table.words td{padding:8px 6px;border-bottom:1px solid #243748;vertical-align:top;color:#e7ddcd;}
+  table.words td.nl{font-family:var(--serif);font-weight:700;color:#fff;white-space:nowrap;}
+  table.words td.pr{color:var(--orange);font-style:italic;white-space:nowrap;}
+
+  footer.src{margin-top:44px;font-size:13px;color:var(--ink-soft);line-height:1.6;}
+  footer.src h3{font-family:var(--sans);text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--accent);}
+  footer.src a{color:var(--link);}
+  .back-top{display:inline-block;margin-top:18px;font-size:14px;color:var(--accent);text-decoration:none;font-weight:700;}
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="theme-cb" aria-hidden="true" tabindex="-1">
+<input type="checkbox" id="nav-cb" aria-hidden="true" tabindex="-1">
+
+<div class="topbar">
+  <label class="ctrl" for="nav-cb" role="button" aria-label="Открыть маршрут">☰&nbsp;Остановки</label>
+  <span class="here" id="here">Роттердам · архитектура</span>
+  <span class="spacer"></span>
+  <span class="ctrl" id="pct">0%</span>
+  <label class="ctrl" for="theme-cb" role="button" aria-label="Переключить тему">
+    <span class="l-light">🌙&nbsp;Тёмная</span><span class="l-dark">☀️&nbsp;Светлая</span>
+  </label>
+</div>
+<div id="progress"></div>
+
+<label class="menu-backdrop" for="nav-cb" aria-hidden="true"></label>
+<aside class="menu-panel" id="menu" aria-label="Остановки">
+  <h2>Маршрут дня <label class="close-x" for="nav-cb" role="button" aria-label="Закрыть">✕</label></h2>
+  <ol>
+    <li><a href="#s1"><span class="mt">Город без центра: зачем</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#s2"><span class="mt">Centraal: ворота-заявление</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#s3"><span class="mt">Markthal: жизнь над рынком</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#s4"><span class="mt">Кубические дома</span><span class="mr">8 мин</span></a></li>
+    <li><a href="#s5"><span class="mt">Белый дом и старая гавань</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#s6"><span class="mt">Depot: зеркальная чаша</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#s7"><span class="mt">Эразмусбрюг: Лебедь</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#s8"><span class="mt">Вильгельмина-пир: вертикальный город</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#s9"><span class="mt">Hotel New York и Америка</span><span class="mr">6 мин</span></a></li>
+    <li><a href="#s10"><span class="mt">Зачем это всё</span><span class="mr">5 мин</span></a></li>
+    <li><a href="#cheat"><span class="mt">🏙 Шпаргалка и порядок</span><span class="mr">4 мин</span></a></li>
+    <li><a href="#top"><span class="mt">↑ В начало</span><span class="mr"></span></a></li>
+  </ol>
+</aside>
+
+<header class="cover" id="top">
+  <div class="kicker">Книга шестая · к понедельнику · спутник «Погружения в Нидерланды»</div>
+  <h1 class="title">Роттердам<br>город <em>наоборот</em></h1>
+  <p class="dek">Единственный голландский город, где можно задрать голову и увидеть небоскрёбы. У него за полтора часа отняли всё прошлое — и он решил из этого сделать не трагедию, а лабораторию. Прогулка по городу, который выбрал будущее вместо ностальгии, и по домам-кубам, в которых это будущее живёт.</p>
+  <div class="meta-row">
+    <span>🏙 <b>9 остановок</b> архитектуры</span>
+    <span>🚶 <b>~5–6 км</b> пешком</span>
+    <span>🔊 <b>Аудиогид</b> у каждой</span>
+    <span>📶 <b>Работает офлайн</b></span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <figure>
+    <svg viewBox="0 0 460 240" role="img" aria-label="Силуэт Роттердама">
+      <rect x="0" y="0" width="460" height="240" fill="none"/>
+      <line x1="0" y1="200" x2="460" y2="200" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+      <!-- Witte Huis -->
+      <rect x="20" y="120" width="26" height="80" fill="#c9b58e"/><text x="33" y="216" text-anchor="middle" font-family="DM Sans" font-size="9" fill="currentColor">Witte Huis</text>
+      <!-- cube houses -->
+      <g transform="translate(80,150)"><rect x="0" y="0" width="26" height="26" transform="rotate(45 13 13)" fill="#E8631A"/><rect x="34" y="0" width="26" height="26" transform="rotate(45 47 13)" fill="#E8631A"/></g>
+      <text x="105" y="216" text-anchor="middle" font-family="DM Sans" font-size="9" fill="currentColor">кубы</text>
+      <!-- Markthal arch -->
+      <path d="M150 200 L150 150 Q 185 110 220 150 L220 200" fill="none" stroke="#9a7b53" stroke-width="10"/><text x="185" y="216" text-anchor="middle" font-family="DM Sans" font-size="9" fill="currentColor">Markthal</text>
+      <!-- Depot bowl -->
+      <path d="M245 200 Q 240 150 285 150 Q 330 150 325 200 Z" fill="#bcd0dd"/><circle cx="285" cy="148" r="10" fill="#7bb8d8"/><text x="285" y="216" text-anchor="middle" font-family="DM Sans" font-size="9" fill="currentColor">Depot</text>
+      <!-- Erasmusbrug swan -->
+      <g><line x1="355" y1="200" x2="365" y2="90" stroke="#9aa7b5" stroke-width="4"/><path d="M365 90 L355 200 M365 95 L400 200 M365 110 L340 200" stroke="#9aa7b5" stroke-width="1.5"/></g><text x="370" y="216" text-anchor="middle" font-family="DM Sans" font-size="9" fill="currentColor">Erasmusbrug</text>
+      <!-- De Rotterdam towers -->
+      <rect x="410" y="70" width="14" height="130" fill="#0D1B2A"/><rect x="426" y="55" width="14" height="145" fill="#0D1B2A"/><text x="427" y="216" text-anchor="middle" font-family="DM Sans" font-size="9" fill="currentColor">De Rotterdam</text>
+      <text x="230" y="28" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="15" fill="#E8631A">Манхэттен на Маасе</text>
+    </svg>
+    <figcaption>Силуэт, которого нет больше нигде в Нидерландах: небоскрёбы, кубы, арка-рынок, зеркальная чаша и мост-лебедь в одном кадре.</figcaption>
+  </figure>
+
+  <nav class="toc">
+    <h2>Как смотреть город</h2>
+    <ol>
+      <li><a href="#s1"><span class="t">Город без центра: зачем Роттердам такой</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#s2"><span class="t">Centraal: вокзал как заявление</span><span class="rt">5 мин</span></a></li>
+      <li><a href="#s3"><span class="t">Markthal: жизнь над рынком</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#s4"><span class="t">Кубические дома: лес, в котором живут</span><span class="rt">8 мин</span></a></li>
+      <li><a href="#s5"><span class="t">Белый дом: уцелевший небоскрёб 1898 года</span><span class="rt">5 мин</span></a></li>
+      <li><a href="#s6"><span class="t">Depot Boijmans: зеркальная чаша</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#s7"><span class="t">Эразмусбрюг: мост-лебедь</span><span class="rt">5 мин</span></a></li>
+      <li><a href="#s8"><span class="t">Вильгельмина-пир: вертикальный город</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#s9"><span class="t">Hotel New York: причал в Америку</span><span class="rt">6 мин</span></a></li>
+      <li><a href="#s10"><span class="t">Зачем это всё: травма как метод</span><span class="rt">5 мин</span></a></li>
+      <li><a href="#cheat"><span class="t">🏙 Порядок обхода + шпаргалка</span><span class="rt">4 мин</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section class="ch" id="s1">
+    <div class="ch-head"><div class="ch-num">Остановка первая · у вокзала</div><h2 class="ch-title">Город без центра: зачем Роттердам такой</h2></div>
+    <div class="ch-meta"><span class="badge day">старт · Rotterdam Centraal</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Если Амстердам — это бережно законсервированный XVII век, то Роттердам — его полная противоположность, и вы это почувствуете в первую же минуту. Здесь нет старого центра. Совсем. Вместо кружева каналов и кривых домиков — небоскрёбы, бетон, сталь, стекло и широкие проспекты. Многие приезжают и разочарованно бормочут: «некрасиво, не по-голландски». И это огромная ошибка восприятия. <strong>Роттердам надо смотреть не как «неудавшийся Амстердам», а как единственный в стране город, который сознательно выбрал будущее.</strong> Чтобы это понять, нужно знать про один день.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · полтора часа, отменившие прошлое</div>
+      <p><strong>14 мая 1940 года</strong> немецкая авиация за считанные часы стёрла исторический центр Роттердама с лица земли. Сгорело около <strong>24 000 домов</strong>, без крова осталось порядка <strong>80 000 человек</strong>. Средневековый город просто перестал существовать — на его месте осталась выжженная пустошь, которую горожане потом обвели на карте «линией пожара» (<em>de brandgrens</em>; её след сегодня отмечен в мостовой светящимися метками — будете идти, поглядывайте под ноги). И тут город сделал выбор, определивший всё. Он мог пойти путём Варшавы — которую вы хорошо знаете — и кропотливо <em>воссоздать</em> старину по довоенным чертежам. Роттердам решил <strong>не делать этого</strong>. Вместо воскрешения — чистый лист. Вместо ностальгии — приглашение архитекторам всего мира пробовать здесь то, что нигде больше не разрешат.</p>
+    </div>
+
+    <p>Отсюда и характер города, и его девиз — <em>«Geen woorden, maar daden»</em> («Не слова, а дела»). Роттердам — это рабочий портовый город (крупнейший порт Европы), без аристократического чванства, прямой, многонациональный, грубоватый и гордый этим. Его прозвали <strong>«Манхэттен на Маасе»</strong>. И сегодня вы пройдёте по нему не как по «достопримечательностям», а как по <strong>открытому музею архитектуры XX–XXI веков</strong> — где почти каждое здание спорит с соседним о том, каким должен быть город. Держите в голове контраст с Варшавой весь день: два города, две страшные раны, два противоположных ответа на вопрос «что делать с уничтоженным прошлым». Это и есть главная тема прогулки — и она вам близка лично.</p>
+
+    <blockquote>Варшава воскресила свой убитый город. Роттердам похоронил свой и на могиле построил будущее. Оба ответа — про память. Просто диаметрально разные.</blockquote>
+  </section>
+
+  <!-- 2 -->
+  <section class="ch" id="s2">
+    <div class="ch-head"><div class="ch-num">Остановка вторая · Centraal</div><h2 class="ch-title">Centraal: вокзал как заявление</h2></div>
+    <div class="ch-meta"><span class="badge day">точка прибытия</span><span class="badge time">⏱ 5 мин</span></div>
+
+    <p>Не пробегайте вокзал — он задаёт тон всему. Современный <strong>Rotterdam Centraal</strong> (2014, бюро Benthem Crouwel, MVSA и West 8) — это не «транспортный узел», а парадные ворота-манифест. Прежде чем нырнуть в город, выйдите на привокзальную площадь и обернитесь.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · крыша, которая показывает пальцем</div>
+      <p>Гигантский козырёк вокзала из блестящей нержавеющей стали вытянут острым клином — и этот клин <strong>намеренно направлен в сторону центра города</strong>, как стрелка-указатель: «вам туда, в будущее». Сторона, обращённая к городу, — дерзкая, сверкающая, футуристическая; а вот сторона, обращённая к старому пригороду за спиной, — нарочно скромная, из дерева и стекла, чтобы не давить на малоэтажную застройку. Одно здание говорит на двух языках сразу, смотря куда повёрнуто. Это очень роттердамский жест: вокзал не просто впускает вас в город — он <em>режиссирует</em> ваш первый взгляд и буквально показывает, в какую сторону идти. Сравните потом с амстердамским Центральным вокзалом из первой книги (пышная неоготика Кёйперса, 1889): там вокзал — нарядный сундук прошлого, здесь — заострённая стрела в завтра.</p>
+    </div>
+
+    <p>Отсюда до первой большой остановки — Markthal и кубических домов — минут пятнадцать пешком на юго-восток, к станции Blaak. Идите спокойно, посматривая вверх: уже по дороге начнётся та самая архитектурная разноголосица, ради которой вы приехали.</p>
+
+    <blockquote>Амстердамский вокзал — нарядный сундук прошлого. Роттердамский — стальная стрела, показывающая, в какую сторону думать.</blockquote>
+  </section>
+
+  <!-- 3 -->
+  <section class="ch" id="s3">
+    <div class="ch-head"><div class="ch-num">Остановка третья · Markthal</div><h2 class="ch-title">Markthal: жизнь над рынком</h2></div>
+    <div class="ch-meta"><span class="badge day">у станции Blaak</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Первый шок — <strong>Markthal</strong> (2014), творение роттердамского бюро <strong>MVRDV</strong>. Снаружи это гигантская подкова-арка из стекла и серого камня, изогнутая, как застывшая волна. И вот фокус, который не виден, пока не узнаешь: <strong>сама арка — это жилой дом.</strong> В её толще — больше сотни квартир, окна которых смотрят и наружу, и <em>внутрь</em>, на рынок. Люди буквально живут в стенах рыночного зала. Это решение родилось из скучного, но важного закона: ЕС потребовал, чтобы продуктовые рынки были крытыми, — и вместо банального ангара MVRDV предложили накрыть рынок жильём. Проблема регламента превратилась в аттракцион.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · самая большая картина мира — на потолке</div>
+      <p>Зайдите внутрь и задерите голову. Весь свод арки изнутри (4500 кв. м!) покрыт исполинской цифровой фреской <strong>«Рог изобилия» (Hoorn des Overvloeds)</strong> художников Арно Кунена и Ирис Роскам — взрывающийся фейерверк гигантских фруктов, цветов, рыб и насекомых в сверхъярких пиксельных красках. Это, как считается, <strong>крупнейшее художественное произведение в Нидерландах</strong>. Местные тут же прозвали его «роттердамской Сикстинской капеллой» — с поправкой на то, что вместо Бога и пророков здесь парят клубника и треска размером с автобус. Очень в духе города: торжественный жанр потолочной фрески, но про еду, рынок и изобилие, а не про небеса. Для вас как для людей визуального — отдельное удовольствие разглядывать, как старая идея (расписной свод) пересобрана цифровыми инструментами в нечто поп-артовое.</p>
+    </div>
+
+    <div class="route">
+      <span class="pin">🍒</span>
+      <div>Практично: внутри — десятки прилавков с едой со всего мира (Роттердам очень многонациональный, и рынок это показывает вкусно). Хорошее место для позднего завтрака или обеда <em>перед</em> кубическими домами, которые буквально в ста метрах. И обратите внимание на торцы арки: они затянуты <b>подвесной стеклянной сеткой</b> — крупнейшим таким фасадом в Европе, почти невидимой стеной, держащей стекло.</div>
+    </div>
+
+    <blockquote>Им велели всего лишь накрыть рынок крышей. Они накрыли его сотней квартир и самой большой картиной страны. «Не слова, а дела».</blockquote>
+  </section>
+
+  <!-- 4 -->
+  <section class="ch" id="s4">
+    <div class="ch-head"><div class="ch-num">Остановка четвёртая · Kubuswoningen</div><h2 class="ch-title">Кубические дома: лес, в котором живут</h2></div>
+    <div class="ch-meta"><span class="badge day">Overblaak · ваша главная цель</span><span class="badge time">⏱ 8 мин</span></div>
+
+    <p>А вот и то, ради чего вы во многом сюда ехали. Прямо рядом с Markthal, над проезжей дорогой, навис целый <strong>лес из жёлтых кубов</strong>, поставленных на угол, — <strong>кубические дома (Kubuswoningen)</strong> архитектора <strong>Пита Блома</strong> (построены в 1982–1984 годах). Это, наверное, самый узнаваемый и самый спорный жилой эксперимент Нидерландов. Тридцать восемь жилых кубов, каждый наклонён на 54,7° и насажен на шестигранный бетонный «ствол». Зрелище абсолютно инопланетное — и за ним стоит очень земная идея.</p>
+
+    <figure>
+      <svg viewBox="0 0 300 230" role="img" aria-label="Устройство кубического дома">
+        <rect x="0" y="0" width="300" height="230" fill="none"/>
+        <!-- pylon -->
+        <polygon points="120,150 150,135 180,150 180,210 150,225 120,210" fill="#9aa7b5"/>
+        <text x="150" y="185" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#fff">ствол</text>
+        <text x="150" y="200" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#fff">(вход, лестница)</text>
+        <!-- tilted cube -->
+        <g transform="translate(150,80)">
+          <polygon points="0,-55 48,-27 48,27 0,55 -48,27 -48,-27" fill="#E8631A"/>
+          <polygon points="0,-55 48,-27 0,1 -48,-27" fill="#ff8a44"/>
+          <polygon points="0,55 48,27 48,-27 0,1" fill="#c9510f"/>
+          <line x1="0" y1="1" x2="0" y2="55" stroke="#a8430c" stroke-width="1"/>
+        </g>
+        <text x="245" y="70" font-family="Playfair Display, serif" font-style="italic" font-size="13" fill="#E8631A">«дерево»</text>
+        <text x="245" y="88" font-family="DM Sans" font-size="10" fill="currentColor">— жильё</text>
+        <text x="245" y="165" font-family="Playfair Display, serif" font-style="italic" font-size="13" fill="#9aa7b5">«ствол»</text>
+        <text x="245" y="183" font-family="DM Sans" font-size="10" fill="currentColor">— опора</text>
+        <text x="150" y="22" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="700" fill="currentColor">куб наклонён на угол</text>
+      </svg>
+      <figcaption>Каждый дом — «дерево»: жилой куб-крона на бетонном стволе. Вместе 38 кубов образуют «лес» — Blaakse Bos.</figcaption>
+    </figure>
+
+    <div class="hook">
+      <div class="lbl">Крючок · архитектор хотел посадить лес</div>
+      <p>Пит Блом исходил из метафоры, которую стоит знать, стоя под кубами: <strong>каждый дом — это дерево, а весь комплекс — лес</strong>. Он так его и назвал — <em>«Blaakse Bos»</em>, «Блакский лес». Идея была почти утопическая и очень человечная: построить <em>деревню внутри большого города</em>, поднять жильё над шумной дорогой (кубы стоят на «стволах» прямо над проезжей частью, как мост), а внизу оставить людям землю — площадь, проходы, общую жизнь. Блом называл концепцию «жильё как городская крыша»: дом-крона наверху, общественное пространство внизу. Это был ответ 1970-х на бездушные башни-муравейники: не складывать людей в коробки, а дать каждому свой наклонный мир-дерево над общим «лесным» партером. Идеализм чистой воды — и в этом его обаяние.</p>
+    </div>
+
+    <h3>Можно зайти внутрь</h3>
+    <p>Один из кубов специально превращён в музей-квартиру — <strong>Kijk-Kubus</strong> («Смотри-куб»), открыт ежедневно примерно с 11:00 до 17:00. Очень советую: снаружи кубы поражают, но <em>внутри</em> начинается самое интересное — вы оказываетесь в наклонном мире, где стены валятся на вас или от вас, окна смотрят в небо и в землю, а мебель приходится делать на заказ. Это редкий шанс не просто сфотографировать здание, а побыть <em>внутри</em> архитектурной идеи.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · честно: жить в этом тяжело</div>
+      <p>И вот взрослая правда, без открыточного восторга. Кубические дома — гениальный манифест и довольно <strong>неудобное жильё</strong>. Из-за наклона стен значительная часть площади (по разным оценкам, до четверти) почти не используется: к скошенным стенам не приставить обычный шкаф, мебель нужна нестандартная, окна моются с трудом, втащить диван — квест. Многие жильцы со временем съезжали, часть кубов теперь сдают туристам и под хостел. Это идеальная иллюстрация вечного спора в архитектуре: <strong>здание как высказывание против здания как дома для жизни</strong>. Блом построил поэму о городе-лесе — но жить в поэме оказалось неудобно. И оба эти факта правдивы одновременно. Для вас, думающих про то, как идея сталкивается с реальностью, — это идеальный экспонат: красивая утопия, об углы которой бьются головой настоящие люди.</p>
+    </div>
+
+    <p>Рядом не пропустите «брата» кубов — узкую шестигранную башню <strong>Blaaktoren</strong>, которую за форму прозвали <strong>«Карандаш» (Het Potlood)</strong>: тот же Блом, тот же геометрический язык. Кубы-лес и башня-карандаш вместе — единый ансамбль, маленький город-фантазия посреди делового Роттердама.</p>
+
+    <blockquote>Блом построил не дома, а поэму о городе-лесе. Жить в поэме оказалось неудобно — но именно она стала символом города. Иногда манифест важнее комфорта.</blockquote>
+  </section>
+
+  <!-- 5 -->
+  <section class="ch" id="s5">
+    <div class="ch-head"><div class="ch-num">Остановка пятая · Witte Huis</div><h2 class="ch-title">Белый дом: уцелевший небоскрёб 1898 года</h2></div>
+    <div class="ch-meta"><span class="badge day">у Oudehaven · 5 мин ходьбы</span><span class="badge time">⏱ 5 мин</span></div>
+
+    <p>В двух шагах от кубов, у воды старой гавани <strong>Oudehaven</strong>, стоит нарядный белый дом в стиле модерн, который выглядит здесь почти аномалией среди стекла и бетона. Это <strong>Witte Huis</strong> («Белый дом», 1898) — и у него двойная слава. Во-первых, когда его построили, в нём было около <strong>43 метров и десять этажей</strong>, и его гордо называли <strong>первым «небоскрёбом» Европы</strong> (по меркам конца XIX века — действительно высочайшее офисное здание континента). Во-вторых, и это куда важнее, — <strong>он пережил бомбардировку 1940 года</strong>, когда вокруг сгорело всё.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · свидетель посреди амнезии</div>
+      <p>Вдумайтесь в эту сцену. Вокруг вас — город, у которого отшибло память, город сплошного «после». И вдруг посреди него стоит изящный дом из «до» — один из горстки уцелевших. Witte Huis — это не просто старое здание, это <strong>живой свидетель того, каким Роттердам был до 14 мая 1940-го</strong>, чудом не сгоревшая страница из сожжённой книги. Старая гавань Oudehaven рядом — тоже один из немногих клочков «дороттердамского» Роттердама. Постойте тут минуту: контраст между этим кружевным особняком и нависающими над ним кубами Блома и есть весь город — то немногое, что осталось от прошлого, в плотном кольце радикального будущего. Без Белого дома вы бы и не поверили, что у этого города вообще было «вчера».</p>
+    </div>
+
+    <blockquote>Город, потерявший память, и один уцелевший дом из «до». Белый дом — это чудом не сгоревшая страница из сожжённой книги.</blockquote>
+  </section>
+
+  <!-- 6 -->
+  <section class="ch" id="s6">
+    <div class="ch-head"><div class="ch-num">Остановка шестая · Depot Boijmans</div><h2 class="ch-title">Depot Boijmans: зеркальная чаша</h2></div>
+    <div class="ch-meta"><span class="badge day">Museumpark · смотрим снаружи</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>Чуть западнее, в Музейном парке, стоит здание, которое невозможно сфотографировать «целиком», потому что оно отражает всё вокруг, — <strong>Depot Boijmans Van Beuningen</strong> (бюро MVRDV, открыт в конце 2021 года). Огромная чаша-горшок, расширяющаяся кверху, целиком обшитая <strong>зеркальным металлом</strong>: в её изогнутых боках плывёт весь Роттердам — небо, деревья, окрестные дома и вы сами. Вы смотрите его снаружи — и это абсолютно правильно: само здание и есть аттракцион, гигантское кривое зеркало, в котором город любуется собой.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · музей вывернули наизнанку</div>
+      <p>Но дело не только в красоте отражений. Depot — это <strong>первое в мире полностью открытое публике музейное хранилище</strong>, и идея тут революционная. Обычный музей показывает 5–10% коллекции, остальное пылится в закрытых запасниках, недоступных никому. MVRDV и музей Бойманса сделали наоборот: <strong>спрятали выставочные залы и открыли склад</strong>. Внутри (если будет время и желание зайти) вы ходите между стеллажами со <em>всей</em> коллекцией — 150 тысяч предметов, в реставрационных мастерских за стеклом, среди климат-камер. Это прямой родственник того, что вы видели в других книгах: как Аудекерк в Амстердаме открыла современное искусство в древних стенах, так Депо открыло то, что музеи веками прятали. <strong>Жест очень роттердамский: не делать вид, что искусство — это волшебство из ниоткуда, а честно показать склад, труд и логистику за кулисами.</strong> Прозрачность вместо тайны.</p>
+    </div>
+
+    <p>На крыше чаши, кстати, разбит настоящий <strong>берёзовый лес и ресторан</strong> — общественное пространство на высоте, с видом на город. Снова та же мысль, что и у Блома с его «лесом» из кубов: затащить природу и людей наверх, на крышу. У роттердамцев это прямо навязчивая идея — и она прекрасна.</p>
+
+    <blockquote>Обычный музей прячет 90% коллекции. Этот спрятал залы и открыл склад. Вместо тайны — честная изнанка. Очень в духе города дела, а не позы.</blockquote>
+  </section>
+
+  <!-- 7 -->
+  <section class="ch" id="s7">
+    <div class="ch-head"><div class="ch-num">Остановка седьмая · Erasmusbrug</div><h2 class="ch-title">Эразмусбрюг: мост-лебедь</h2></div>
+    <div class="ch-meta"><span class="badge day">переход через Маас</span><span class="badge time">⏱ 5 мин</span></div>
+
+    <p>Теперь — к реке и через неё. Через широкий <strong>Маас</strong> перекинут <strong>Эразмусбрюг</strong> (Erasmusbrug, 1996, бюро UNStudio архитектора Бена ван Беркеля). Это вантовый мост с высоким изломанным голубоватым пилоном, изогнутым так, что за силуэт его сразу прозвали <strong>«Лебедем» (de Zwaan)</strong>. Он стал главным символом современного Роттердама — стройным, лёгким, чуть надменным росчерком над серой водой большого порта.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · мост как машина джентрификации</div>
+      <p>Но Эразмусбрюг — это не просто красивая инженерия, это <strong>градостроительный инструмент</strong>. До него южный берег Мааса — <em>Kop van Zuid</em> — был заброшенной портовой окраиной: ржавые причалы, пустые склады, бедные кварталы, отрезанные рекой от «настоящего» города на севере. Мост-лебедь в 1996-м буквально <strong>сшил два берега</strong> и запустил одно из самых амбициозных преобразований в Европе: бывшие доки за пару десятилетий превратились в район небоскрёбов, куда вы сейчас и идёте. То есть красивый мост — это ещё и рычаг, которым богатый север перетянул развитие на бедный юг (со всеми вопросами про джентрификацию, которые вам как людям про общество близки). Перейдите его пешком или на велосипеде — и вы физически совершите тот самый переход «из старого Роттердама в новый», который город задумал как символ.</p>
+    </div>
+
+    <blockquote>Это не просто мост. Это шов, которым богатый берег пришил к себе бедный — и превратил ржавые доки в район небоскрёбов.</blockquote>
+  </section>
+
+  <!-- 8 -->
+  <section class="ch" id="s8">
+    <div class="ch-head"><div class="ch-num">Остановка восьмая · Wilhelminapier</div><h2 class="ch-title">Вильгельмина-пир: вертикальный город</h2></div>
+    <div class="ch-meta"><span class="badge day">Kop van Zuid · южный берег</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>За мостом вы попадаете на <strong>Wilhelminapier</strong> — узкий мыс бывших портовых причалов, ставший витриной роттердамских небоскрёбов. Здесь сгрудились башни, каких в остальных Нидерландах просто нет: страна плоских горизонтов в одной точке решила расти вверх. И главный здесь — комплекс <strong>«De Rotterdam»</strong> (2013) местного гения <strong>Рема Колхаса</strong> и его бюро <strong>OMA</strong>.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · человек, переписавший теорию города</div>
+      <p>Про Колхаса стоит знать, стоя под его башней. <strong>OMA</strong> — основанное в Роттердаме бюро — одно из самых влиятельных в мире, а сам Рем Колхас не только строит, но и <em>думает</em>: его книги перевернули то, как архитекторы понимают современный мегаполис. «De Rotterdam» он назвал <strong>«вертикальным городом»</strong>: три сросшиеся башни, которые будто чуть сдвинуты друг относительно друга, так что весь массив словно колеблется и двоится, когда обходишь его. Внутри — квартиры, офисы, отель, спортзал: целый город в одном здании, идея, к которой Колхас возвращался всю карьеру. Рядом — другие звёзды: башня с «изломом» KPN-телекома от итальянца <strong>Ренцо Пьяно</strong> (она нарочно наклонена и подпёрта стальной «тростью»), жилые Montevideo и New Orleans. Вместе они и делают тот самый силуэт «Манхэттена на Маасе». Запомните: и OMA, и MVRDV (Markthal, Depot) — <strong>родом отсюда</strong>. Маленький разбомблённый город не просто отстроился — он стал <em>экспортёром</em> мировой архитектуры, его бюро строят теперь по всей планете.</p>
+    </div>
+
+    <p>Походите между башнями, позадирайте голову, поймайте, как «De Rotterdam» меняет очертания с каждым шагом. Это лучшее место, чтобы почувствовать амбицию города физически — масштабом, тенью, ветром между высотками. А потом спуститесь к самой воде, на оконечность пирса: там вас ждёт здание с самой человеческой историей дня.</p>
+
+    <blockquote>Плоская страна, которая всю историю отвоёвывала горизонталь у моря, в одной точке вдруг рванула вертикально вверх. И отсюда же экспортирует архитектуру всему миру.</blockquote>
+  </section>
+
+  <!-- 9 -->
+  <section class="ch" id="s9">
+    <div class="ch-head"><div class="ch-num">Остановка девятая · Hotel New York</div><h2 class="ch-title">Hotel New York: причал в Америку</h2></div>
+    <div class="ch-meta"><span class="badge day">конец Wilhelminapier</span><span class="badge time">⏱ 6 мин</span></div>
+
+    <p>На самой оконечности пирса, у воды, стоит нарядное здание с двумя башенками — <strong>Hotel New York</strong>. После парада дерзких небоскрёбов оно кажется почти скромным, но именно тут прогулка делает вам личный, тихий поклон. Это бывшая <strong>штаб-квартира пароходной компании Holland-America Lijn</strong> (Голландско-Американской линии), и от этих самых причалов больше века уходили океанские лайнеры за океан.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · отсюда Европа уплывала в новую жизнь</div>
+      <p>С конца XIX века и до середины XX-го отсюда, с Вильгельмина-пира, <strong>миллионы европейцев отплывали в Америку</strong> — навсегда. Поляки, евреи, немцы, украинцы, русские, белорусы, итальянцы — бежавшие от погромов, бедности, войн и империй, с одним чемоданом и адресом дальнего родственника в кармане. Это место — <strong>порог между Старым Светом и Новым</strong>, последний голландский причал, который они видели, прежде чем вода и недели пути отделяли их от прежней жизни. И вот тут — прямая рифма с вами. Пара, которая сама сделала шаг через границу, из Беларуси в Варшаву, стоит на причале, с которого поколения людей делали тот же выбор, только намного более бесповоротный: оторваться от родины ради будущего. Закажите в кафе отеля кофе, сядьте у окна и посмотрите на широкую серую воду. С этого самого места люди в последний раз оглядывались на Европу. Уехать, чтобы жить, — очень старый и очень здешний сюжет.</p>
+    </div>
+
+    <p>В этом и есть тихая гениальность вашего маршрута: целый день про здания, бетон, амбиции и формы — и в финале здание, которое всё это переводит в <strong>человеческое</strong>. Архитектура Роттердама — про то, как город заново придумал себя после катастрофы. Hotel New York — про то, как <em>люди</em> заново придумывали себя, уплывая отсюда в неизвестность. Город и человек делают, по сути, одно и то же: начинают с чистого листа, потому что к старому возврата нет.</p>
+
+    <blockquote>Целый день — про то, как город пересобрал себя после катастрофы. И в финале — причал, с которого миллионы людей пересобирали себя сами, уплывая в Америку. Та же история, только про человека.</blockquote>
+  </section>
+
+  <!-- 10 -->
+  <section class="ch" id="s10">
+    <div class="ch-head"><div class="ch-num">Остановка десятая · итог</div><h2 class="ch-title">Зачем это всё: травма как метод</h2></div>
+    <div class="ch-meta"><span class="badge day">на обратном пути</span><span class="badge time">⏱ 5 мин</span></div>
+
+    <p>Соберём день в одну мысль. Роттердам легко списать как «некрасивый и бетонный» — но это значит не понять самого смелого городского эксперимента Европы. Этот город превратил <strong>катастрофу в метод</strong>. Лишившись прошлого, он отказался его подделывать и вместо этого сделал постоянное обновление своим способом существовать. Здесь архитектура — не украшение и не наследие, а <em>образ мышления</em>: каждое поколение получает право переспорить предыдущее новым зданием.</p>
+
+    <div class="hook">
+      <div class="lbl">Крючок · город до сих пор не закончен</div>
+      <p>И это не «история про прошлое». Прямо сейчас, в 2026 году, Роттердам снова выбирает себе новую икону: в городе идёт большой архитектурный конкурс на очередной знаковый небоскрёб, и в финале — мировые звёзды вроде MVRDV, Heatherwick и Mecanoo. То есть город <strong>буквально продолжает достраивать себя у вас на глазах</strong>, восемьдесят с лишним лет спустя. Где Амстердам охраняет свой XVII век как музейный экспонат (вспомните запреты и борьбу с овертуризмом из первой книги), там Роттердам принципиально <em>не доделан</em> — и гордится этим. Два полюса одной маленькой страны: один бережёт, другой переизобретает.</p>
+    </div>
+
+    <p>И последняя петля назад — к Варшаве, с которой мы начали, потому что для вас это не абстракция. Варшава после своей катастрофы сказала: «мы воссоздадим то, что у нас отняли, — это и будет наша победа и наша память». Роттердам сказал: «возврата к тому, что отняли, нет, — нашей памятью станет то, что мы построим вместо». Невозможно сказать, какой ответ «правильный»; оба — про достоинство и про то, как жить после утраты. Но пройдя сегодня этот город ногами, вы получили редкую вещь: <strong>возможность подержать в руках альтернативный ответ на вопрос, который ваша часть Европы знает слишком хорошо.</strong> Что делать, когда прошлого больше нет? Можно воскресить. А можно — построить будущее так дерзко, что в него захочется жить. Роттердам выбрал второе.</p>
+
+    <blockquote>Что делать, когда прошлого больше нет? Воскресить его — или построить будущее так, чтобы в него захотелось жить. Роттердам выбрал второе — и не закончил до сих пор.</blockquote>
+  </section>
+
+  <!-- ── ШПАРГАЛКА ── -->
+  <section class="cheat" id="cheat">
+    <h2>🏙 Шпаргалка и порядок обхода</h2>
+    <p class="sub">Маршрут одним взглядом + самое важное в строках.</p>
+
+    <h3>Порядок обхода</h3>
+    <ul class="ctl">
+      <li><span class="ct">1</span><span class="cd"><b>Rotterdam Centraal</b> — стальной козырёк-стрела, направленный в центр. Старт.</span></li>
+      <li><span class="ct">2</span><span class="cd">~15 мин пешком на ЮВ к станции <b>Blaak</b>.</span></li>
+      <li><span class="ct">3</span><span class="cd"><b>Markthal</b> — арка-дом над рынком, потолок «Рог изобилия». Обед.</span></li>
+      <li><span class="ct">4</span><span class="cd"><b>Кубические дома</b> (рядом!) — зайдите в музей <b>Kijk-Kubus</b> (11:00–17:00). Рядом «Карандаш».</span></li>
+      <li><span class="ct">5</span><span class="cd"><b>Witte Huis</b> + старая гавань <b>Oudehaven</b> — 5 мин пешком, уцелевший дом 1898 г.</span></li>
+      <li><span class="ct">6</span><span class="cd"><b>Depot Boijmans</b> (Museumpark, западнее) — зеркальная чаша, снаружи. По пути — Эразмусбрюг.</span></li>
+      <li><span class="ct">7</span><span class="cd"><b>Erasmusbrug</b> — перейти Маас пешком на южный берег.</span></li>
+      <li><span class="ct">8</span><span class="cd"><b>Wilhelminapier</b> — небоскрёбы: De Rotterdam (OMA), KPN (Пьяно).</span></li>
+      <li><span class="ct">9</span><span class="cd"><b>Hotel New York</b> — конец пирса, кофе у воды, причал эмиграции.</span></li>
+    </ul>
+
+    <h3>14 вещей, которые стоит унести</h3>
+    <ol class="twenty">
+      <li><b>14 мая 1940</b> бомбардировка стёрла центр (~24 000 домов). Город решил <b>не восстанавливать</b> старину.</li>
+      <li>Девиз: <b>«Geen woorden, maar daden»</b> — «не слова, а дела». Рабочий портовый город, «Манхэттен на Маасе».</li>
+      <li>Главный контраст дня: <b>Роттердам vs Варшава</b> — два ответа на уничтоженное прошлое (построить будущее vs воскресить).</li>
+      <li><b>Centraal</b> (2014): стальной козырёк-стрела указывает в центр; две стороны — «к городу» и «к пригороду».</li>
+      <li><b>Markthal</b> (MVRDV, 2014): арка-жилой дом над рынком; потолок «Рог изобилия» — крупнейшее произведение в стране.</li>
+      <li><b>Кубические дома</b> (Пит Блом, 1982–84): «дом-дерево», ансамбль = «лес» <b>Blaakse Bos</b>; 38 кубов на углу.</li>
+      <li>Концепция «жильё как городская крыша»: жильё наверху, общая жизнь и дорога внизу.</li>
+      <li>Зайти можно в музей-куб <b>Kijk-Kubus</b> (~11:00–17:00); рядом башня <b>«Карандаш»</b> (Blaaktoren).</li>
+      <li>Честно: в кубах <b>неудобно жить</b> (наклонные стены, до ~25% площади «теряется») — манифест против дома для жизни.</li>
+      <li><b>Witte Huis</b> (1898) — «первый небоскрёб Европы» (~43 м), <b>пережил бомбардировку</b>; свидетель старого города.</li>
+      <li><b>Depot Boijmans</b> (MVRDV, 2021) — зеркальная чаша, <b>первое публичное хранилище музея</b> в мире; на крыше лес.</li>
+      <li><b>Erasmusbrug</b> («Лебедь», UNStudio, 1996) — сшил берега, запустил застройку южного <b>Kop van Zuid</b>.</li>
+      <li><b>De Rotterdam</b> (OMA / Рем Колхас, 2013) — «вертикальный город»; OMA и MVRDV — родом из Роттердама.</li>
+      <li><b>Hotel New York</b> — штаб Holland-America Lijn; отсюда миллионы уплывали в Америку (рифма с вашей биографией).</li>
+    </ol>
+
+    <h3>10 слов</h3>
+    <table class="words">
+      <tr><td class="nl">Kubuswoningen</td><td class="pr">кю́бюсво́нинген</td><td>кубические дома</td></tr>
+      <tr><td class="nl">Blaakse Bos</td><td class="pr">бла́ксе бос</td><td>«Блакский лес» — их имя</td></tr>
+      <tr><td class="nl">Kijk-Kubus</td><td class="pr">кейк-кю́бюс</td><td>куб-музей, куда можно войти</td></tr>
+      <tr><td class="nl">Het Potlood</td><td class="pr">хет по́тлот</td><td>«Карандаш» — башня Блома</td></tr>
+      <tr><td class="nl">Markthal</td><td class="pr">ма́ркт-хал</td><td>рынок-дом</td></tr>
+      <tr><td class="nl">Witte Huis</td><td class="pr">ви́тте хёйс</td><td>Белый дом (1898)</td></tr>
+      <tr><td class="nl">Erasmusbrug</td><td class="pr">эра́смюс-брюх</td><td>мост-«Лебедь»</td></tr>
+      <tr><td class="nl">Maas</td><td class="pr">мас</td><td>река, на которой стоит город</td></tr>
+      <tr><td class="nl">Haven</td><td class="pr">ха́вен</td><td>гавань, порт (главное слово города)</td></tr>
+      <tr><td class="nl">Wederopbouw</td><td class="pr">ве́дероп-бау</td><td>«восстановление» — послевоенная эпоха</td></tr>
+    </table>
+    <p class="sub" style="margin-top:22px;">«g/ch» — горловое «х»; «ui» ≈ среднее «ау/ой»; «aa» — долгое «а». Смотрите вверх и под ноги (ищите метки «линии пожара»).</p>
+  </section>
+
+  <footer class="src">
+    <h3>Источники и сверка фактов</h3>
+    <p>Кубические дома и концепция Blaakse Bos, музей Kijk-Kubus, башня «Карандаш»: <a href="https://www.kubuswoning.nl/en/">kubuswoning.nl</a>, <a href="https://en.wikipedia.org/wiki/Cube_house">Cube house — Wikipedia</a>. Markthal и «Рог изобилия», Depot Boijmans: <a href="https://www.mvrdv.com/projects/115/markthal">MVRDV — Markthal</a>, <a href="https://www.mvrdv.com/projects/10/depot-boijmans-van-beuningen">MVRDV — Depot</a>. Конкурс на новую икону Роттердама (2026): <a href="https://www.domusweb.it/en/news/gallery/2026/03/03/rotterdam-shift-landmark-finalists-mvrdv-heatherwick-mecanoo.html">Domus (март 2026)</a>. Бомбардировка 14.05.1940, девиз города, Centraal (2014), Witte Huis (1898), Erasmusbrug (1996, UNStudio), De Rotterdam (OMA, 2013), Hotel New York / Holland-America Lijn — по совокупности энциклопедических и архитектурных источников.</p>
+    <p style="opacity:.7;margin-top:14px;">Часы музеев (Kijk-Kubus, Depot) и кафе уточняйте на месте. Смотрите смело — этот город любит, когда на него задирают голову. 🏙</p>
+    <a class="back-top" href="#top">↑ Наверх, к маршруту</a>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var themeCb=document.getElementById('theme-cb'), navCb=document.getElementById('nav-cb');
+  try{
+    var saved=localStorage.getItem('nl-theme');
+    if(saved==='dark') themeCb.checked=true;
+    else if(saved==='light') themeCb.checked=false;
+    else if(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) themeCb.checked=true;
+  }catch(e){}
+  themeCb.addEventListener('change',function(){ try{ localStorage.setItem('nl-theme', themeCb.checked?'dark':'light'); }catch(e){} });
+
+  var menu=document.getElementById('menu');
+  menu.addEventListener('click',function(e){ if(e.target.closest('a')) navCb.checked=false; });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') navCb.checked=false; });
+
+  var bar=document.getElementById('progress'), pct=document.getElementById('pct'), here=document.getElementById('here');
+  var sections=Array.prototype.slice.call(document.querySelectorAll('section.ch, section.cheat'));
+  var links={};
+  Array.prototype.forEach.call(menu.querySelectorAll('a[href^="#"]'),function(a){ links[a.getAttribute('href').slice(1)]=a; });
+  function titleOf(sec){ var t=sec.querySelector('.ch-title')||sec.querySelector('h2'); return t?t.textContent.trim():''; }
+  function update(){
+    var h=document.documentElement, scrolled=h.scrollTop||document.body.scrollTop, height=(h.scrollHeight-h.clientHeight)||1;
+    var p=Math.min(100,Math.max(0,Math.round((scrolled/height)*100)));
+    bar.style.width=p+'%'; pct.textContent=p+'%';
+    var mid=scrolled+window.innerHeight*0.30, current=null;
+    for(var i=0;i<sections.length;i++){ if(sections[i].offsetTop<=mid) current=sections[i]; }
+    var id=current?current.id:null;
+    here.textContent=current?titleOf(current):'Роттердам · архитектура';
+    for(var k in links){ links[k].classList.toggle('active', k===id); }
+  }
+  var ticking=false;
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(function(){ update(); ticking=false; }); } }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  update();
+})();
+</script>
+
+<script>
+/* Аудиогид: озвучка через Web Speech API (голос устройства, офлайн). */
+(function(){
+  if(!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance==='undefined') return;
+  var synth=window.speechSynthesis;
+  var voice=null, rate=1, items=[], idx=0, playing=false, paused=false, seq=0, hl=null;
+  function pickVoice(){
+    var vs=synth.getVoices()||[];
+    voice=vs.filter(function(v){return /ru[-_]?ru/i.test(v.lang);})[0] || vs.filter(function(v){return /^ru/i.test(v.lang);})[0] || null;
+  }
+  pickVoice();
+  if(synth.onvoiceschanged!==undefined) synth.onvoiceschanged=pickVoice;
+  function clean(s){ return (s||'').replace(/\s+/g,' ').trim(); }
+  function chunk(t){
+    if(t.length<=240) return [t];
+    var parts=t.match(/[^.!?…]+[.!?…]*/g)||[t], out=[], buf='';
+    parts.forEach(function(p){ if((buf+p).length>240){ if(buf) out.push(buf.trim()); buf=p; } else buf+=p; });
+    if(buf.trim()) out.push(buf.trim());
+    return out;
+  }
+  var player=document.createElement('div'); player.id='player';
+  player.innerHTML='<button class="p-pp" aria-label="Пауза или воспроизведение">⏸</button><button class="p-stop" aria-label="Остановить">⏹</button><span class="p-title"></span><span class="p-note"></span><button class="p-rate" aria-label="Скорость">1×</button>';
+  document.body.appendChild(player);
+  var ppBtn=player.querySelector('.p-pp'), stopBtn=player.querySelector('.p-stop'), titleEl=player.querySelector('.p-title'), noteEl=player.querySelector('.p-note'), rateBtn=player.querySelector('.p-rate');
+  function setNote(){ noteEl.textContent=items.length?('§ '+Math.min(idx+1,items.length)+'/'+items.length):''; }
+  function highlight(el){ if(el===hl) return; if(hl) hl.classList.remove('speaking'); hl=el; if(el){ el.classList.add('speaking'); el.scrollIntoView({behavior:'smooth',block:'center'}); } }
+  function clearHl(){ if(hl) hl.classList.remove('speaking'); hl=null; }
+  function build(section){
+    items=[];
+    var title=section.querySelector('.ch-title')||section.querySelector('h2');
+    if(title) chunk(clean(title.textContent)).forEach(function(c){ items.push({el:title,text:c}); });
+    section.querySelectorAll('p, h3, li, blockquote').forEach(function(n){
+      var t=clean(n.textContent); if(t) chunk(t).forEach(function(c){ items.push({el:n,text:c}); });
+    });
+  }
+  function speak(){
+    if(idx>=items.length){ stop(); return; }
+    var my=++seq, it=items[idx]; highlight(it.el); setNote();
+    var u=new SpeechSynthesisUtterance(it.text); u.lang='ru-RU'; if(voice) u.voice=voice; u.rate=rate; u.pitch=1;
+    u.onend=function(){ if(my===seq && playing && !paused){ idx++; speak(); } };
+    u.onerror=function(){ if(my===seq && playing && !paused){ idx++; speak(); } };
+    synth.speak(u);
+  }
+  function start(section,label){ synth.cancel(); build(section); idx=0; playing=true; paused=false; ppBtn.textContent='⏸'; titleEl.textContent=label; player.classList.add('show'); speak(); }
+  function stop(){ playing=false; paused=false; ++seq; synth.cancel(); clearHl(); player.classList.remove('show'); }
+  ppBtn.addEventListener('click',function(){ if(!playing) return; if(paused){ paused=false; synth.resume(); ppBtn.textContent='⏸'; } else { paused=true; synth.pause(); ppBtn.textContent='▶'; } });
+  stopBtn.addEventListener('click',stop);
+  rateBtn.addEventListener('click',function(){ var s=[1,1.2,1.5,0.8], i=s.indexOf(rate); rate=s[(i+1)%s.length]; rateBtn.textContent=rate+'×'; if(playing && !paused){ synth.cancel(); speak(); } });
+  setInterval(function(){ if(playing && !paused && synth.speaking){ synth.pause(); synth.resume(); } },9000);
+  function mkBtn(label){ var b=document.createElement('button'); b.className='listen-btn'; b.textContent='▶ '+label; return b; }
+  document.querySelectorAll('section.ch').forEach(function(sec){
+    var meta=sec.querySelector('.ch-meta'); if(!meta) return;
+    var t=sec.querySelector('.ch-title'), name=t?t.textContent.trim():'остановку';
+    var b=mkBtn('Слушать'); b.addEventListener('click',function(){ start(sec,name); }); meta.appendChild(b);
+  });
+  var cheat=document.querySelector('section.cheat');
+  if(cheat){ var cb=mkBtn('Слушать шпаргалку'); cb.className+=' cheat-listen'; cb.addEventListener('click',function(){ start(cheat,'Шпаргалка'); }); var sub=cheat.querySelector('.sub'); if(sub) sub.insertAdjacentElement('afterend',cb); else cheat.insertBefore(cb,cheat.firstChild); }
+  window.addEventListener('beforeunload',function(){ synth.cancel(); });
+})();
+</script>
+</body>
+</html>
